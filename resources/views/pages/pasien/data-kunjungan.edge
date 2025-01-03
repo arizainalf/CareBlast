@@ -1,0 +1,178 @@
+@layout.app()
+@slot('content')
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center flex-wrap">
+    <div class="input-group contacts-search mb-4">
+      <input type="text" class="form-control" placeholder="Cari obat pasien...">
+      <span class="input-group-text"><a href="javascript:void(0)"><i class="flaticon-381-search-2"></i></a></span>
+    </div>
+    <div style="margin-top: -0.5rem;">
+      <button type="button" class="btn btn-rounded fs-17 btn-primary" data-bs-toggle="modal"
+        data-bs-target="#basicModal"><span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i>
+        </span>Kunjungan</button>
+    </div>
+  </div>
+  <hr style="margin-top: -0.8rem;">
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="row">
+            <div class="col-xl-4 col-xxl-6 col-lg-6">
+              <div class="card">
+                <div class="card-header border-0 pb-0">
+                  <div class="d-flex flex-column">
+                    <h4 class="card-title">Akmal Sidik</h4> <!-- Nama pasien-->
+                    <small class="text-muted">32780561664398</small> <!-- NIK -->
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div id="DZ_W_TimeLine" class="widget-timeline dlab-scroll height370">
+                    <ul class="timeline">
+                      <li>
+                        <div class="timeline-badge primary"></div>
+                        <a class="timeline-panel text-muted" href="#">
+                          <span>10 november 2024</span>
+                          <h6 class="mb-0">Pemeiksaan rurin gula darah <strong class="text-primary">Ke 5</strong>.
+                            <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, in!</p>
+                          </h6>
+                        </a>
+                      </li>
+                      <li>
+                        <div class="timeline-badge info">
+                        </div>
+                        <a class="timeline-panel text-muted" href="#">
+                          <span>10 Desember 2024</span>
+                          <h6 class="mb-0">New order placed <strong class="text-info">#XF-2356.</strong></h6>
+                          <p class="mb-0">Quisque a consequat ante Sit amet magna at volutapt...</p>
+                        </a>
+                      </li>
+                      <li>
+                        <div class="timeline-badge dark">
+                        </div>
+                        <a class="timeline-panel text-muted" href="#">
+                          <span>20 minutes ago</span>
+                          <h6 class="mb-0">Mashable, a news website and blog, goes live.</h6>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-xxl-6 col-lg-6">
+              <div class="card">
+                <div class="card-header border-0 pb-0">
+                  <div class="d-flex flex-column">
+                    <h4 class="card-title">Akmal Sidik</h4> <!-- Nama pasien-->
+                    <small class="text-muted">32780561664398</small> <!-- NIK -->
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div id="DZ_W_TimeLine" class="widget-timeline dlab-scroll height370">
+                    <ul class="timeline">
+                      <li>
+                        <div class="timeline-badge primary"></div>
+                        <a class="timeline-panel text-muted" href="#">
+                          <span>10 minutes ago</span>
+                          <h6 class="mb-0">Youtube, a video-sharing website, goes live <strong
+                              class="text-primary">$500</strong>.
+                          </h6>
+                        </a>
+                      </li>
+                      <li>
+                        <div class="timeline-badge info">
+                        </div>
+                        <a class="timeline-panel text-muted" href="#">
+                          <span>20 minutes ago</span>
+                          <h6 class="mb-0">New order placed <strong class="text-info">#XF-2356.</strong></h6>
+                          <p class="mb-0">Quisque a consequat ante Sit amet magna at volutapt...</p>
+                        </a>
+                      </li>
+                      <li>
+                        <div class="timeline-badge dark">
+                        </div>
+                        <a class="timeline-panel text-muted" href="#">
+                          <span>20 minutes ago</span>
+                          <h6 class="mb-0">Mashable, a news website and blog, goes live.</h6>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="progect-pagination d-flex justify-content-between align-items-center flex-wrap mt-3">
+              <h4 class="mb-3">Showing 6 from 600 data</h4>
+              <ul class="pagination mb-3">
+                <li class="page-item page-indicator">
+                  <a class="page-link" href="javascript:void(0)">
+                    <i class="fas fa-angle-double-left me-2"></i>Previous</a>
+                </li>
+                <li class="page-item">
+                  <a class="active" href="javascript:void(0)">1</a>
+                  <a class="" href="javascript:void(0)">2</a>
+                  <a class="" href="javascript:void(0)">3</a>
+                  <a class="" href="javascript:void(0)">4</a>
+                </li>
+                <li class="page-item page-indicator">
+                  <a class="page-link" href="javascript:void(0)">
+                    Next<i class="fas fa-angle-double-right ms-2"></i></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="basicModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah data pasien baru</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal">
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Nama depan">
+            </div>
+            <div class="col-sm-6 mt-2 mt-sm-0">
+              <input type="text" class="form-control" placeholder="Nama belakang">
+            </div>
+          </div>
+          <div class="row align-items-center mb-2">
+            <div class="col-sm-6 my-1">
+              {{-- <label class="me-sm-2">Preference</label> --}}
+              <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
+                <option selected="">Jenis Kelamin</option>
+                <option value="pria">Pria</option>
+                <option value="wanita">Wanita</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-2">
+            <input type="text" inputmode="numeric" class="form-control input-default " placeholder="NIK">
+          </div>
+          <div class="mb-2">
+            <input type="text" class="form-control input-default" placeholder="Tempat & Tanggal Lahir">
+          </div>
+          <div class="mb-3">
+            <textarea class="form-control" rows="4" id="alamat" placeholder="Alamat Lengkap"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+@end
+@end

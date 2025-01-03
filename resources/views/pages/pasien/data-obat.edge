@@ -1,0 +1,135 @@
+@layout.app()
+@slot('content')
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center flex-wrap">
+    <div class="input-group contacts-search mb-4">
+      <input type="text" class="form-control" placeholder="Cari obat pasien...">
+      <span class="input-group-text"><a href="javascript:void(0)"><i class="flaticon-381-search-2"></i></a></span>
+    </div>
+    <div style="margin-bottom: -0.5rem;">
+      <button type="button" class="btn btn-rounded fs-17 btn-primary" data-bs-toggle="modal"
+        data-bs-target="#basicModal"><span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i>
+        </span>Obat</button>
+    </div>
+  </div>
+  <hr style="margin-top: -0.8rem;">
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="row"> <!-- Satu row untuk semua card -->
+        <!-- Card Pertama -->
+        <div class="col-xl-4">
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex flex-column">
+                <h4 class="card-title">Akmal Sidik</h4> <!-- Nama pasien-->
+                <small class="text-muted">32780561664398</small> <!-- NIK -->
+              </div>
+              <div class="bootstrap-badge" data-bs-toggle="modal" data-bs-target="#obatModal">
+                <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-xl"><i
+                    class="far fa-trash-alt"></i></a>
+              </div>
+            </div>
+            <div class="modal fade" id="obatModal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Hapus Data Obat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+                  </div>
+                  <div class="modal-body">Data obat <b>Akmal Sidik</b> akan dihapus?</div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger light">Hapus</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="basic-list-group mb-0">
+                <ul class="list-group">
+                  <li class="list-group-item active">Sebelum Makan </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis in <span class="badge badge-primary badge-pill">3X1</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac consectetur ac <span class="badge badge-primary badge-pill">2X1</span></li>
+                </ul>
+                <ul class="list-group">
+                  <li class="list-group-item disabled">Sesudah Makan </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac consectetur ac <span class="badge badge-secondary badge-pill">1X1</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Vestibulum at eros <span class="badge badge-secondary badge-pill">2X1</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="progect-pagination d-flex justify-content-between align-items-center flex-wrap mt-3">
+          <h4 class="mb-3">Showing 6 from 600 data</h4>
+          <ul class="pagination mb-3">
+            <li class="page-item page-indicator">
+              <a class="page-link" href="javascript:void(0)">
+                <i class="fas fa-angle-double-left me-2"></i>Previous</a>
+            </li>
+            <li class="page-item">
+              <a class="active" href="javascript:void(0)">1</a>
+              <a class="" href="javascript:void(0)">2</a>
+              <a class="" href="javascript:void(0)">3</a>
+              <a class="" href="javascript:void(0)">4</a>
+            </li>
+            <li class="page-item page-indicator">
+              <a class="page-link" href="javascript:void(0)">
+                Next<i class="fas fa-angle-double-right ms-2"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="basicModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah data pasien baru</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal">
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Nama depan">
+            </div>
+            <div class="col-sm-6 mt-2 mt-sm-0">
+              <input type="text" class="form-control" placeholder="Nama belakang">
+            </div>
+          </div>
+          <div class="row align-items-center mb-2">
+            <div class="col-sm-6 my-1">
+              {{-- <label class="me-sm-2">Preference</label> --}}
+              <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
+                <option selected="">Jenis Kelamin</option>
+                <option value="pria">Pria</option>
+                <option value="wanita">Wanita</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-2">
+            <input type="text" inputmode="numeric" class="form-control input-default " placeholder="NIK">
+          </div>
+          <div class="mb-2">
+            <input type="text" class="form-control input-default" placeholder="Tempat & Tanggal Lahir">
+          </div>
+          <div class="mb-3">
+            <textarea class="form-control" rows="4" id="alamat" placeholder="Alamat Lengkap"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+@end
+@end

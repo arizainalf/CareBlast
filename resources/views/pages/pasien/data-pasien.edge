@@ -1,0 +1,271 @@
+@layout.app()
+@slot('content')
+<div class="container-fluid" style="margin-top: -1rem;">
+  <div class="d-flex justify-content-between align-items-center flex-wrap">
+    <div class="input-group contacts-search mb-4">
+      <input type="text" class="form-control" placeholder="Cari pasien...">
+      <span class="input-group-text"><a href="javascript:void(0)"><i class="flaticon-381-search-2"></i></a></span>
+    </div>
+    <div class="mb-4">
+      {{-- <a data-bs-toggle="modal" data-bs-target="#basicModal" href="javascript:void(0);"
+        class="btn btn-primary btn-rounded fs-18"><i class="fas fa-plus"></i> Pasien</a> --}}
+      <button type="button" class="btn btn-rounded fs-17 btn-primary" data-bs-toggle="modal"
+        data-bs-target="#basicModal"><span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i>
+        </span>Pasien</button>
+    </div>
+  </div>
+  <hr style="margin-top: -0.8rem;">
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="row"> <!-- Satu row untuk semua card -->
+        <!-- Card Pertama -->
+        <div class="col-xl-3 col-xxl-4 col-lg-4 col-md-6 col-sm-6 items">
+          <div class="card overflow-hidden">
+            <div class="text-center p-5 overlay-box" style="background-image: url(images/big/img5.jpg);">
+              <img src="images/akmaal.png" width="100" class="img-fluid rounded-circle" alt="">
+              <h3 class="mt-3 mb-0 text-white">Akmal Sidik</h3>
+              <p class="fs-10 mb-0 user-work text-white">32780744433377</p>
+            </div>
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Laki-Laki</h4>
+                    <small>21 Tahun</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Tasikmalaya</h4>
+                    <small>18 - 09 - 2003</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer mt-0">
+              <button class="btn btn-primary btn-lg btn-block"><a class="text-white" href="/profile">Detail Pasien</a></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Kedua -->
+        <div class="col-xl-3 col-xxl-4 col-lg-4 col-md-6 col-sm-6 items">
+          <div class="card overflow-hidden">
+            <div class="text-center p-5 overlay-box" style="background-image: url(images/big/img5.jpg);">
+              <img src="images/akmaal.png" width="100" class="img-fluid rounded-circle" alt="">
+              <h3 class="mt-3 mb-0 text-white">Akmal Sidik</h3>
+              <p class="fs-10 mb-0 user-work text-white">32780744433377</p>
+            </div>
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Laki-Laki</h4>
+                    <small>21 Tahun</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Tasikmalaya</h4>
+                    <small>18 - 09 - 2003</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer mt-0">
+              <button class="btn btn-primary btn-lg btn-block"><a class="text-white" href="/profile">Detail Pasien</a></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Ketiga -->
+        <div class="col-xl-3 col-xxl-4 col-lg-4 col-md-6 col-sm-6 items">
+          <div class="card overflow-hidden">
+            <div class="text-center p-5 overlay-box" style="background-image: url(images/pattern/pattern5.png);">
+              <img src="images/akmaal.png" width="100" class="img-fluid rounded-circle" alt="">
+              <h3 class="mt-3 mb-0 text-white">Akmal Sidik</h3>
+              <p class="fs-10 mb-0 user-work text-white">32780744433377</p>
+            </div>
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Laki-Laki</h4>
+                    <small>21 Tahun</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Tasikmalaya</h4>
+                    <small>18 - 09 - 2003</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer mt-0">
+              <button class="btn btn-primary btn-lg btn-block"><a class="text-white" href="/profile">Detail Pasien</a></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Keempat -->
+        <div class="col-xl-3 col-xxl-4 col-lg-4 col-md-6 col-sm-6 items">
+          <div class="card overflow-hidden">
+            <div class="text-center p-5 overlay-box" style="background-image: url(images/big/img5.jpg);">
+              <img src="images/akmaal.png" width="100" class="img-fluid rounded-circle" alt="">
+              <h3 class="mt-3 mb-0 text-white">Akmal Sidik</h3>
+              <p class="fs-10 mb-0 user-work text-white">32780744433377</p>
+            </div>
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Laki-Laki</h4>
+                    <small>21 Tahun</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Tasikmalaya</h4>
+                    <small>18 - 09 - 2003</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer mt-0">
+              <button class="btn btn-primary btn-lg btn-block"><a class="text-white" href="/profile">Detail Pasien</a></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Kelima -->
+        <div class="col-xl-3 col-xxl-4 col-lg-4 col-md-6 col-sm-6 items">
+          <div class="card overflow-hidden">
+            <div class="text-center p-5 overlay-box" style="background-image: url(images/big/img5.jpg);">
+              <img src="images/akmaal.png" width="100" class="img-fluid rounded-circle" alt="">
+              <h3 class="mt-3 mb-0 text-white">Akmal Sidik</h3>
+              <p class="fs-10 mb-0 user-work text-white">32780744433377</p>
+            </div>
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Laki-Laki</h4>
+                    <small>21 Tahun</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Tasikmalaya</h4>
+                    <small>18 - 09 - 2003</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer mt-0">
+              <button class="btn btn-primary btn-lg btn-block"><a class="text-white" href="/profile">Detail Pasien</a></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card ke enam -->
+        <div class="col-xl-3 col-xxl-4 col-lg-4 col-md-6 col-sm-6 items">
+          <div class="card overflow-hidden">
+            <div class="text-center p-5 overlay-box" style="background-image: url(images/big/img5.jpg);">
+              <img src="images/akmaal.png" width="100" class="img-fluid rounded-circle" alt="">
+              <h3 class="mt-3 mb-0 text-white">Akmal Sidik</h3>
+              <p class="fs-10 mb-0 user-work text-white">32780744433377</p>
+            </div>
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Laki-Laki</h4>
+                    <small>21 Tahun</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="bgl-primary rounded p-3">
+                    <h4 class="mb-0">Tasikmalaya</h4>
+                    <small>18 - 09 - 2003</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer mt-0">
+              <button class="btn btn-primary btn-lg btn-block"><a class="text-white" href="/profile">Detail Pasien</a></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="progect-pagination d-flex justify-content-between align-items-center flex-wrap mt-3">
+        <h4 class="mb-3">Showing 6 from 600 data</h4>
+        <ul class="pagination mb-3">
+          <li class="page-item page-indicator">
+            <a class="page-link" href="javascript:void(0)">
+              <i class="fas fa-angle-double-left me-2"></i>Previous</a>
+          </li>
+          <li class="page-item">
+            <a class="active" href="javascript:void(0)">1</a>
+            <a class="" href="javascript:void(0)">2</a>
+            <a class="" href="javascript:void(0)">3</a>
+            <a class="" href="javascript:void(0)">4</a>
+          </li>
+          <li class="page-item page-indicator">
+            <a class="page-link" href="javascript:void(0)">
+              Next<i class="fas fa-angle-double-right ms-2"></i></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="basicModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah data pasien baru</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal">
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Nama depan">
+            </div>
+            <div class="col-sm-6 mt-2 mt-sm-0">
+              <input type="text" class="form-control" placeholder="Nama belakang">
+            </div>
+          </div>
+          <div class="row align-items-center mb-2">
+            <div class="col-sm-6 my-1">
+              {{-- <label class="me-sm-2">Preference</label> --}}
+              <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
+                <option selected="">Jenis Kelamin</option>
+                <option value="pria">Pria</option>
+                <option value="wanita">Wanita</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-2">
+            <input type="text" inputmode="numeric" class="form-control input-default " placeholder="NIK">
+          </div>
+          <div class="mb-2">
+            <input type="text" class="form-control input-default" placeholder="Tempat & Tanggal Lahir">
+          </div>
+          <div class="mb-3">
+            <textarea class="form-control" rows="4" id="alamat" placeholder="Alamat Lengkap"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+@end
+@end

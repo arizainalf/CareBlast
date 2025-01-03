@@ -1,0 +1,154 @@
+@layout.app()
+@slot('content')
+<div class="container-fluid">
+  <div class="row page-titles">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><a href="javascript:void(0)">Pasien</a></li>
+      <li class="breadcrumb-item"><a href="javascript:void(0)">Akmal Sidik</a></li>
+    </ol>
+  </div>
+  <div class="row">
+    <div class="col-xl-12">
+      <!-- row -->
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="profile card card-body px-3 pt-3 pb-0">
+            <div class="profile-head">
+              <div class="photo-content">
+                <div class="cover-photo rounded"></div>
+              </div>
+              <div class="profile-info">
+                <div class="profile-photo">
+                  <img src="images/akmaal.png" class="img-fluid rounded-circle" alt="">
+                </div>
+                <div class="profile-details">
+                  <div class="profile-name px-3 pt-2">
+                    <h4 class="text-primary mb-0">Akmal Sidik </h4>
+                    <p>32780561664398001</p>
+                  </div>
+                  <div class="profile-email px-2 pt-2">
+                    <h4 class="text-muted mb-0">Tasikmalaya, 18 September 2003</h4>
+                    <p>21 tahun</p>
+                  </div>
+                  <div class="dropdown ms-auto">
+                    <a href="#" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true"><svg
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px"
+                        height="18px" viewbox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"></rect>
+                          <circle fill="#000000" cx="5" cy="12" r="2"></circle>
+                          <circle fill="#000000" cx="12" cy="12" r="2"></circle>
+                          <circle fill="#000000" cx="19" cy="12" r="2"></circle>
+                        </g>
+                      </svg></a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <a href="#">
+                        <li class="dropdown-item"><i class="fas fa-capsules text-success me-2"></i>
+                          Tambah Obat</li>
+                        <li class="dropdown-item"><i class="fas fa-walking text-primary me-3"></i>
+                          Tambah kunjungan</li>
+                        <li class="dropdown-item"><i class="fa fa-ban text-danger me-2"></i>
+                          Hapus Pasien</li>
+                      </a>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-4">
+          <div class="row">
+            <div class="col-xl-12">
+              <div class="card">
+                <div class="card-header">
+                  <div class="d-flex flex-column">
+                    <h4 class="card-title">Data Obat</h4>
+                  </div>
+                  <div class="bootstrap-badge" data-bs-toggle="modal" data-bs-target="#obatModal">
+                    <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-lg"><i
+                        class="far fa-trash-alt"></i></a>
+                    {{--  <a href="javascript:void(0)" class="badge badge-rounded badge-outline-warning badge-lg"><i
+                        class="fas fa-pencil-alt"></i></a>  --}}
+                  </div>
+                </div>
+                {{--  Modal  --}}
+                <div class="modal fade" id="obatModal">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Hapus Data Obat</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal">
+                        </button>
+                      </div>
+                      <div class="modal-body">Data obat <b>Akmal Sidik</b> akan dihapus?</div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-danger light">Hapus</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="basic-list-group mb-0">
+                    <ul class="list-group">
+                      <li class="list-group-item active">Sebelum Makan </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis
+                        in <span class="badge badge-rounded badge-outline-warning badge-lg"><i class="fas fa-pencil-alt"></i></span><span class="badge badge-primary badge-pill">3X1</span></li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis
+                        in <span class="badge badge-rounded badge-outline-warning badge-lg"><i class="fas fa-pencil-alt"></i></span><span
+                          class="badge badge-primary badge-pill">2X1</span></li>
+                    </ul>
+                    <ul class="list-group">
+                      <li class="list-group-item disabled">Sesudah Makan </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac consectetur
+                        ac <span class="badge badge-secondary badge-pill">1X1</span></li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">Vestibulum at eros
+                        <span class="badge badge-secondary badge-pill">2X1</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-8">
+          <div class="card">
+            <div class="card-body">
+              <div class="profile-tab">
+                <div class="custom-tab-1">
+                  <ul class="nav nav-tabs">
+                    <li class="nav-item"><a href="#data-diri" data-bs-toggle="tab" class="nav-link active show">Data
+                        Diri</a>
+                    </li>
+                    <li class="nav-item"><a href="#data-kunjungan" data-bs-toggle="tab" class="nav-link">Kunjungan</a>
+                    </li>
+                    <li class="nav-item"><a href="#kirim-hasil-lab" data-bs-toggle="tab" class="nav-link">Kirim Hasil
+                        Lab</a>
+                    </li>
+                  </ul>
+                  <div class="tab-content">
+                    <div id="data-diri" class="tab-pane fade active show">
+                      @include('pages/pasien/partial/data-diri')
+                    </div>
+                    <div id="data-kunjungan" class="tab-pane fade">
+                      @include('pages/pasien/partial/data-kunjungan')
+                    </div>
+                    <div id="kirim-hasil-lab" class="tab-pane fade">
+                      @include('pages/pasien/partial/kirim-hasil-lab')
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@end
+@end
