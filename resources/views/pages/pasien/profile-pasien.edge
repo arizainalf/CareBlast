@@ -32,24 +32,34 @@
                   </div>
                   <div class="dropdown ms-auto">
                     <a href="#" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true"><svg
-                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px"
-                        height="18px" viewbox="0 0 24 24" version="1.1">
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px"
+                        viewbox="0 0 24 24" version="1.1">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                           <rect x="0" y="0" width="24" height="24"></rect>
                           <circle fill="#000000" cx="5" cy="12" r="2"></circle>
                           <circle fill="#000000" cx="12" cy="12" r="2"></circle>
                           <circle fill="#000000" cx="19" cy="12" r="2"></circle>
                         </g>
-                      </svg></a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                      <a href="#">
-                        <li class="dropdown-item"><i class="fas fa-capsules text-success me-2"></i>
-                          Tambah Obat</li>
-                        <li class="dropdown-item"><i class="fas fa-walking text-primary me-3"></i>
-                          Tambah kunjungan</li>
-                        <li class="dropdown-item"><i class="fa fa-ban text-danger me-2"></i>
-                          Hapus Pasien</li>
-                      </a>
+                      </svg>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded">
+                      <li>
+                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#tambahObatModal">
+                          <i class="fas fa-capsules text-success me-2"></i> Tambah Obat
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                          data-bs-target="#tambahKunjunganModal">
+                          <i class="fas fa-walking text-primary me-2"></i> Tambah Kunjungan
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                          data-bs-target="#hapusModal">
+                          <i class="fas fa-ban text-danger me-2"></i> Hapus Pasien
+                        </button>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -70,11 +80,11 @@
                   <div class="bootstrap-badge" data-bs-toggle="modal" data-bs-target="#obatModal">
                     <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-lg"><i
                         class="far fa-trash-alt"></i></a>
-                    {{--  <a href="javascript:void(0)" class="badge badge-rounded badge-outline-warning badge-lg"><i
-                        class="fas fa-pencil-alt"></i></a>  --}}
+                    {{-- <a href="javascript:void(0)" class="badge badge-rounded badge-outline-warning badge-lg"><i
+                        class="fas fa-pencil-alt"></i></a> --}}
                   </div>
                 </div>
-                {{--  Modal  --}}
+                {{-- Modal --}}
                 <div class="modal fade" id="obatModal">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -96,17 +106,27 @@
                     <ul class="list-group">
                       <li class="list-group-item active">Sebelum Makan </li>
                       <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis
-                        in <span class="badge badge-rounded badge-outline-warning badge-lg"><i class="fas fa-pencil-alt"></i></span><span class="badge badge-primary badge-pill">3X1</span></li>
+                        in <span class="badge badge-rounded badge-outline-warning badge-lg" data-bs-toggle="modal"
+                          data-bs-target="#basicModal"><i class="fas fa-pencil-alt"></i></span><span
+                          class="badge badge-primary badge-pill">3X1</span></li>
                       <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis
-                        in <span class="badge badge-rounded badge-outline-warning badge-lg"><i class="fas fa-pencil-alt"></i></span><span
-                          class="badge badge-primary badge-pill">2X1</span></li>
+                        in <span class="badge badge-rounded badge-outline-warning badge-lg" data-bs-toggle="modal"
+                          data-bs-target="#basicModal"><i
+                            class="fas fa-pencil-alt"></i></span><span class="badge badge-primary badge-pill">2X1</span>
+                      </li>
                     </ul>
                     <ul class="list-group">
                       <li class="list-group-item disabled">Sesudah Makan </li>
                       <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac consectetur
-                        ac <span class="badge badge-secondary badge-pill">1X1</span></li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">Vestibulum at eros
-                        <span class="badge badge-secondary badge-pill">2X1</span>
+                        ac <span class="badge badge-rounded badge-outline-warning badge-lg" data-bs-toggle="modal"
+                          data-bs-target="#basicModal"><i
+                            class="fas fa-pencil-alt"></i></span><span
+                          class="badge badge-secondary badge-pill">1X1</span></li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac consectetur
+                        ac<span class="badge badge-rounded badge-outline-warning badge-lg" data-bs-toggle="modal"
+                          data-bs-target="#basicModal"><i
+                            class="fas fa-pencil-alt"></i></span><span
+                          class="badge badge-secondary badge-pill">2X1</span>
                       </li>
                     </ul>
                   </div>
@@ -149,6 +169,19 @@
       </div>
     </div>
   </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="basicModal">
+  @include('pages/pasien/modal-profile/edit-obat')
+</div>
+<div class="modal fade" id="tambahObatModal">
+  @include('pages/pasien/modal-profile/tambah-obat')
+</div>
+<div class="modal fade" id="tambahKunjunganModal">
+  @include('pages/pasien/modal-profile/tambah-kunjungan')
+</div>
+<div class="modal fade" id="hapusModal">
+  @include('pages/pasien/modal-profile/hapus-pasien')
 </div>
 @end
 @end

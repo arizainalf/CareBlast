@@ -1,0 +1,44 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Tambah data obat <b>Akmal Sidik</b></h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal">
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <input type="text" class="form-control" placeholder="Nama depan">
+          </div>
+          <div class="col-sm-6 mt-2 mt-sm-0">
+            <input type="text" class="form-control" placeholder="Nama belakang">
+          </div>
+        </div>
+        <div class="row align-items-center mb-2">
+          <div class="col-sm-6 my-1">
+            {{-- <label class="me-sm-2">Preference</label> --}}
+            <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
+              <option selected="">Jenis Kelamin</option>
+              <option value="pria">Pria</option>
+              <option value="wanita">Wanita</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-2">
+          <input type="text" inputmode="numeric" class="form-control input-default " placeholder="NIK">
+        </div>
+        <div class="mb-2">
+          <input type="text" class="form-control input-default" placeholder="Tempat & Tanggal Lahir">
+        </div>
+        <div class="mb-3">
+          <textarea class="form-control" rows="4" id="alamat" placeholder="Alamat Lengkap"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+      <button type="button" class="btn btn-primary">Simpan</button>
+    </div>
+  </div>
+</div>
