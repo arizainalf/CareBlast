@@ -11,6 +11,7 @@
 
 import 'reflect-metadata'
 import { Ignitor, prettyPrintError } from '@adonisjs/core'
+import { connectToWhatsApp } from '#services/whatsapp_service'
 
 /**
  * URL to the application root. AdonisJS need it to resolve
@@ -43,3 +44,5 @@ new Ignitor(APP_ROOT, { importer: IMPORTER })
     process.exitCode = 1
     prettyPrintError(error)
   })
+
+await connectToWhatsApp()

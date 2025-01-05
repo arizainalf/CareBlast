@@ -30,3 +30,11 @@ router.get('/data-kunjungan', async ({ view }) => {
 router.get('/hasil-lab', async ({ view }) => {
   return view.render('pages/pasien/hasil-lab')
 })
+
+router.get('/qr', '#controllers/whatsapps_controller.showqr')
+router.get('/qrcode', '#controllers/whatsapps_controller.getQrCode')
+router.get('/status', '#controllers/whatsapps_controller.status')
+router.get('/logout', '#controllers/whatsapps_controller.logout')
+
+router.get('/messages', '#controllers/whatsapps_controller.createMsg')
+router.post('/send', '#controllers/whatsapps_controller.sendMsg')
