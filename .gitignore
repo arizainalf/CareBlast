@@ -3,6 +3,9 @@ node_modules
 build
 tmp
 
+#auth key whatsapp
+whatsappAuth
+
 # Secrets
 .env
 .env.local
@@ -23,6 +26,3 @@ yarn-error.log
 
 # Platform specific
 .DS_Store
-
-#auth key whatsapp
-whatsappAuth
