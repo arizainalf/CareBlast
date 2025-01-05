@@ -132,7 +132,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Tambah data pasien baru</h5>
+        <h5 class="modal-title">Tambah data kunjungan pasien</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal">
         </button>
       </div>
@@ -140,36 +140,27 @@
         <form>
           <div class="row mb-2">
             <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Nama depan">
+              <input type="text" class="form-control" placeholder="Nama pasien">
             </div>
             <div class="col-sm-6 mt-2 mt-sm-0">
-              <input type="text" class="form-control" placeholder="Nama belakang">
+              <input type="text" class="form-control" inputmode="numeric" placeholder="NIK">
             </div>
-          </div>
-          <div class="row align-items-center mb-2">
-            <div class="col-sm-6 my-1">
-              {{-- <label class="me-sm-2">Preference</label> --}}
-              <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
-                <option selected="">Jenis Kelamin</option>
-                <option value="pria">Pria</option>
-                <option value="wanita">Wanita</option>
-              </select>
-            </div>
-          </div>
-          <div class="mb-2">
-            <input type="text" inputmode="numeric" class="form-control input-default " placeholder="NIK">
-          </div>
-          <div class="mb-2">
-            <input type="text" class="form-control input-default" placeholder="Tempat & Tanggal Lahir">
           </div>
           <div class="mb-3">
-            <textarea class="form-control" rows="4" id="alamat" placeholder="Alamat Lengkap"></textarea>
+            <input type="text" class="form-control input-default " placeholder="Tema kunjungan">
+          </div>
+          <div class="mb-2">
+            <input type="text" class="form-control input-default " placeholder="Keterangan">
+          </div>
+          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+            <label class="form-label">Tanggal Kunjungan</label>
+            <input type="text" class="form-control" placeholder="2017-06-04" id="mdate">
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary">Simpan</button>
       </div>
     </div>
   </div>
