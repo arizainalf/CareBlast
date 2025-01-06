@@ -2,37 +2,25 @@
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title">Edit Obat Oskadon</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal">
-      </button>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form>
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <input type="text" class="form-control" placeholder="Nama depan">
-          </div>
-          <div class="col-sm-6 mt-2 mt-sm-0">
-            <input type="text" class="form-control" placeholder="Nama belakang">
-          </div>
-        </div>
-        <div class="row align-items-center mb-2">
-          <div class="col-sm-6 my-1">
-            {{-- <label class="me-sm-2">Preference</label> --}}
-            <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
-              <option selected="">Jenis Kelamin</option>
-              <option value="pria">Pria</option>
-              <option value="wanita">Wanita</option>
-            </select>
-          </div>
-        </div>
+      <form id="medicine-form">
         <div class="mb-2">
-          <input type="text" inputmode="numeric" class="form-control input-default " placeholder="NIK">
+          <label class="form-label">Berapa kali sehari</label>
+          <select id="frequency-select" class="form-select">
+            <option value="1">sehari 1x</option>
+            <option value="2">sehari 2x</option>
+            <option value="3">sehari 3x</option>
+            <option value="4">sehari 4x</option>
+          </select>
         </div>
-        <div class="mb-2">
-          <input type="text" class="form-control input-default" placeholder="Tempat & Tanggal Lahir">
-        </div>
-        <div class="mb-3">
-          <textarea class="form-control" rows="4" id="alamat" placeholder="Alamat Lengkap"></textarea>
+        <div id="time-inputs">
+          <label class="form-label">Pada jam berapa?</label>
+          <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autobtn-close="true">
+            <input type="text" class="form-control" value="13:14">
+            <span class="input-group-text"><i class="far fa-clock"></i></span>
+          </div>
         </div>
       </form>
     </div>
@@ -42,3 +30,35 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const frequencySelect = document.getElementById("frequency-select");
+    const timeInputsContainer = document.getElementById("time-inputs");
+
+    frequencySelect.addEventListener("change", function () {
+      const frequency = parseInt(this.value, 10);
+      timeInputsContainer.innerHTML = "";
+
+      for (let i = 1; i <= frequency; i++) {
+        const inputGroup = document.createElement("div");
+        inputGroup.classList.add("input-group", "clockpicker", "mb-2");
+
+        inputGroup.innerHTML = `
+          <label class="form-label">Pada jam ke-${i}?</label>
+          <div class="input-group">
+            <input type="text" class="form-control clockpicker-input" placeholder="Pilih waktu">
+            <span class="input-group-text"><i class="far fa-clock"></i></span>
+          </div>
+        `;
+        timeInputsContainer.appendChild(inputGroup);
+      }
+
+      // Re-initialize clockpicker for new inputs
+      const clockpickerElements = document.querySelectorAll(".clockpicker");
+      clockpickerElements.forEach((element) => {
+        $(element).clockpicker();
+      });
+    });
+  });
+</script>
