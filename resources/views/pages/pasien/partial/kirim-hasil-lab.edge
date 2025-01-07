@@ -1,52 +1,39 @@
 <div class="pt-3">
-                        <div class="settings-form">
-                          <h4 class="text-primary">Account Setting</h4>
-                          <form>
-                            <div class="row">
-                              <div class="mb-3 col-md-6">
-                                <label class="form-label">Email</label>
-                                <input type="email" placeholder="Email" class="form-control">
-                              </div>
-                              <div class="mb-3 col-md-6">
-                                <label class="form-label">Password</label>
-                                <input type="password" placeholder="Password" class="form-control">
-                              </div>
-                            </div>
-                            <div class="mb-3">
-                              <label class="form-label">Address</label>
-                              <input type="text" placeholder="1234 Main St" class="form-control">
-                            </div>
-                            <div class="mb-3">
-                              <label class="form-label">Address 2</label>
-                              <input type="text" placeholder="Apartment, studio, or floor" class="form-control">
-                            </div>
-                            <div class="row">
-                              <div class="mb-3 col-md-6">
-                                <label class="form-label">City</label>
-                                <input type="text" class="form-control">
-                              </div>
-                              <div class="mb-3 col-md-4">
-                                <label class="form-label">State</label>
-                                <select class="form-control default-select wide" id="inputState">
-                                  <option selected="">Choose...</option>
-                                  <option>Option 1</option>
-                                  <option>Option 2</option>
-                                  <option>Option 3</option>
-                                </select>
-                              </div>
-                              <div class="mb-3 col-md-2">
-                                <label class="form-label">Zip</label>
-                                <input type="text" class="form-control">
-                              </div>
-                            </div>
-                            <div class="mb-3">
-                              <div class="form-check custom-checkbox">
-                                <input type="checkbox" class="form-check-input" id="gridCheck">
-                                <label class="form-check-label form-label" for="gridCheck"> Check me out</label>
-                              </div>
-                            </div>
-                            <button class="btn btn-primary" type="submit">Sign
-                              in</button>
-                          </form>
-                        </div>
-                      </div>
+  <div class="settings-form">
+    <h4 class="text-primary">Account Setting</h4>
+    <form>
+      <div class="row">
+        <div class="mb-3 col-md-6">
+          <label class="form-label">Nama Pasien</label>
+          <input type="text" placeholder="Nama pasien" class="form-control">
+        </div>
+        <div class="mb-3 col-md-6">
+          <label class="form-label">NIK</label>
+          <input type="text" inputmode="numeric" placeholder="3278098****" class="form-control">
+        </div>
+        <div class="mb-3 col-md-6">
+          <label class="form-label">No Whatsapp Aktif</label>
+          <input type="text" inputmode="numeric" placeholder="08586166****" class="form-control">
+        </div>
+        <div class="mb-3 col-md-6">
+          <label class="form-label">Nama Pengirim</label>
+          <input type="text" placeholder="Contoh : Admin Puskesmas panglayungan" class="form-control">
+        </div>
+        <label class="form-label">Kirim hasil lab</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text">2Mb<span class="text-danger">*</span></span>
+          <div class="form-file">
+            <input type="file" class="form-file-input form-control">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 mb-3">
+        <div class="mb-3">
+          <label class="text-label form-label">Isi pesan / keterangan</label>
+          <Textarea type="text" name="place" row="4" class="form-control" required=""></Textarea>
+        </div>
+      </div>
+      <button class="btn btn-primary" type="submit"><i class="far fa-paper-plane"></i> Kirim</button>
+    </form>
+  </div>
+</div>

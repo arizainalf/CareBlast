@@ -208,9 +208,9 @@
                   this.midYear=y;
                   var yearHtml =
                       '<div class="dtp-picker-year hidden" >' +
-                      '<div><a href="javascript:void(0);" class="btn btn-default dtp-select-year-range before" style="margin: 0;"><i class="material-icons">keyboard_arrow_up</i></a></div>' +
+                      '<div><a href="javascript:void(0);" class="btn btn-default dtp-select-year-range before" style="margin: 0;"><i class="fas fa-chevron-up"></i></a></div>' +
                       yearPicker +
-                      '<div><a href="javascript:void(0);" class="btn btn-default dtp-select-year-range after" style="margin: 0;"><i class="material-icons">keyboard_arrow_down</i></a></div>' +
+                      '<div><a href="javascript:void(0);" class="btn btn-default dtp-select-year-range after" style="margin: 0;"><i class="fas fa-chevron-down"></i></a></div>' +
                       '</div>';
 
                  this.template = '<div class="dtp hidden" id="' + this.name + '">' +
@@ -223,22 +223,22 @@
                          '<div class="dtp-date hidden">' +
                          '<div>' +
                          '<div class="left center p10">' +
-                         '<a href="javascript:void(0);" class="dtp-select-month-before"><i class="material-icons">chevron_left</i></a>' +
+                         '<a href="javascript:void(0);" class="dtp-select-month-before"><i class="fas fa-chevron-left"></i></a>' +
                          '</div>' +
                          '<div class="dtp-actual-month p80">MAR</div>' +
                          '<div class="right center p10">' +
-                         '<a href="javascript:void(0);" class="dtp-select-month-after"><i class="material-icons">chevron_right</i></a>' +
+                         '<a href="javascript:void(0);" class="dtp-select-month-after"><i class="fas fa-chevron-right"></i></a>' +
                          '</div>' +
                          '<div class="clearfix"></div>' +
                          '</div>' +
                          '<div class="dtp-actual-num">13</div>' +
                          '<div>' +
                          '<div class="left center p10">' +
-                         '<a href="javascript:void(0);" class="dtp-select-year-before"><i class="material-icons">chevron_left</i></a>' +
+                         '<a href="javascript:void(0);" class="dtp-select-year-before"><i class="fas fa-chevron-left"></i></a>' +
                          '</div>' +
                          '<div class="dtp-actual-year p80'+(this.params.year?"":" disabled")+'">2014</div>' +
                          '<div class="right center p10">' +
-                         '<a href="javascript:void(0);" class="dtp-select-year-after"><i class="material-icons">chevron_right</i></a>' +
+                         '<a href="javascript:void(0);" class="dtp-select-year-after"><i class="fas fa-chevron-right"></i></a>' +
                          '</div>' +
                          '<div class="clearfix"></div>' +
                          '</div>' +

@@ -30,6 +30,9 @@ router.get('/data-kunjungan', async ({ view }) => {
 router.get('/hasil-lab', async ({ view }) => {
   return view.render('pages/pasien/hasil-lab')
 })
+router.get('/whatsapps', async ({ view }) => {
+  return view.render('whatsapps/whatsapp')
+})
 
 router.get('/qr', '#controllers/whatsapps_controller.showqr')
 router.get('/qrcode', '#controllers/whatsapps_controller.getQrCode')

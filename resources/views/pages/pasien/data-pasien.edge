@@ -253,11 +253,20 @@
           </div>
           <div class="row align-items-center mb-2">
             <div class="col-sm-6 my-1">
-              {{-- <label class="me-sm-2">Preference</label> --}}
+              <label class="ms-2" style="margin-bottom: -2px;">Jenis Kelamin :</label>
               <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
-                <option selected="">Jenis Kelamin</option>
                 <option value="pria">Pria</option>
                 <option value="wanita">Wanita</option>
+              </select>
+            </div>
+            <div class="col-sm-6 my-1">
+              <label class="ms-2" style="margin-bottom: -2px;">Jenis Penyakit :</label>
+              <select class="me-sm-2 default-select form-control wide" id="inlineFormCustomSelect">
+                <option value="diabetes">Diabetes</option>
+                <option value="hipertensi1">Hipertensi 1</option>
+                <option value="hipertensi2">Hipertensi 2</option>
+                <option value="jiwa">Mental disorder</option>
+                <option value="tb_paru">Tuberkulosis paru</option>
               </select>
             </div>
           </div>
@@ -265,7 +274,10 @@
             <input type="text" inputmode="numeric" class="form-control input-default " placeholder="NIK">
           </div>
           <div class="mb-2">
-            <input type="text" class="form-control input-default" placeholder="Tempat & Tanggal Lahir">
+            <input type="text" class="form-control input-default" placeholder="Tempat Lahir">
+          </div>
+          <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+            <input type="text" class="form-control" placeholder="Tanggal Lahir" id="mdate">
           </div>
           <div class="mb-3">
             <textarea class="form-control" rows="4" id="alamat" placeholder="Alamat Lengkap"></textarea>
