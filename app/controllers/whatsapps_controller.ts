@@ -7,7 +7,7 @@ import { inject } from '@adonisjs/core'
 @inject()
 export default class WhatsappsController {
   async showqr({ view }: HttpContext) {
-    return view.render('whatsapps/qr')
+    return view.render('pages/index')
   }
   async getQrCode({ response }: HttpContext) {
     console.log('requesting qr code from service')

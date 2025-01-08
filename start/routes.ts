@@ -15,9 +15,6 @@ router.get('/login', async ({ view }) => {
 router.get('/profile', async ({ view }) => {
   return view.render('pages/pasien/profile-pasien')
 })
-router.get('/', async ({ view }) => {
-  return view.render('pages/index')
-})
 router.get('/data-pasien', async ({ view }) => {
   return view.render('pages/pasien/data-pasien')
 })
@@ -34,7 +31,7 @@ router.get('/whatsapps', async ({ view }) => {
   return view.render('whatsapps/whatsapp')
 })
 
-router.get('/qr', '#controllers/whatsapps_controller.showqr')
+router.get('/', '#controllers/whatsapps_controller.showqr')
 router.get('/qrcode', '#controllers/whatsapps_controller.getQrCode')
 router.get('/status', '#controllers/whatsapps_controller.status')
 router.get('/logout', '#controllers/whatsapps_controller.logout')
