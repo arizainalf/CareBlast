@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import { v4 as uuidv4 } from 'uuid'
-import JenisPenyakit from '#models/jenis_penyakit'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
+import Pasien from '#models/pasien'
+import { v4 as uuidv4 } from 'uuid'
 
-export default class Pasien extends BaseModel {
+export default class Kunjungan extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -12,13 +12,10 @@ export default class Pasien extends BaseModel {
   declare uuid: string
 
   @column()
-  declare jenisPenyakitId: number
+  declare pasienId: number
 
-  @hasMany(() => JenisPenyakit)
-  declare jenisPenyakits: HasMany<typeof JenisPenyakit>
-
-  @column()
-  declare name: string
+  @hasMany(() => Pasien)
+  declare pasiens: HasMany<typeof Pasien>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -26,7 +23,7 @@ export default class Pasien extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  public static async generateUuid(pasien: Pasien) {
-    pasien.uuid = uuidv4()
+  public static async generateUuid(kunjungan: Kunjungan) {
+    kunjungan.uuid = uuidv4()
   }
 }

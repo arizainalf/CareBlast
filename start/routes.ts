@@ -38,3 +38,5 @@ router.get('/logout', '#controllers/whatsapps_controller.logout')
 
 router.get('/messages', '#controllers/whatsapps_controller.createMsg')
 router.post('/send', '#controllers/whatsapps_controller.sendMsg')
+
+router.get('/pasiens', '#controllers/pasiens_controller.index')
