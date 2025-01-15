@@ -1,0 +1,40 @@
+<!-- Tambahkan JavaScript -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const showMoreBtn = document.getElementById('showMoreBtn');
+    const hiddenItems = document.querySelectorAll('.timeline-item.hidden');
+    let isExpanded = false;
+
+    showMoreBtn.addEventListener('click', function () {
+      if (!isExpanded) {
+        hiddenItems.forEach(item => {
+          item.style.display = 'block';
+        });
+        showMoreBtn.textContent = 'Show Less';
+        isExpanded = true;
+      } else {
+        hiddenItems.forEach(item => {
+          item.style.display = 'none';
+        });
+        showMoreBtn.textContent = 'Show All';
+        isExpanded = false;
+      }
+    });
+
+    // Fungsi untuk menyesuaikan tinggi
+    function adjustHeight() {
+      const rightColumn = document.querySelector('.col-lg-8 .card');
+      const leftColumn = document.querySelector('.col-lg-4 .card');
+      if (rightColumn && leftColumn) {
+        const rightHeight = rightColumn.offsetHeight;
+        leftColumn.style.height = `${rightHeight}px`;
+      }
+    }
+
+    // Jalankan saat halaman dimuat
+    adjustHeight();
+
+    // Jalankan saat window diresize
+    window.addEventListener('resize', adjustHeight);
+  });
+</script>

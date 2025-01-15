@@ -1,0 +1,69 @@
+<!-- Ubah bagian style -->
+<style>
+  /* Style untuk scrollbar */
+  .timeline-item.hidden {
+    display: none;
+  }
+
+  #DZ_W_TimeLine::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  #DZ_W_TimeLine::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  #DZ_W_TimeLine::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+
+  #DZ_W_TimeLine::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* Perbaikan style untuk equal height */
+  .equal-height {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .equal-height .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .equal-height .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* Tambahkan ini */
+  }
+
+  /* Perbaikan pada timeline container */
+  #DZ_W_TimeLine {
+    flex: 1;
+    overflow-y: auto;
+    position: absolute;
+    /* Tambahkan ini */
+    top: 0;
+    bottom: 40px;
+    /* Sesuaikan dengan tinggi tombol + margin */
+    left: 0;
+    right: 0;
+    padding: 1rem;
+  }
+
+  /* Style untuk container tombol */
+  .timeline-footer {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: white;
+    border-top: 1px solid #eee;
+  }
+</style>
