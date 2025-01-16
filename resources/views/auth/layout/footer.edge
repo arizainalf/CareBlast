@@ -1,0 +1,43 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Handle form navigation
+  function showVerificationForm(e) {
+    e.preventDefault();
+    document.getElementById('requestResetForm').classList.add('d-none');
+    document.getElementById('verificationForm').classList.remove('d-none');
+  }
+
+  function showResetForm(e) {
+    e.preventDefault();
+    document.getElementById('verificationForm').classList.add('d-none');
+    document.getElementById('resetPasswordForm').classList.remove('d-none');
+  }
+
+  function handleResetPassword(e) {
+    e.preventDefault();
+    // Handle password reset logic here
+    alert('Password reset successfully!');
+    window.location.href = 'login';
+  }
+
+  function resendCode() {
+    alert('Verification code resent!');
+  }
+
+  // Handle verification code input
+  document.querySelectorAll('.verification-input').forEach((input, index) => {
+    input.addEventListener('keyup', (e) => {
+      if (e.key >= 0 && e.key <= 9) {
+        const nextInput = input.nextElementSibling;
+        if (nextInput) {
+          nextInput.focus();
+        }
+      } else if (e.key === 'Backspace') {
+        const prevInput = input.previousElementSibling;
+        if (prevInput) {
+          prevInput.focus();
+        }
+      }
+    });
+  });
+</script>

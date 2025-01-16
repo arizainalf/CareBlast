@@ -12,6 +12,9 @@ import router from '@adonisjs/core/services/router'
 router.get('/login', async ({ view }) => {
   return view.render('auth/login-page')
 })
+router.get('/forgot', async ({ view }) => {
+  return view.render('auth/forgot-pw')
+})
 router.get('/profile', async ({ view }) => {
   return view.render('pages/pasien/profile-pasien')
 })

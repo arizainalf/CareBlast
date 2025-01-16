@@ -1,0 +1,16 @@
+@layout.auth()
+@slot('auth')
+<!-- Request Reset Form -->
+<div class="card p-4" id="requestResetForm">
+    @include('auth/partials/page-forgot')
+</div>
+<!-- Verification Form -->
+<div class="card p-4 d-none" id="verificationForm">
+    @include('auth/partials/page-verify')
+</div>
+<!-- Reset Password Form -->
+<div class="card p-4 d-none" id="resetPasswordForm">
+    @include('auth/partials/page-reset')
+</div>
+@end
+@end
