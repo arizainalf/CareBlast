@@ -46,3 +46,20 @@ router.get('/messages', '#controllers/whatsapps_controller.createMsg')
 router.post('/send', '#controllers/whatsapps_controller.sendMsg')
 
 router.get('/pasiens', '#controllers/pasiens_controller.index')
+
+//Pages Error
+router.get('/bad-request', async ({ view }) => {
+  return view.render('pages/errors/400')
+})
+router.get('/forbidden-error', async ({ view }) => {
+  return view.render('pages/errors/403')
+})
+router.get('/not-found', async ({ view }) => {
+  return view.render('pages/errors/404')
+})
+router.get('/server-error', async ({ view }) => {
+  return view.render('pages/errors/500')
+})
+router.get('/server-unavailable', async ({ view }) => {
+  return view.render('pages/errors/503')
+})
