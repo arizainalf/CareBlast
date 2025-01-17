@@ -8,7 +8,7 @@
     </div>
     <div style="margin-top: -0.5rem;">
       <button type="button" class="btn btn-rounded fs-17 btn-primary" data-bs-toggle="modal"
-        data-bs-target="#basicModal"><span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i>
+        data-bs-target="#kunjunganModal"><span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i>
         </span>Kunjungan</button>
     </div>
   </div>
@@ -22,8 +22,8 @@
               <div class="card">
                 <div class="card-header border-0 pb-0">
                   <div class="d-flex flex-column">
-                    <h4 class="card-title">Akmal Sidik</h4> <!-- Nama pasien-->
-                    <small class="text-muted">32780561664398</small> <!-- NIK -->
+                    <h4 class="card-title">Akmal Sidik</h4>
+                    <small class="text-muted">32780561664398</small>
                   </div>
                 </div>
                 <div class="card-body">
@@ -64,8 +64,8 @@
               <div class="card">
                 <div class="card-header border-0 pb-0">
                   <div class="d-flex flex-column">
-                    <h4 class="card-title">Akmal Sidik</h4> <!-- Nama pasien-->
-                    <small class="text-muted">32780561664398</small> <!-- NIK -->
+                    <h4 class="card-title">Akmal Sidik</h4>
+                    <small class="text-muted">32780561664398</small>
                   </div>
                 </div>
                 <div class="card-body">
@@ -128,54 +128,8 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="basicModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Tambah data kunjungan pasien</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal">
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <input class="form-control" list="GFGOptions" placeholder="Nama Pasien">
-              <datalist id="GFGOptions">
-                <option value="Budi Santoso">Budi Santoso</option>
-                <option value="Siti Nurhaliza">Siti Nurhaliza</option>
-                <option value="Agus Setiawan">Agus Setiawan</option>
-                <option value="Dewi Lestari">Dewi Lestari</option>
-                <option value="Joko Widodo">Joko Widodo</option>
-                <option value="Megawati Soekarnoputri">Megawati Soekarnoputri</option>
-                <option value="Susilo Bambang Yudhoyono">Susilo Bambang Yudhoyono</option>
-                <option value="Abdurrahman Wahid">Abdurrahman Wahid</option>
-                <option value="Soekarno">Soekarno</option>
-                <option value="Hatta Rajasa">Hatta Rajasa</option>
-              </datalist>
-            </div>
-            <div class="col-sm-6 mt-2 mt-sm-0">
-              <input type="text" class="form-control" inputmode="numeric" placeholder="NIK">
-            </div>
-          </div>
-          <div class="mb-3">
-            <input type="text" class="form-control input-default " placeholder="Tema kunjungan">
-          </div>
-          <div class="mb-2">
-            <input type="text" class="form-control input-default " placeholder="Keterangan">
-          </div>
-          <div class="mb-2">
-            <input name="datepicker" class="datepicker-default form-control" placeholder="Tanggal kunjungan4"
-              id="datepicker">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" class="btn btn-primary">Simpan</button>
-      </div>
-    </div>
-  </div>
+<div class="modal fade" id="kunjunganModal">
+    @include('kunjungan/detail_kunjungan/modal/tambah-kunjungan')
 </div>
 @end
 @end

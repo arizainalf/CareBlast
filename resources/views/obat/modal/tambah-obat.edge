@@ -1,0 +1,30 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="tambahObatLabel">Tambah Obat Baru</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form id="formTambahObat">
+        <!-- Nama Obat -->
+        <div class="mb-3">
+          <label for="namaObat" class="form-label">Nama Obat</label>
+          <input type="text" class="form-control" id="namaObat" placeholder="Masukan nama obat" required>
+        </div>
+        <!-- Dosis -->
+        <div class="mb-3">
+          <label for="dosisObat" class="form-label">Dosis</label>
+          <div class="input-group">
+            <input type="text" inputmode="numeric" class="form-control" id="dosisObat" placeholder="Dosis obat (mg)"
+              required>
+            <label class="input-group-text  mb-0">mg</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+      <button type="submit" form="formTambahObat" class="btn btn-primary">Simpan</button>
+    </div>
+  </div>
+</div>

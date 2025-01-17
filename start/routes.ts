@@ -16,25 +16,25 @@ router.get('/forgot', async ({ view }) => {
   return view.render('auth/forgot-pw')
 })
 router.get('/profile', async ({ view }) => {
-  return view.render('pages/pasien/profile-pasien')
+  return view.render('pasien/profile-pasien')
 })
 router.get('/data-pasien', async ({ view }) => {
-  return view.render('pages/pasien/data-pasien')
+  return view.render('pasien/data-pasien')
 })
 router.get('/data-obat', async ({ view }) => {
-  return view.render('pages/pasien/data-obat')
+  return view.render('obat/data-obat')
 })
 router.get('/data-kunjungan', async ({ view }) => {
-  return view.render('pages/pasien/data-kunjungan')
+  return view.render('kunjungan/data-kunjungan')
 })
 router.get('/hasil-lab', async ({ view }) => {
-  return view.render('pages/pasien/hasil-lab')
+  return view.render('hasil-lab/index')
 })
 router.get('/whatsapps', async ({ view }) => {
   return view.render('whatsapps/whatsapp')
 })
 router.get('/detail-kunjungan', async ({ view }) => {
-  return view.render('pages/pasien/detail_kunjungan/index')
+  return view.render('kunjungan/detail_kunjungan/index')
 })
 
 router.get('/', '#controllers/whatsapps_controller.showqr')

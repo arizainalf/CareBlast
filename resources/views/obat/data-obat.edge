@@ -58,7 +58,7 @@
                           </div>
                           <!-- Add Button -->
                           <div>
-                            <button type="button" class="btn btn-rounded btn-sm btn-primary align-items-center gap-2"
+                            <button type="button" class="btn btn-rounded fs-14 btn-primary align-items-center gap-2"
                               data-bs-toggle="modal" data-bs-target="#tambahObat">
                               <span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i></span>
                               Obat
@@ -179,29 +179,88 @@
                       <div class="card shadow-lg border-0 h-100">
                         <div class="card-header bg-white py-3">
                           <div class="d-flex flex-column">
-                            <h4 class="card-title">Akmal Sidik</h4> <!-- Nama pasien-->
-                            <small class="text-muted">32780561664398</small> <!-- NIK -->
+                            <h4 class="card-title">Akmal Sidik <small class="text-info text-sm"> ke - 3</small> </h4>
+                            <small class="text-muted">32780561664398</small>
                           </div>
                           <div class="bootstrap-badge" data-bs-toggle="modal" data-bs-target="#obatModal">
                             <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-xl"><i
                                 class="far fa-trash-alt"></i></a>
                           </div>
                         </div>
-                        <div class="modal fade" id="obatModal">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title">Hapus Data Obat</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                                </button>
-                              </div>
-                              <div class="modal-body">Data obat <b>Akmal Sidik</b> akan dihapus?</div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-primary light"
-                                  data-bs-dismiss="modal">Batal</button>
-                                <button type="button" class="btn btn-danger light">Hapus</button>
-                              </div>
-                            </div>
+                        <div class="card-body">
+                          <div class="basic-list-group mb-0">
+                            <ul class="list-group">
+                              <li class="list-group-item active">Sebelum Makan </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac
+                                facilisis in
+                                <span class="badge badge-primary badge-pill">3X1</span>
+                              </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac
+                                consectetur ac
+                                <span class="badge badge-primary badge-pill">2X1</span>
+                              </li>
+                            </ul>
+                            <ul class="list-group">
+                              <li class="list-group-item disabled">Sesudah Makan </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac
+                                consectetur ac
+                                <span class="badge badge-secondary badge-pill">1X1</span>
+                              </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Vestibulum
+                                at eros <span class="badge badge-secondary badge-pill">2X1</span></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-white py-3">
+                          <div class="d-flex flex-column">
+                            <h4 class="card-title">Akmal Sidik <small class="text-info text-sm"> ke - 3</small> </h4>
+                            <small class="text-muted">32780561664398</small>
+                          </div>
+                          <div class="bootstrap-badge" data-bs-toggle="modal" data-bs-target="#obatModal">
+                            <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-xl"><i
+                                class="far fa-trash-alt"></i></a>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="basic-list-group mb-0">
+                            <ul class="list-group">
+                              <li class="list-group-item active">Sebelum Makan </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac
+                                facilisis in
+                                <span class="badge badge-primary badge-pill">3X1</span>
+                              </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac
+                                consectetur ac
+                                <span class="badge badge-primary badge-pill">2X1</span>
+                              </li>
+                            </ul>
+                            <ul class="list-group">
+                              <li class="list-group-item disabled">Sesudah Makan </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac
+                                consectetur ac
+                                <span class="badge badge-secondary badge-pill">1X1</span>
+                              </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Vestibulum
+                                at eros <span class="badge badge-secondary badge-pill">2X1</span></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-white py-3">
+                          <div class="d-flex flex-column">
+                            <h4 class="card-title">Akmal Sidik <small class="text-info text-sm"> ke - 3</small> </h4>
+                            <small class="text-muted">32780561664398</small>
+                          </div>
+                          <div class="bootstrap-badge" data-bs-toggle="modal" data-bs-target="#obatModal">
+                            <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-xl"><i
+                                class="far fa-trash-alt"></i></a>
                           </div>
                         </div>
                         <div class="card-body">
@@ -264,106 +323,21 @@
 
   <!-- Modal Tambah Obat -->
   <div class="modal fade" id="tambahObat" tabindex="-1" aria-labelledby="tambahObatLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="tambahObatLabel">Tambah Obat Baru</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="formTambahObat">
-            <!-- Nama Obat -->
-            <div class="mb-3">
-              <label for="namaObat" class="form-label">Nama Obat</label>
-              <input type="text" class="form-control" id="namaObat" placeholder="Masukan nama obat" required>
-            </div>
-            <!-- Dosis -->
-            <div class="mb-3">
-              <label for="dosisObat" class="form-label">Dosis</label>
-              <div class="input-group">
-                <input type="text" inputmode="numeric" class="form-control" id="dosisObat" placeholder="Dosis obat (mg)"
-                  required>
-                <label class="input-group-text  mb-0">mg</label>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" form="formTambahObat" class="btn btn-primary">Simpan</button>
-        </div>
-      </div>
-    </div>
+    @include('obat/modal/tambah-obat')
   </div>
 
   <!-- Modal Edit Obat -->
   <div class="modal fade" id="editObat" tabindex="-1" aria-labelledby="editObatLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editObatLabel">Edit Obat</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="formEditObat">
-            <!-- Nama Obat -->
-            <div class="mb-3">
-              <label for="namaObat" class="form-label">Nama Obat</label>
-              <input type="text" class="form-control" id="namaObat" required>
-            </div>
-            <!-- Dosis -->
-            <div class="mb-3">
-              <label for="dosisObat" class="form-label">Dosis</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="dosisObat" required>
-                <span class="input-group-text">mg</span>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" form="formTambahObat" class="btn btn-primary">Simpan</button>
-        </div>
-      </div>
-    </div>
+    @include('obat/modal/edit-obat')
   </div>
 
   <!-- Modal Hapus Obat -->
   <div class="modal fade" id="hapusObat" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Hapus Data Obat</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Obat <b>Paramex</b> akan dihapus?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="button" class="btn btn-danger">Hapus</button>
-        </div>
-      </div>
-    </div>
+    @include('obat/modal/hapus-obat')
   </div>
   <!-- Modal Hpaus Obat pasien -->
   <div class="modal fade" id="obatModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Hapus Data Obat</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Data obat <b>Akmal Sidik</b> akan dihapus?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="button" class="btn btn-danger">Hapus</button>
-        </div>
-      </div>
-    </div>
+    @include('obat/modal/hapus-obat-pasien')
   </div>
 </div>
 @end

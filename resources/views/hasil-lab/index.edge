@@ -10,7 +10,7 @@
   <div class="content-wrapper">
     <div class="container-xxl flex-grow-1">
       <div class="row g-4">
-        <!-- List Surat Masuk with improved card design -->
+        <!-- List Riwayat Pengiriman Hasil Laboratorium -->
         <div class="col-lg-4">
           <div class="card border-0 shadow-sm">
             <div class="card-body">
@@ -24,7 +24,7 @@
                 </button>
               </div>
 
-              <!-- Search with improved styling -->
+              <!-- Pencarian Pasien -->
               <div class="mb-4">
                 <form action="#">
                   <div class="input-group search-area">
@@ -34,7 +34,7 @@
                 </form>
               </div>
 
-              <!-- List group with hover effects -->
+              <!-- List Catatan -->
               <div class="list-group">
                 <a href="javascript:void(0)"
                   class="list-group-item list-group-item-action border-0 mb-2 rounded hover-shadow">
@@ -56,7 +56,7 @@
           </div>
         </div>
 
-        <!-- Detail Surat with improved design -->
+        <!-- Detail Pengiriman dan Hasil Lab -->
         <div class="col-lg-8">
           <div class="card border-0 shadow-sm hover-shadow-lg transition-all">
             <div class="card-header bg-primary p-4">
@@ -105,40 +105,7 @@
   </div>
 </div>
 <div class="modal fade" id="kirimHasilModal" tabindex="-1" aria-labelledby="kirimHasilModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Kirim Hasil lab</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal">
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <input type="text" class="form-control" placeholder="Nama Penerima">
-            </div>
-            <div class="col-sm-6 mt-2 mt-sm-0">
-              <input type="text" type="numeric" class="form-control" placeholder="No Whatsapp">
-            </div>
-          </div>
-          <div class="input-group mb-3">
-            <span class="input-group-text">2Mb<span class="text-danger">*</span></span>
-            <div class="form-file">
-              <input type="file" class="form-file-input form-control">
-            </div>
-          </div>
-          <div class="mb-3">
-            <textarea class="form-control" rows="4" id="pesan" placeholder="Isi pesan..."></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
+  @include('hasil-lab/modal/kirim-hasil-lab')
 </div>
 @end
 @end
