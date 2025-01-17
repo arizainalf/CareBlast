@@ -11,10 +11,15 @@
           <input type="text" class="form-control input-default" placeholder="Nama Pasien">
         </div>
         <div class="mb-3">
-          <input type="text" class="form-control input-default" placeholder="Nama obat">
+          <input class="form-control" list="GFGOptions" placeholder="Nama Obat">
+          <datalist id="GFGOptions">
+            <option value="Paramex">Paramex</option>
+            <option value="Parasetamol">Parasetamol</option>
+            <option value="Panadol">Panadol</option>
+          </datalist>
         </div>
         <div class="mb-3">
-          <label class="form-label">Keterangan waktu:</label>
+          <label class="form-label">Aturan Pakai</label>
           <select class="default-select  form-control ">
             <option>Sesudah makan</option>
             <option>Sebelum makan</option>

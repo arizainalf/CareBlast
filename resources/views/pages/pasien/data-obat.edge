@@ -1,142 +1,367 @@
 @layout.app()
 @slot('content')
-<div class="container-fluid">
-  <div class="d-flex justify-content-between align-items-center flex-wrap">
-    <div class="input-group contacts-search mb-4">
-      <input type="text" class="form-control" placeholder="Cari obat pasien...">
-      <span class="input-group-text"><a href="javascript:void(0)"><i class="flaticon-381-search-2"></i></a></span>
-    </div>
-    <div style="margin-bottom: -0.5rem;">
-      <button type="button" class="btn btn-rounded fs-17 btn-primary" data-bs-toggle="modal"
-        data-bs-target="#basicModal"><span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i>
-        </span>Obat</button>
+<div class="container-fluid px-4">
+  <!-- Breadcrumb with proper spacing -->
+  <div class="row my-4">
+    <div class="col-12">
+      <div class="row page-titles" style="margin-bottom: -4px;">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item active"><a href="javascript:void(0)">Pasien</a></li>
+          <li class="breadcrumb-item"><a href="javascript:void(0)">Data Obat</a></li>
+        </ol>
+      </div>
     </div>
   </div>
-  <hr style="margin-top: -0.8rem;">
-  <div class="row">
-    <div class="col-xl-12">
-      <div class="row"> <!-- Satu row untuk semua card -->
-        <!-- Card Pertama -->
-        <div class="col-xl-4">
-          <div class="card">
-            <div class="card-header">
-              <div class="d-flex flex-column">
-                <h4 class="card-title">Akmal Sidik</h4> <!-- Nama pasien-->
-                <small class="text-muted">32780561664398</small> <!-- NIK -->
-              </div>
-              <div class="bootstrap-badge" data-bs-toggle="modal" data-bs-target="#obatModal">
-                <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-xl"><i
-                    class="far fa-trash-alt"></i></a>
-              </div>
-            </div>
-            <div class="modal fade" id="obatModal">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Hapus Data Obat</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal">
-                    </button>
+
+  <!-- Main content wrapper -->
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white py-3">
+            <h4 class="card-title mb-0">Data Obat Pasien</h4>
+          </div>
+          <div class="card-body">
+            <!-- Nav tabs with consistent spacing -->
+            <div class="default-tab">
+              <ul class="nav nav-tabs mb-3" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active d-flex align-items-center gap-2" data-bs-toggle="tab" href="#dataObat">
+                    <i class="fas fa-pills"></i>
+                    <span>Data Obat</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="tab" href="#listObat">
+                    <i class="fas fa-medkit"></i>
+                    <span>List Obat Pasien</span>
+                  </a>
+                </li>
+              </ul>
+
+              <div class="tab-content">
+                <!-- Data Obat Tab -->
+                <div class="tab-pane fade show active" id="dataObat" role="tabpanel">
+                  <div class="col-12">
+                    <!-- Search with improved styling -->
+                    <div class="row mb-3">
+                      <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <!-- Search Area -->
+                          <div class="col-md-4">
+                            <form action="#">
+                              <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Cari obat...">
+                                <span class="input-group-text"><i class="flaticon-381-search-2"></i></span>
+                              </div>
+                            </form>
+                          </div>
+                          <!-- Add Button -->
+                          <div>
+                            <button type="button" class="btn btn-rounded btn-sm btn-primary align-items-center gap-2"
+                              data-bs-toggle="modal" data-bs-target="#tambahObat">
+                              <span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i></span>
+                              Obat
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="modal-body">Data obat <b>Akmal Sidik</b> akan dihapus?</div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-danger light">Hapus</button>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr class="text-bold">
+                          <th width="5%">#</th>
+                          <th><strong>Nama Obat</strong></th>
+                          <th><strong>Dosis</strong></th>
+                          <th><strong>Aksi</strong></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th>1</th>
+                          <td>Kolor Tea Shirt For Man</td>
+                          <td>50 mg</td>
+                          <td>
+                            <div class="d-flex">
+                              <a href="#" class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
+                                data-bs-target="#editObat"><i class="fas fa-pencil-alt"></i></a>
+                              <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
+                                data-bs-target="#hapusObat"><i class="fa fa-trash"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>2</th>
+                          <td>Kolor Tea Shirt For Women</td>
+                          <td>50 mg</td>
+                          <td>
+                            <div class="d-flex">
+                              <a href="#" class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
+                                data-bs-target="#editObat"><i class="fas fa-pencil-alt"></i></a>
+                              <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
+                                data-bs-target="#hapusObat"><i class="fa fa-trash"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>3</th>
+                          <td>Blue Backpack For Baby</td>
+                          <td>50 mg</td>
+                          <td>
+                            <div class="d-flex">
+                              <a href="#" class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
+                                data-bs-target="#editObat"><i class="fas fa-pencil-alt"></i></a>
+                              <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
+                                data-bs-target="#hapusObat"><i class="fa fa-trash"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>4</th>
+                          <td>Blue Backpack For Baby</td>
+                          <td>50 mg</td>
+                          <td>
+                            <div class="d-flex">
+                              <a href="#" class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
+                                data-bs-target="#editObat"><i class="fas fa-pencil-alt"></i></a>
+                              <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
+                                data-bs-target="#hapusObat"><i class="fa fa-trash"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Pagination Section -->
+                  <div class="card-footer border-0 pt-0">
+                    <div class="d-flex justify-content-end align-items-center mt-3">
+                      <nav>
+                        <ul class="pagination pagination-circle m-0">
+                          <li class="page-item page-indicator">
+                            <a class="page-link" href="javascript:void(0)">
+                              <i class="la la-angle-left"></i>
+                            </a>
+                          </li>
+                          <li class="page-item active"><a class="page-link" href="javascript:void(0)">1</a></li>
+                          <li class="page-item"><a class="page-link" href="javascript:void(0)">2</a></li>
+                          <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
+                          <li class="page-item"><a class="page-link" href="javascript:void(0)">4</a></li>
+                          <li class="page-item page-indicator">
+                            <a class="page-link" href="javascript:void(0)">
+                              <i class="la la-angle-right"></i>
+                            </a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- List Obat Pasien Tab -->
+                <div class="tab-pane fade" id="listObat">
+                  <div class="row g-4">
+                    <div class="col-12">
+                      <!-- Search with improved styling -->
+                      <div class="mb-3 col-md-4">
+                        <form action="#">
+                          <div class="input-group search-area">
+                            <input type="text" class="form-control" placeholder="Cari obat pasien...">
+                            <span class="input-group-text"><a href="javascript:void(0)"><i
+                                  class="flaticon-381-search-2"></i></a></span>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    <!-- Card Obat -->
+                    <div class="col-xl-4">
+                      <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-white py-3">
+                          <div class="d-flex flex-column">
+                            <h4 class="card-title">Akmal Sidik</h4> <!-- Nama pasien-->
+                            <small class="text-muted">32780561664398</small> <!-- NIK -->
+                          </div>
+                          <div class="bootstrap-badge" data-bs-toggle="modal" data-bs-target="#obatModal">
+                            <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-xl"><i
+                                class="far fa-trash-alt"></i></a>
+                          </div>
+                        </div>
+                        <div class="modal fade" id="obatModal">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">Hapus Data Obat</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                </button>
+                              </div>
+                              <div class="modal-body">Data obat <b>Akmal Sidik</b> akan dihapus?</div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-primary light"
+                                  data-bs-dismiss="modal">Batal</button>
+                                <button type="button" class="btn btn-danger light">Hapus</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="basic-list-group mb-0">
+                            <ul class="list-group">
+                              <li class="list-group-item active">Sebelum Makan </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac
+                                facilisis in
+                                <span class="badge badge-primary badge-pill">3X1</span>
+                              </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac
+                                consectetur ac
+                                <span class="badge badge-primary badge-pill">2X1</span>
+                              </li>
+                            </ul>
+                            <ul class="list-group">
+                              <li class="list-group-item disabled">Sesudah Makan </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac
+                                consectetur ac
+                                <span class="badge badge-secondary badge-pill">1X1</span>
+                              </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">Vestibulum
+                                at eros <span class="badge badge-secondary badge-pill">2X1</span></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer border-0 pt-0">
+                    <div class="d-flex justify-content-end align-items-center mt-3">
+                      <nav>
+                        <ul class="pagination pagination-circle m-0">
+                          <li class="page-item page-indicator">
+                            <a class="page-link" href="javascript:void(0)">
+                              <i class="la la-angle-left"></i>
+                            </a>
+                          </li>
+                          <li class="page-item active"><a class="page-link" href="javascript:void(0)">1</a></li>
+                          <li class="page-item"><a class="page-link" href="javascript:void(0)">2</a></li>
+                          <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
+                          <li class="page-item"><a class="page-link" href="javascript:void(0)">4</a></li>
+                          <li class="page-item page-indicator">
+                            <a class="page-link" href="javascript:void(0)">
+                              <i class="la la-angle-right"></i>
+                            </a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="card-body">
-              <div class="basic-list-group mb-0">
-                <ul class="list-group">
-                  <li class="list-group-item active">Sebelum Makan </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis in
-                    <span class="badge badge-primary badge-pill">3X1</span></li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac consectetur ac
-                    <span class="badge badge-primary badge-pill">2X1</span></li>
-                </ul>
-                <ul class="list-group">
-                  <li class="list-group-item disabled">Sesudah Makan </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac consectetur ac
-                    <span class="badge badge-secondary badge-pill">1X1</span></li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">Vestibulum at eros <span
-                      class="badge badge-secondary badge-pill">2X1</span></li>
-                </ul>
-              </div>
-            </div>
           </div>
-        </div>
-        <div class="progect-pagination d-flex justify-content-between align-items-center flex-wrap mt-3">
-          <h4 class="mb-3">Showing 6 from 600 data</h4>
-          <ul class="pagination mb-3">
-            <li class="page-item page-indicator">
-              <a class="page-link" href="javascript:void(0)">
-                <i class="fas fa-angle-double-left me-2"></i>Previous</a>
-            </li>
-            <li class="page-item">
-              <a class="active" href="javascript:void(0)">1</a>
-              <a class="" href="javascript:void(0)">2</a>
-              <a class="" href="javascript:void(0)">3</a>
-              <a class="" href="javascript:void(0)">4</a>
-            </li>
-            <li class="page-item page-indicator">
-              <a class="page-link" href="javascript:void(0)">
-                Next<i class="fas fa-angle-double-right ms-2"></i></a>
-            </li>
-          </ul>
         </div>
       </div>
     </div>
   </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="basicModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Tambah data obat pasien</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal">
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <input class="form-control" list="GFGOptions" placeholder="Nama Pasien">
-              <datalist id="GFGOptions">
-                <option value="Budi Santoso">Budi Santoso</option>
-                <option value="Siti Nurhaliza">Siti Nurhaliza</option>
-                <option value="Agus Setiawan">Agus Setiawan</option>
-                <option value="Dewi Lestari">Dewi Lestari</option>
-                <option value="Joko Widodo">Joko Widodo</option>
-                <option value="Megawati Soekarnoputri">Megawati Soekarnoputri</option>
-                <option value="Susilo Bambang Yudhoyono">Susilo Bambang Yudhoyono</option>
-                <option value="Abdurrahman Wahid">Abdurrahman Wahid</option>
-                <option value="Soekarno">Soekarno</option>
-                <option value="Hatta Rajasa">Hatta Rajasa</option>
-              </datalist>
+
+  <!-- Modal Tambah Obat -->
+  <div class="modal fade" id="tambahObat" tabindex="-1" aria-labelledby="tambahObatLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tambahObatLabel">Tambah Obat Baru</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formTambahObat">
+            <!-- Nama Obat -->
+            <div class="mb-3">
+              <label for="namaObat" class="form-label">Nama Obat</label>
+              <input type="text" class="form-control" id="namaObat" placeholder="Masukan nama obat" required>
             </div>
-            <div class="col-sm-6 mt-2 mt-sm-0">
-              <input type="text" class="form-control" inputmode="numeric" placeholder="NIK">
+            <!-- Dosis -->
+            <div class="mb-3">
+              <label for="dosisObat" class="form-label">Dosis</label>
+              <div class="input-group">
+                <input type="text" inputmode="numeric" class="form-control" id="dosisObat" placeholder="Dosis obat (mg)"
+                  required>
+                <label class="input-group-text  mb-0">mg</label>
+              </div>
             </div>
-          </div>
-          <div class="mb-3">
-            <input type="text" class="form-control input-default " placeholder="Nama obat">
-          </div>
-          <div class="mb-2">
-            <input type="text" class="form-control input-default " placeholder="Keterangan">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Keterangan waktu:</label>
-            <select class="default-select  form-control ">
-              <option>Sesudah makan</option>
-              <option>Sebelum makan</option>
-            </select>
-          </div>
-        </form>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" form="formTambahObat" class="btn btn-primary">Simpan</button>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" class="btn btn-primary">Simpan</button>
+    </div>
+  </div>
+
+  <!-- Modal Edit Obat -->
+  <div class="modal fade" id="editObat" tabindex="-1" aria-labelledby="editObatLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editObatLabel">Edit Obat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formEditObat">
+            <!-- Nama Obat -->
+            <div class="mb-3">
+              <label for="namaObat" class="form-label">Nama Obat</label>
+              <input type="text" class="form-control" id="namaObat" required>
+            </div>
+            <!-- Dosis -->
+            <div class="mb-3">
+              <label for="dosisObat" class="form-label">Dosis</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="dosisObat" required>
+                <span class="input-group-text">mg</span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" form="formTambahObat" class="btn btn-primary">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Hapus Obat -->
+  <div class="modal fade" id="hapusObat" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Hapus Data Obat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Obat <b>Paramex</b> akan dihapus?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-danger">Hapus</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Hpaus Obat pasien -->
+  <div class="modal fade" id="obatModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Hapus Data Obat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Data obat <b>Akmal Sidik</b> akan dihapus?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-danger">Hapus</button>
+        </div>
       </div>
     </div>
   </div>
