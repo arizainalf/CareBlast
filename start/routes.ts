@@ -9,6 +9,12 @@
 
 import router from '@adonisjs/core/services/router'
 
+router.get('/list-users', async ({ view }) => {
+  return view.render('users/index')
+})
+router.get('/edit-profile', async ({ view }) => {
+  return view.render('profile/index')
+})
 router.get('/login', async ({ view }) => {
   return view.render('auth/login-page')
 })
