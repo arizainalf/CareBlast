@@ -8,14 +8,14 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('uuid').notNullable().unique()
       table
-        .bigInteger('obat_id')
+        .integer('obat_id')
         .unsigned()
         .references('id')
         .inTable('obats')
         .onDelete('CASCADE')
         .notNullable()
       table
-        .bigInteger('kunjungan_id')
+        .integer('kunjungan_id')
         .unsigned()
         .references('id')
         .inTable('kunjungans')

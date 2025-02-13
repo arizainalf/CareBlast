@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('uuid').notNullable().unique()
       table
-        .bigInteger('jenis_penyakit_id')
+        .integer('jenis_penyakit_id')
         .unsigned()
         .references('id')
         .inTable('jenis_penyakits')

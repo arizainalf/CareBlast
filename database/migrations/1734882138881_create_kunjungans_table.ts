@@ -7,12 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('uuid').notNullable().unique()
-      table
-        .bigInteger('pasien_id')
-        .unsigned()
-        .references('id')
-        .inTable('pasiens')
-        .onDelete('CASCADE')
+      table.integer('pasien_id').unsigned().references('id').inTable('pasiens').onDelete('CASCADE')
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

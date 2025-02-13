@@ -4,6 +4,7 @@ import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, column, beforeCreate } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { v4 as uuidv4 } from 'uuid'
+import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -23,6 +24,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare email: string
 
+  @column()
+  declare role: string
+
+  @column()
+  declare phoneNumber: string
+
   @column({ serializeAs: null })
   declare password: string
 
@@ -36,4 +43,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   public static async generateUuid(user: User) {
     user.uuid = uuidv4() // Generate UUID sebelum insert
   }
+
+  static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)
 }
