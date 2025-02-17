@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-xl-12">
+    <div class="row">
+      <!-- Tampilkan hasil pencarian -->
+      <div id="searchResults"></div>
+      @each(p in pasien)
+      @include('pasien/partial/data-pasien/card')
+      @end
+    </div>
+
+    @include('pasien/partial/data-pasien/pagination')
+  </div>
+</div>

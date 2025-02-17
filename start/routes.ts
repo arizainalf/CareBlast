@@ -9,6 +9,12 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+const PasiensController = () => import('#controllers/pasiens_controller')
+
+router.get('/data-pasien', [PasiensController, 'index']).as('pasien.index')
+router.post('/data-pasien', [PasiensController, 'store']).as('pasien.store')
+router.get('/jenis-penyakit', 'PasiensController.getJenisPenyakit')
+router.get('/pasiens/search', [PasiensController, 'search']).as('pasien.search')
 
 router
   .get('/login', async ({ view }) => {
@@ -45,9 +51,9 @@ router
     router.get('/profile', async ({ view }) => {
       return view.render('pasien/profile-pasien')
     })
-    router.get('/data-pasien', async ({ view }) => {
-      return view.render('pasien/data-pasien')
-    })
+    // router.get('/data-pasien', async ({ view }) => {
+    //   return view.render('pasien/data-pasien')
+    // })
     router.get('/data-obat', async ({ view }) => {
       return view.render('obat/data-obat')
     })

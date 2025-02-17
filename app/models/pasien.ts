@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
 import { v4 as uuidv4 } from 'uuid'
 import JenisPenyakit from '#models/jenis_penyakit'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class Pasien extends BaseModel {
   @column({ isPrimary: true })
@@ -12,13 +12,31 @@ export default class Pasien extends BaseModel {
   declare uuid: string
 
   @column()
-  declare jenisPenyakitId: number
+  declare jenisPenyakitId: number | null
 
-  @hasMany(() => JenisPenyakit)
-  declare jenisPenyakits: HasMany<typeof JenisPenyakit>
+  @belongsTo(() => JenisPenyakit)
+  declare jenisPenyakit: BelongsTo<typeof JenisPenyakit>
 
   @column()
   declare name: string
+
+  @column()
+  declare tempat: string
+
+  @column.date()
+  declare tanggal_lahir: DateTime
+
+  @column()
+  declare no_hp: string
+
+  @column()
+  declare alamat: string
+
+  @column()
+  declare jenis_kelamin: string
+
+  @column()
+  declare nik: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

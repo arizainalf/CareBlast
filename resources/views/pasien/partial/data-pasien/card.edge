@@ -1,0 +1,30 @@
+<div class="col-xl-3 col-xxl-4 col-lg-4 col-md-6 col-sm-6 items">
+  <div class="card overflow-hidden">
+    <div class="text-center p-5 overlay-box" style="background-image: url(images/big/img5.jpg);">
+      <img src="images/profile.png" width="100" class="img-fluid rounded-circle" alt="">
+      <h3 class="mt-3 mb-0 text-white">{{ p.name }}</h3>
+      <p class="fs-10 mb-0 user-work text-white">{{ p.nik }}</p>
+    </div>
+    <div class="card-body">
+      <div class="row text-center">
+        <div class="col-6">
+          <div class="bgl-primary rounded p-3">
+            <h4 class="mb-0">{{ p.jenis_kelamin }}</h4>
+            <small>{{ calculateAge(p.tanggal_lahir) }} Tahun</small>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="bgl-primary rounded p-3">
+            <h4 class="mb-0">{{ p.tempat }}</h4>
+            <small>{{ formatDate(p.tanggal_lahir) }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer mt-0">
+      <a class="text-white" href="#">
+        <button class="btn btn-primary btn-lg btn-block">Detail Pasien</button>
+      </a>
+    </div>
+  </div>
+</div>

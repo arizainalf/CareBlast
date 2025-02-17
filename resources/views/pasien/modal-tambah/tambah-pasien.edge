@@ -1,0 +1,58 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Tambah data pasien baru</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <form action="{{ route('pasien.store') }}" method="POST">
+      {{ csrfField() }}
+      <div class="modal-body">
+        <div class="mb-2">
+          <input type="text" name="nik" class="form-control" placeholder="NIK" required>
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <input type="text" name="first_name" class="form-control" placeholder="Nama depan" required>
+          </div>
+          <div class="col-sm-6 mt-2 mt-sm-0">
+            <input type="text" name="last_name" class="form-control" placeholder="Nama belakang">
+          </div>
+        </div>
+        <div class="mb-2">
+          <select name="jenis_kelamin" class="form-control" required>
+            <option value="">Pilih Jenis Kelamin</option>
+            <option value="Laki-laki">Laki-laki</option>
+            <option value="Perempuan">Perempuan</option>
+          </select>
+        </div>
+        <div class="row align-items-center mb-2">
+          <div class="col-sm-6 my-1">
+            <label class="ms-2" style="margin-bottom: -2px;">Jenis Penyakit :</label>
+            <select name="jenisPenyakitId" class="me-sm-2 default-select form-control wide" required>
+              @each(penyakit in jenisPenyakits)
+              <option value="{{ penyakit.id }}">{{ penyakit.nama }}</option>
+              @end
+            </select>
+          </div>
+        </div>
+        <div class="mb-2">
+          <input type="text" name="tempat" class="form-control input-default" placeholder="Tempat Lahir" required>
+        </div>
+        <div class="mb-2">
+          <label class="ms-2" style="margin-bottom: -2px;">Tanggal Lahir :</label>
+          <input type="date" name="tanggal_lahir" class="form-control" required>
+        </div>
+        <div class="mb-2">
+          <input type="text" name="no_hp" class="form-control input-default" placeholder="Nomor HP" required>
+        </div>
+        <div class="mb-3">
+          <textarea name="alamat" class="form-control" rows="4" placeholder="Alamat Lengkap" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>

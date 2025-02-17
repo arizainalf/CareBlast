@@ -7,6 +7,8 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('uuid').notNullable().unique()
+      table.index(['name', 'tempat', 'no_hp', 'nik'])
+      table.string('nik').unique()
       table
         .integer('jenis_penyakit_id')
         .unsigned()
@@ -15,6 +17,7 @@ export default class extends BaseSchema {
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
       table.string('name')
+      table.enum('jenis_kelamin', ['Laki-laki', 'Perempuan'])
       table.string('tempat')
       table.date('tanggal_lahir')
       table.string('no_hp')
