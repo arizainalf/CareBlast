@@ -41,9 +41,12 @@ router
   .group(() => {
     router.get('/', '#controllers/dashboard_controller.index').as('dashboard')
 
-    router.get('/list-users', async ({ view }) => {
-      return view.render('users/index')
-    })
+    router.get('/users', '#controllers/users_controller.index').as('users.index')
+    router.post('/users', '#controllers/users_controller.store').as('users.create')
+    router.get('/users/:id', '#controllers/users_controller.show')
+    router.put('/users/:id', '#controllers/users_controller.update')
+    router.delete('/users/:id', '#controllers/users_controller.destroy')
+
     router.get('/edit-profile', async ({ view }) => {
       return view.render('profile/index')
     })

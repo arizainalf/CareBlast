@@ -1,4 +1,9 @@
-@layout.app()
+@layout.app({ title: "Users" })
+
+@pushOnceTo('styles')
+{{-- css --}}
+@end
+
 @slot('content')
 <div class="container-fluid">
   <div class="row">
@@ -7,8 +12,8 @@
         <div class="card-header">
           <h4 class="card-title">Data Pengguna</h4>
           <div>
-            <button type="button" class="btn btn-rounded fs-14 btn-primary align-items-center gap-2" data-bs-toggle="modal"
-              data-bs-target="#tambahPengguna">
+            <button type="button" class="btn btn-rounded fs-14 btn-primary align-items-center gap-2"
+              data-bs-toggle="modal" data-bs-target="#tambahPengguna">
               <span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i></span>
               Pengguna
             </button>
@@ -21,24 +26,25 @@
                 <tr>
                   <th>#</th>
                   <th>Name</th>
-                  <th>Username</th>
+                  <th>Email</th>
                   <th>Tanggal</th>
                   <th>Role</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
+                @each( (user, index) in users)
                 <tr>
-                  <th>1</th>
+                  <th>{{ index + 1 }}</th>
                   <td>
                     <div class="d-flex align-items-center"><img src="images/avatar/1.jpg" class="rounded-lg me-2"
-                        width="24" alt=""> <span class="w-space-no">Dr. Jackson</span></div>
+                        width="24" alt=""> <span class="w-space-no">{{ user.fullName }}</span></div>
                   </td>
-                  <td>jckson123</td>
+                  <td>{{ user.email }}</td>
                   </td>
-                  <td>20 Februari 2025</td>
+                  <td>{{ user.phoneNumber }}</td>
                   <td>
-                    <div class="d-flex align-items-center"><i class="fa fa-circle text-success me-1"></i> Super Admin
+                    <div class="d-flex align-items-center"><i class="fa fa-circle text-success me-1"></i>{{ user.role }}
                     </div>
                   </td>
                   <td>
@@ -48,46 +54,7 @@
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <th>2</th>
-                  <td>
-                    <div class="d-flex align-items-center"><img src="images/avatar/2.jpg" class="rounded-lg me-2"
-                        width="24" alt=""> <span class="w-space-no">Dr. Jackson</span></div>
-                  </td>
-                  <td>jckson123</td>
-                  </td>
-                  <td>23 Februari 2025</td>
-                  <td>
-                    <div class="d-flex align-items-center"><i class="fa fa-circle text-primary me-1"></i> Admin
-                    </div>
-                  </td>
-                  <td>
-                    <div class="d-flex">
-                      <a href="#" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <th>3</th>
-                  <td>
-                    <div class="d-flex align-items-center"><img src="images/avatar/3.jpg" class="rounded-lg me-2"
-                        width="24" alt=""> <span class="w-space-no">Dr. Jackson</span></div>
-                  </td>
-                  <td>jckson123</td>
-                  </td>
-                  <td>22 Februari 2025</td>
-                  <td>
-                    <div class="d-flex align-items-center"><i class="fa fa-circle text-primary me-1"></i> Admin
-                    </div>
-                  </td>
-                  <td>
-                    <div class="d-flex">
-                      <a href="#" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
+                @end
               </tbody>
             </table>
           </div>
@@ -99,5 +66,22 @@
 <div class="modal fade" id="tambahPengguna" tabindex="-1" aria-labelledby="tambahPengguna" aria-hidden="true">
   @include('users/modal/tambah-data-pengguna')
 </div>
+@flashMessages('success')
+{{ notif('Success', 'Data berhasil disimpan', 'success') }}
 @end
+
+@end
+
+@end
+@pushOnceTo('scripts')
+<script>
+  function notif(title, text, icon) {
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      confirmButtonText: 'OK'
+    });
+  }
+</script>
 @end
