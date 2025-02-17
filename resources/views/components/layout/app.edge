@@ -14,7 +14,7 @@
   <meta name="format-detection" content="telephone=no">
 
   <!-- PAGE TITLE HERE -->
-  <title>Admin Dashboard</title>
+  <title>{{ title }}</title>
   <!-- Form step -->
   <link href="{{ asset('vendor/jquery-smartwizard/dist/css/smart_wizard.min.css') }}" rel="stylesheet">
   <!-- FAVICONS ICON -->
@@ -28,7 +28,8 @@
   <!-- asColorpicker -->
   <link href="{{ asset('vendor/jquery-asColorPicker/css/asColorPicker.min.css') }}" rel="stylesheet">
   <!-- Material color picker -->
-  <link href="{{ asset('vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}" rel="stylesheet">
+  <link href="{{ asset('vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css') }}"
+    rel="stylesheet">
   <!-- Pick date -->
   <link rel="stylesheet" href="{{ asset('vendor/pickadate/themes/default.css') }}">
   <link rel="stylesheet" href="{{ asset('vendor/pickadate/themes/default.date.css') }}">
@@ -37,9 +38,13 @@
   <link href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}" rel="stylesheet">
   <!-- Style css -->
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-  {{--  qr code configuration  --}}
+  {{-- qr code configuration --}}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <!-- Toastr -->
+  <link rel="stylesheet" href="vendor/toastr/css/toastr.min.css">
+
+  @stack('styles')
 </head>
 
 <body>
@@ -53,7 +58,7 @@
       <div></div>
     </div>
   </div>
-  
+
   <!--**********************************
         Main wrapper start
     ***********************************-->
@@ -109,7 +114,8 @@
   <script src="{{ asset('vendor/jquery-asGradient/jquery-asGradient.min.js') }}"></script>
   <script src="{{ asset('vendor/jquery-asColorPicker/js/jquery-asColorPicker.min.js') }}"></script>
   <!-- Material color picker -->
-  <script src="{{ asset('vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}"></script>
+  <script
+    src="{{ asset('vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js') }}"></script>
   <!-- pickdate -->
   <script src="{{ asset('vendor/pickadate/picker.js') }}"></script>
   <script src="{{ asset('vendor/pickadate/picker.time.js') }}"></script>
@@ -125,102 +131,104 @@
   <!-- Pickdate -->
   <script src="{{ asset('js/plugins-init/pickadate-init.js') }}"></script>
   <script src="{{ asset('vendor/ckeditor/ckeditor.js') }}"></script>
+  {{-- toast --}}
+  <script src="vendor/toastr/js/toastr.min.js"></script>
   {{-- qr code configuration --}}
   <script>
     async function loadQRCode() {
-        try {
-          const response = await axios.get('/qrcode');
-          const qrCodeImg = document.getElementById('qrCode');
-          const statusDiv = document.getElementById('status');
-          const logoutBtn = document.getElementById('logoutBtn');
-
-          if (response.data.status === 'success') {
-            if (response.data.qrCode === 'You are already logged in') {
-              qrCodeImg.style.display = 'none';
-              statusDiv.className = 'alert alert-success text-center fs-15 mb-4';
-              statusDiv.textContent = 'You are already connected to WhatsApp!';
-              logoutBtn.style.display = 'block';
-            } else {
-              qrCodeImg.src = `data:image/png;base64,${response.data.qrCode}`;
-              qrCodeImg.style.display = 'block';
-              statusDiv.className = 'alert alert-info text-center fs-15 mb-4';
-              statusDiv.textContent = 'Waiting for connection...';
-              checkStatus();
-            }
-          }
-        } catch (error) {
-          console.error('Error loading QR code:', error);
-          const statusDiv = document.getElementById('status');
-          statusDiv.className = 'alert alert-danger text-center fs-15 mb-4';
-          statusDiv.textContent = 'Failed to load QR code. Please try again.';
-        }
-      }
-
-      async function checkStatus() {
-        try {
-          const response = await axios.get('/status');
-          const qrCodeImg = document.getElementById('qrCode');
-          const statusDiv = document.getElementById('status');
-          const logoutBtn = document.getElementById('logoutBtn');
-
-          if (response.data.status === 'success') {
-            if (response.data.connected) {
-              qrCodeImg.style.display = 'none';
-              statusDiv.className = 'alert alert-success text-center fs-15 mb-4';
-              statusDiv.textContent = 'Connected to WhatsApp!';
-              logoutBtn.style.display = 'block';
-            } else {
-              statusDiv.className = 'alert alert-info text-center fs-15 mb-4';
-              statusDiv.textContent = 'Waiting for connection...';
-              logoutBtn.style.display = 'none';
-              setTimeout(checkStatus, 5000);
-            }
-          }
-        } catch (error) {
-          console.error('Error checking status:', error);
-        }
-      }
-
-      function refreshQR() {
-        document.getElementById('qrCode').style.display = 'block';
-        document.getElementById('logoutBtn').style.display = 'none';
-        document.getElementById('status').className = 'alert alert-info text-center fs-15 mb-4';
-        document.getElementById('status').textContent = 'Waiting for connection...';
-        loadQRCode();
-      }
-
-      async function logout() {
+      try {
+        const response = await axios.get('/qrcode');
+        const qrCodeImg = document.getElementById('qrCode');
+        const statusDiv = document.getElementById('status');
         const logoutBtn = document.getElementById('logoutBtn');
-        const originalText = logoutBtn.textContent || 'Logout';
 
-        try {
-          logoutBtn.innerHTML = '<span class="loading"></span>Logging out...';
-          logoutBtn.disabled = true;
-
-          const response = await axios.post('/logout');
-          if (response.data.status === 'success') {
-            const statusDiv = document.getElementById('status');
-            statusDiv.className = 'alert alert-warning text-center fs-15 mb-4';
-            statusDiv.textContent = 'Logged out successfully.';
-            document.getElementById('qrCode').style.display = 'block';
-            logoutBtn.style.display = 'none';
-            setTimeout(loadQRCode, 1000);
+        if (response.data.status === 'success') {
+          if (response.data.qrCode === 'You are already logged in') {
+            qrCodeImg.style.display = 'none';
+            statusDiv.className = 'alert alert-success text-center fs-15 mb-4';
+            statusDiv.textContent = 'You are already connected to WhatsApp!';
+            logoutBtn.style.display = 'block';
           } else {
-            throw new Error(response.data.message || 'Logout failed');
+            qrCodeImg.src = `data:image/png;base64,${response.data.qrCode}`;
+            qrCodeImg.style.display = 'block';
+            statusDiv.className = 'alert alert-info text-center fs-15 mb-4';
+            statusDiv.textContent = 'Waiting for connection...';
+            checkStatus();
           }
-        } catch (error) {
-          console.error('Error during logout:', error);
-          const statusDiv = document.getElementById('status');
-          statusDiv.className = 'alert alert-danger text-center fs-15 mb-4';
-          statusDiv.textContent = 'Logout failed. Please try again.';
-        } finally {
-          logoutBtn.innerHTML = originalText;
-          logoutBtn.disabled = false;
         }
+      } catch (error) {
+        console.error('Error loading QR code:', error);
+        const statusDiv = document.getElementById('status');
+        statusDiv.className = 'alert alert-danger text-center fs-15 mb-4';
+        statusDiv.textContent = 'Failed to load QR code. Please try again.';
       }
+    }
 
-      // Initial load
+    async function checkStatus() {
+      try {
+        const response = await axios.get('/status');
+        const qrCodeImg = document.getElementById('qrCode');
+        const statusDiv = document.getElementById('status');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        if (response.data.status === 'success') {
+          if (response.data.connected) {
+            qrCodeImg.style.display = 'none';
+            statusDiv.className = 'alert alert-success text-center fs-15 mb-4';
+            statusDiv.textContent = 'Connected to WhatsApp!';
+            logoutBtn.style.display = 'block';
+          } else {
+            statusDiv.className = 'alert alert-info text-center fs-15 mb-4';
+            statusDiv.textContent = 'Waiting for connection...';
+            logoutBtn.style.display = 'none';
+            setTimeout(checkStatus, 5000);
+          }
+        }
+      } catch (error) {
+        console.error('Error checking status:', error);
+      }
+    }
+
+    function refreshQR() {
+      document.getElementById('qrCode').style.display = 'block';
+      document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('status').className = 'alert alert-info text-center fs-15 mb-4';
+      document.getElementById('status').textContent = 'Waiting for connection...';
       loadQRCode();
+    }
+
+    async function logout() {
+      const logoutBtn = document.getElementById('logoutBtn');
+      const originalText = logoutBtn.textContent || 'Logout';
+
+      try {
+        logoutBtn.innerHTML = '<span class="loading"></span>Logging out...';
+        logoutBtn.disabled = true;
+
+        const response = await axios.post('/logout');
+        if (response.data.status === 'success') {
+          const statusDiv = document.getElementById('status');
+          statusDiv.className = 'alert alert-warning text-center fs-15 mb-4';
+          statusDiv.textContent = 'Logged out successfully.';
+          document.getElementById('qrCode').style.display = 'block';
+          logoutBtn.style.display = 'none';
+          setTimeout(loadQRCode, 1000);
+        } else {
+          throw new Error(response.data.message || 'Logout failed');
+        }
+      } catch (error) {
+        console.error('Error during logout:', error);
+        const statusDiv = document.getElementById('status');
+        statusDiv.className = 'alert alert-danger text-center fs-15 mb-4';
+        statusDiv.textContent = 'Logout failed. Please try again.';
+      } finally {
+        logoutBtn.innerHTML = originalText;
+        logoutBtn.disabled = false;
+      }
+    }
+
+    // Initial load
+    loadQRCode();
   </script>
 
   <script>
@@ -272,6 +280,8 @@
     });
 
   </script>
+
+  @stack('scripts')
 
 </body>
 

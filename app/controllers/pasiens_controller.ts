@@ -103,7 +103,7 @@ export default class PasiensController {
       let formattedDate = null
 
       if (rawDate) {
-        const date = new Date(rawDate)
+        const date = rawDate.toJSDate()
         formattedDate = date.toISOString().split('T')[0]
       }
 
