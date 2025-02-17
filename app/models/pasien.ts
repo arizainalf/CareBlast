@@ -38,6 +38,9 @@ export default class Pasien extends BaseModel {
   @column()
   declare nik: string
 
+  @column()
+  declare golongan_darah: string | null
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
