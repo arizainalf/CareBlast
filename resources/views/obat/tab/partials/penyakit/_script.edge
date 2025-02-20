@@ -1,0 +1,62 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let searchInput = document.getElementById('searchInput');
+    let searchForm = document.getElementById('searchForm');
+    let tbody = document.querySelector('#penyakitTable tbody');
+    let timeout = null;
+
+    function searchPenyakit(searchQuery) {
+      fetch(`/obat-penyakit/search?search=${encodeURIComponent(searchQuery)}`)
+        .then(response => response.json())
+        .then(data => {
+          tbody.innerHTML = '';
+
+          if (data.penyakits.data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center">Data tidak ditemukan</td></tr>';
+            return;
+          }
+
+          data.penyakits.data.forEach((penyakit, index) => {
+            let row = `
+        <tr>
+          <th>${(data.penyakits.meta.currentPage - 1) * data.penyakits.meta.perPage + index + 1}</th>
+          <td>${penyakit.nama}</td>
+          <td>${penyakit.deskripsi}</td>
+          <td>
+            <div class="d-flex">
+              <button class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
+                data-bs-target="#editPenyakit${penyakit.uuid}">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <form action="/obat-penyakit/${penyakit.uuid}/delete" method="POST" class="d-inline">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                <button type="submit" class="btn btn-danger shadow btn-xs sharp"
+                  onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      `;
+            tbody.innerHTML += row;
+          });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Event pencarian otomatis (tanpa tombol)
+    searchInput.addEventListener('input', function () {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        searchPenyakit(searchInput.value.trim());
+      }, 300);
+    });
+
+    // Event tombol cari (submit form tetap AJAX)
+    searchForm.addEventListener('submit', function (event) {
+      event.preventDefault(); // Mencegah refresh halaman
+      searchPenyakit(searchInput.value.trim());
+    });
+  });
+</script>
