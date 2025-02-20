@@ -22,7 +22,7 @@ export default class extends BaseSchema {
       table.date('tanggal_lahir')
       table.string('no_hp')
       table.string('alamat')
-      table.enum('golongan_darah', ['A+','B+','AB+','0+','A-','B-','AB-','O-']).nullable()
+      table.enum('golongan_darah', ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-']).nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })
