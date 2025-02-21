@@ -1,0 +1,73 @@
+<div class="table-responsive">
+  <table class="table table-hover" id="penyakitTable">
+    <thead>
+      <tr class="text-bold">
+        <th width="5%">#</th>
+        <th><strong>Penyakit</strong></th>
+        <th><strong>Deskripsi</strong></th>
+        <th><strong>Aksi</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      @each((penyakit, index) in penyakits)
+      <tr>
+        <th>{{ (penyakits.currentPage - 1) * penyakits.perPage + index + 1 }}</th>
+        <td>{{ penyakit.nama }}</td>
+        <td>{{ penyakit.deskripsi }}</td>
+        <td>
+          <div class="d-flex">
+            <button class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
+              data-bs-target="#editPenyakit{{ penyakit.uuid }}">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+            <button class="btn btn-danger shadow btn-xs sharp delete-btn" data-bs-toggle="modal"
+              data-bs-target="#confirmDeleteModal" data-uuid="{{ penyakit.uuid }}" data-nama="{{ penyakit.nama }}">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      @endeach
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Hapus Data Penyakit</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Apakah Anda yakin ingin menghapus data penyakit <b id="penyakitName"></b>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
+        <form id="deleteForm" action="#" method="POST">
+          {{ csrfField() }}
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger light">Hapus</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+    const deleteForm = document.getElementById("deleteForm");
+    const penyakitName = document.getElementById("penyakitName");
+
+    deleteButtons.forEach(button => {
+      button.addEventListener("click", function () {
+        const uuid = this.getAttribute("data-uuid");
+        const nama = this.getAttribute("data-nama");
+
+        penyakitName.textContent = nama;
+        deleteForm.action = `/obat-penyakit/penyakit/${uuid}/delete`;
+      });
+    });
+  });
+</script>

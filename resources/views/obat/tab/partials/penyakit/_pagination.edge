@@ -1,0 +1,31 @@
+<div class="card-footer border-0 pt-0">
+  <div class="d-flex justify-content-end align-items-center mt-3">
+    <nav>
+      <ul class="pagination pagination-circle m-0">
+
+        @if (penyakits.currentPage > 1)
+        <li class="page-item page-indicator">
+          <a class="page-link" href="?page={{ penyakits.currentPage - 1 }}#dataPenyakit">
+            <i class="la la-angle-left"></i>
+          </a>
+        </li>
+        @endif
+
+        @each(i in Array.from({ length: penyakits.lastPage }, (_, index) => index + 1))
+        <li class="page-item {{ penyakits.currentPage == i ? 'active' : '' }}">
+          <a class="page-link" href="?page={{ i }}#dataPenyakit">{{ i }}</a>
+        </li>
+        @endeach
+
+        @if (penyakits.currentPage < penyakits.lastPage)
+        <li class="page-item page-indicator">
+          <a class="page-link" href="?page={{ penyakits.currentPage + 1 }}#dataPenyakit">
+            <i class="la la-angle-right"></i>
+          </a>
+          </li>
+          @endif
+
+      </ul>
+    </nav>
+  </div>
+</div>

@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('uuid').notNullable().unique()
       table.string('nama')
+      table.decimal('dosis', 8, 2)
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

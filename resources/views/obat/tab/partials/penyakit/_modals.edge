@@ -1,0 +1,52 @@
+<div class="modal fade" id="tambahPenyakit" tabindex="-1" aria-labelledby="tambahPenyakitLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/obat-penyakit/penyakit" method="POST">
+        {{ csrfField() }}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="nama-tambah" class="form-label">Nama Penyakit</label>
+            <input type="text" class="form-control" id="nama-tambah" name="nama" required>
+          </div>
+          <div class="mb-3">
+            <label for="deskripsi-tambah" class="form-label">Deskripsi</label>
+            <textarea class="form-control" id="deskripsi-tambah" name="deskripsi" rows="4" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary light">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+@each(penyakit in penyakits)
+<div class="modal fade" id="editPenyakit{{ penyakit.uuid }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/obat-penyakit/penyakit/{{ penyakit.uuid }}/update" method="POST">
+        {{ csrfField() }}
+        <input type="hidden" name="_method" value="PUT">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="nama-{{ penyakit.uuid }}" class="form-label">Nama Penyakit</label>
+            <input type="text" class="form-control" id="nama-{{ penyakit.uuid }}" name="nama"
+              value="{{ penyakit.nama }}" required>
+          </div>
+          <div class="mb-3">
+            <label for="deskripsi-{{ penyakit.uuid }}" class="form-label">Deskripsi</label>
+            <textarea class="form-control" id="deskripsi-{{ penyakit.uuid }}" name="deskripsi" rows="4"
+              required>{{ penyakit.deskripsi }}</textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary light">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+@endeach

@@ -1,0 +1,53 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let searchInput = document.getElementById('searchInputObat');
+    let searchForm = document.getElementById('searchFormObat');
+    let tbody = document.querySelector('#obatTable tbody');
+    let timeout = null;
+
+    function searchObat(searchQuery) {
+      fetch(`/obat-penyakit/obat/search?search=${encodeURIComponent(searchQuery)}`)
+        .then(response => response.json())
+        .then(data => {
+          tbody.innerHTML = '';
+
+          if (data.obats.data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center">Data tidak ditemukan</td></tr>';
+            return;
+          }
+
+          data.obats.data.forEach((obat, index) => {
+            let row = `
+              <tr>
+                <th>${(data.obats.meta.currentPage - 1) * data.obats.meta.perPage + index + 1}</th>
+                <td>${obat.nama}</td>
+                <td>${obat.dosis} mg</td>
+                <td>
+                  <div class="d-flex">
+                    <button class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
+                      data-bs-target="#editObat${obat.uuid}">
+                      <i class="fas fa-pencil-alt"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+            tbody.innerHTML += row;
+          });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    searchInput.addEventListener('input', function () {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        searchObat(this.value.trim());
+      }, 300);
+    });
+
+    searchForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      searchObat(searchInput.value.trim());
+    });
+  });
+</script>
