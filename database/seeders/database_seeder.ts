@@ -4,6 +4,7 @@ import Pasien from '#models/pasien'
 import JenisPenyakit from '#models/jenis_penyakit'
 import { v4 as uuid } from 'uuid'
 import { DateTime } from 'luxon'
+import Obat from '#models/obat'
 
 export default class extends BaseSeeder {
   private generateNIK(): string {
@@ -59,6 +60,27 @@ export default class extends BaseSeeder {
         phoneNumber: '081930865458',
       },
     ])
+
+    const obatData = [
+      { nama: 'Paracetamol', dosis: 500 },
+      { nama: 'Amoxicillin', dosis: 250 },
+      { nama: 'Ibuprofen', dosis: 200 },
+      { nama: 'Cetirizine', dosis: 10 },
+      { nama: 'Metformin', dosis: 850 },
+      { nama: 'Simvastatin', dosis: 20 },
+      { nama: 'Omeprazole', dosis: 40 },
+      { nama: 'Ciprofloxacin', dosis: 500 },
+      { nama: 'Dexamethasone', dosis: 0.5 },
+      { nama: 'Losartan', dosis: 50 },
+    ]
+
+    await Obat.createMany(
+      obatData.map((data) => ({
+        uuid: uuid(),
+        nama: data.nama,
+        dosis: data.dosis,
+      }))
+    )
 
     // Seed Jenis Penyakit
     const jenisPenyakitData = [

@@ -1,0 +1,83 @@
+@each(obat in obats)
+<div class="modal fade" id="hapusObat{{ obat.uuid }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Hapus Data Obat</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Obat <b>{{ obat.nama }}</b> akan dihapus?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
+        <form action="{{ route('delete-obat', { uuid: obat.uuid }) }}" method="POST" class="d-inline">
+          {{ csrfField() }}
+          <button type="submit" class="btn btn-danger light">Hapus</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+@endeach
+
+<!-- Add Modal -->
+<div class="modal fade" id="tambahObat" tabindex="-1" aria-labelledby="tambahObatLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/obat-penyakit/obat" method="POST">
+        {{ csrfField() }}
+        <div class="modal-header">
+          <h5 class="modal-title" id="tambahObatLabel">Tambah Obat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="nama-tambah" class="form-label">Nama Obat</label>
+            <input type="text" class="form-control" id="nama-tambah" name="nama" required>
+          </div>
+          <div class="mb-3">
+            <label for="dosis-tambah" class="form-label">Dosis (mg)</label>
+            <input type="number" step="0.01" class="form-control" id="dosis-tambah" name="dosis" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary light">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+@each(obat in obats)
+<div class="modal fade" id="editObat{{ obat.uuid }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ route('update-obat', { uuid: obat.uuid }) }}" method="POST">
+        {{ csrfField() }}
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Obat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="nama-{{ obat.uuid }}" class="form-label">Nama Obat</label>
+            <input type="text" class="form-control" id="nama-{{ obat.uuid }}" name="nama" value="{{ obat.nama }}"
+              required>
+          </div>
+          <div class="mb-3">
+            <label for="dosis-{{ obat.uuid }}" class="form-label">Dosis (mg)</label>
+            <input type="number" step="0.01" class="form-control" id="dosis-{{ obat.uuid }}" name="dosis"
+              value="{{ obat.dosis }}" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary light">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+@endeach

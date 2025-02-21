@@ -1,7 +1,7 @@
 @layout.app({ title: "Data Obat & Penyakit" })
 @slot('content')
 <div class="container-fluid px-4">
-  <!-- Breadcrumb with proper spacing -->
+
   <div class="row my-4">
     <div class="col-12">
       <div class="row page-titles" style="margin-bottom: -4px;">
@@ -13,7 +13,6 @@
     </div>
   </div>
 
-  <!-- Main content wrapper -->
   <div class="content-wrapper">
     <div class="row">
       <div class="col-12">
@@ -22,7 +21,7 @@
             <h4 class="card-title mb-0">Obat & Penyakit Pasien</h4>
           </div>
           <div class="card-body">
-            <!-- Nav tabs with consistent spacing -->
+
             <div class="default-tab">
               <ul class="nav nav-tabs mb-3" role="tablist">
                 <li class="nav-item">
@@ -46,16 +45,15 @@
               </ul>
 
               <div class="tab-content">
-                <!-- Data Obat Tab -->
+
                 <div class="tab-pane fade show active" id="dataObat" role="tabpanel">
                   @include('obat/tab/obat')
                 </div>
-                <!-- Data Penyakit Tab -->
+
                 <div class="tab-pane fade" id="dataPenyakit">
                   @include('obat/tab/penyakit')
                 </div>
 
-                <!-- List Obat Pasien Tab -->
                 <div class="tab-pane fade" id="listObat">
                   @include('obat/tab/list-obat')
                 </div>
@@ -67,25 +65,11 @@
     </div>
   </div>
 
-  <!-- Modal Tambah Obat -->
-  <div class="modal fade" id="tambahObat" tabindex="-1" aria-labelledby="tambahObatLabel" aria-hidden="true">
-    @include('obat/modal/tambah-obat')
-  </div>
-
-  <!-- Modal Edit Obat -->
-  <div class="modal fade" id="editObat" tabindex="-1" aria-labelledby="editObatLabel" aria-hidden="true">
-    @include('obat/modal/edit-obat')
-  </div>
-
-  <!-- Modal Hapus Obat -->
-  <div class="modal fade" id="hapusObat" tabindex="-1" aria-hidden="true">
-    @include('obat/modal/hapus-obat')
-  </div>
-  <!-- Modal Hpaus Obat pasien -->
   <div class="modal fade" id="obatModal" tabindex="-1" aria-hidden="true">
     @include('obat/modal/hapus-obat-pasien')
   </div>
 </div>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const hash = window.location.hash;

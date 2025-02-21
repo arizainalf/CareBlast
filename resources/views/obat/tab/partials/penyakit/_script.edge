@@ -6,7 +6,7 @@
     let timeout = null;
 
     function searchPenyakit(searchQuery) {
-      fetch(`/obat-penyakit/search?search=${encodeURIComponent(searchQuery)}`)
+      fetch(`/obat-penyakit/penyakit/search?search=${encodeURIComponent(searchQuery)}`)
         .then(response => response.json())
         .then(data => {
           tbody.innerHTML = '';
@@ -45,7 +45,6 @@
         .catch(error => console.error('Error:', error));
     }
 
-    // Event pencarian otomatis (tanpa tombol)
     searchInput.addEventListener('input', function () {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
@@ -53,9 +52,8 @@
       }, 300);
     });
 
-    // Event tombol cari (submit form tetap AJAX)
     searchForm.addEventListener('submit', function (event) {
-      event.preventDefault(); // Mencegah refresh halaman
+      event.preventDefault();
       searchPenyakit(searchInput.value.trim());
     });
   });

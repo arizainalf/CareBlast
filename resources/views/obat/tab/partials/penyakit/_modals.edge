@@ -1,8 +1,7 @@
-<!-- Add Modal -->
 <div class="modal fade" id="tambahPenyakit" tabindex="-1" aria-labelledby="tambahPenyakitLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="/obat-penyakit" method="POST">
+      <form action="/obat-penyakit/penyakit" method="POST">
         {{ csrfField() }}
         <div class="modal-body">
           <div class="mb-3">
@@ -15,20 +14,19 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary light">Simpan</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- Edit Modals -->
 @each(penyakit in penyakits)
 <div class="modal fade" id="editPenyakit{{ penyakit.uuid }}" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="/obat-penyakit/{{ penyakit.uuid }}/update" method="POST">
+      <form action="/obat-penyakit/penyakit/{{ penyakit.uuid }}/update" method="POST">
         {{ csrfField() }}
         <input type="hidden" name="_method" value="PUT">
         <div class="modal-body">
@@ -44,8 +42,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary light">Simpan Perubahan</button>
         </div>
       </form>
     </div>

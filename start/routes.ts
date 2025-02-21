@@ -9,7 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
-const PenyakitController = () => import('#controllers/penyakits_controller')
+const ObatPenyakitController = () => import('#controllers/obat_penyakits_controller')
 const PasiensController = () => import('#controllers/pasiens_controller')
 
 router
@@ -55,15 +55,34 @@ router
       return view.render('pasien/profile-pasien')
     })
 
-    router.get('/obat-penyakit', [PenyakitController, 'index']).as('obat-penyakit')
-    router.post('/obat-penyakit', [PenyakitController, 'store']).as('store-obat-penyakit')
+    // start/routes.ts
+    router.get('/obat-penyakit', [ObatPenyakitController, 'index']).as('obat-penyakit')
+
+    // Penyakit routes
     router
-      .post('/obat-penyakit/:uuid/update', [PenyakitController, 'update'])
-      .as('update-obat-penyakit')
+      .post('/obat-penyakit/penyakit', [ObatPenyakitController, 'storePenyakit'])
+      .as('store-penyakit')
     router
-      .post('/obat-penyakit/:uuid/delete', [PenyakitController, 'destroy'])
-      .as('delete-obat-penyakit')
-    router.get('/obat-penyakit/search', [PenyakitController, 'search']).as('search-obat-penyakit')
+      .post('/obat-penyakit/penyakit/:uuid/update', [ObatPenyakitController, 'updatePenyakit'])
+      .as('update-penyakit')
+    router
+      .post('/obat-penyakit/penyakit/:uuid/delete', [ObatPenyakitController, 'destroyPenyakit'])
+      .as('delete-penyakit')
+    router
+      .get('/obat-penyakit/penyakit/search', [ObatPenyakitController, 'searchPenyakit'])
+      .as('search-penyakit')
+
+    // Obat routes
+    router.post('/obat-penyakit/obat', [ObatPenyakitController, 'storeObat']).as('store-obat')
+    router
+      .post('/obat-penyakit/obat/:uuid/update', [ObatPenyakitController, 'updateObat'])
+      .as('update-obat')
+    router
+      .post('/obat-penyakit/obat/:uuid/delete', [ObatPenyakitController, 'destroyObat'])
+      .as('delete-obat')
+    router
+      .get('/obat-penyakit/obat/search', [ObatPenyakitController, 'searchObat'])
+      .as('search-obat')
 
     router.get('/data-kunjungan', async ({ view }) => {
       return view.render('kunjungan/data-kunjungan')

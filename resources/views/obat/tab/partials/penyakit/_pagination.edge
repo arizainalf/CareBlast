@@ -2,6 +2,7 @@
   <div class="d-flex justify-content-end align-items-center mt-3">
     <nav>
       <ul class="pagination pagination-circle m-0">
+
         @if (penyakits.currentPage > 1)
         <li class="page-item page-indicator">
           <a class="page-link" href="?page={{ penyakits.currentPage - 1 }}#dataPenyakit">
@@ -23,6 +24,7 @@
           </a>
           </li>
           @endif
+
       </ul>
     </nav>
   </div>

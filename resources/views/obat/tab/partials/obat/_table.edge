@@ -1,0 +1,33 @@
+<div class="table-responsive">
+  <table class="table table-hover" id="obatTable">
+    <thead>
+      <tr class="text-bold">
+        <th width="5%">#</th>
+        <th><strong>Nama Obat</strong></th>
+        <th><strong>Dosis (mg)</strong></th>
+        <th><strong>Aksi</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      @each((obat, index) in obats)
+      <tr>
+        <th>{{ (obats.currentPage - 1) * obats.perPage + index + 1 }}</th>
+        <td>{{ obat.nama }}</td>
+        <td>{{ obat.dosis % 1 == 0 ? parseInt(obat.dosis) : obat.dosis }} mg</td>
+        <td>
+          <div class="d-flex">
+            <button class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
+              data-bs-target="#editObat{{ obat.uuid }}">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+            <button type="button" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
+              data-bs-target="#hapusObat{{ obat.uuid }}">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      @endeach
+    </tbody>
+  </table>
+</div>

@@ -9,6 +9,12 @@ export default class Obat extends BaseModel {
   @column()
   declare uuid: string
 
+  @column()
+  declare nama: string
+
+  @column()
+  declare dosis: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

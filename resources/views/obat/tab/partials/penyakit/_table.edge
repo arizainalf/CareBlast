@@ -32,7 +32,6 @@
   </table>
 </div>
 
-<!-- Modal Konfirmasi Hapus -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -67,7 +66,7 @@
         const nama = this.getAttribute("data-nama");
 
         penyakitName.textContent = nama;
-        deleteForm.action = `/obat-penyakit/${uuid}/delete`;
+        deleteForm.action = `/obat-penyakit/penyakit/${uuid}/delete`;
       });
     });
   });
