@@ -19,6 +19,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare uuid: string
 
   @column()
+  declare foto: string
+
+  @column()
   declare fullName: string | null
 
   @column()
@@ -41,7 +44,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @beforeCreate()
   public static async generateUuid(user: User) {
-    user.uuid = uuidv4() // Generate UUID sebelum insert
+    user.uuid = uuidv4()
   }
 
   static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)

@@ -8,6 +8,7 @@ import {
 import { Boom } from '@hapi/boom'
 import qrImage from 'qr-image'
 import NumberHelper from '#services/number_service'
+import Message from '#models/message'
 
 let socket: any
 
@@ -23,9 +24,6 @@ export async function connectToWhatsApp() {
     })
 
     socket.ev.on('creds.update', saveCreds)
-    // socket.ev.on('messages.upsert', ({ messages }: { messages: any[] }) => {
-    //   console.log('got messages', messages)
-    // })
     socket.ev.on('connection.update', (update: any) => {
       console.log('Connection update:', update)
       const { connection, lastDisconnect } = update
@@ -81,8 +79,45 @@ export async function getQrCode(): Promise<string> {
 }
 
 export async function getStatus() {
-  return socket?.isConnected
+  socket.ev.on('connection.update', (update: any) => {
+    console.log('Connection update:', update)
+    const { connection } = update
+    if (connection === 'open') {
+      return 'Connected'
+    } else if (connection === 'close') {
+      return 'Closed'
+    }
+  })
 }
+
+async function saveMessage(sender: string, text: string) {
+  try {
+    await Message.create({
+      sender,
+      message: text,
+    })
+    console.log('Pesan berhasil disimpan')
+  } catch (error) {
+    console.error('Gagal menyimpan pesan:', error)
+  }
+}
+
+export async function upsert() {
+  socket.ev.on('messages.upsert', async ({ messages }: { messages: any[] }) => {
+    for (const msg of messages) {
+      if (!msg.key.fromMe) {
+        const sender = msg.key.remoteJid
+        const text = msg.message?.conversation || msg.message?.extendedTextMessage?.text
+
+        console.log(`Pesan dari ${sender}: ${text}`)
+
+        // Simpan ke database jika perlu
+        await saveMessage(sender, text)
+      }
+    }
+  })
+}
+
 
 export async function sendMsg(number: string, message: string) {
   const NumberFormatted = NumberHelper(number)

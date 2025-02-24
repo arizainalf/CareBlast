@@ -1,4 +1,6 @@
-﻿@layout.app({ title: "Dashboard CareBlast" })
+﻿@layout.app({ title: "Dashboard" })
+
+
 @slot('content')
 <div class="container-fluid">
   <div class="row">
@@ -160,4 +162,104 @@
   </div>
 </div>
 @end
+
+@slot('scripts')
+<script>
+  let statusCheckInterval = null; // Untuk menyimpan interval checkStatus
+
+  async function loadQRCode() {
+    try {
+      const response = await axios.get('/qrcode');
+      if (response.data.status === 'success') {
+        if (response.data.qrCode === 'You are already logged in') {
+          handleConnected();
+        } else {
+          document.getElementById('qrCode').src = `data:image/png;base64,${response.data.qrCode}`;
+          document.getElementById('qrCode').style.display = 'block';
+          document.getElementById('logoutBtn').style.display = 'none';
+          startStatusCheck(); // Mulai pengecekan status jika belum berjalan
+        }
+      }
+    } catch (error) {
+      console.error('Error loading QR code:', error);
+      showDisconnected('Failed to load QR code. Please try again.');
+    }
+  }
+
+  async function checkStatus() {
+    try {
+      const response = await axios.get('/status');
+      if (response.data.status === 'success') {
+        if (response.data.connected === 'open') {
+          handleConnected();
+          stopStatusCheck(); // Hentikan pengecekan karena sudah terhubung
+        } else {
+          showDisconnected('Waiting for connection...');
+        }
+      }
+    } catch (error) {
+      console.error('Error checking status:', error);
+    }
+  }
+
+  function handleConnected() {
+    document.getElementById('qrCode').style.display = 'none';
+    document.getElementById('status').className = 'status connected';
+    document.getElementById('status').textContent = 'Connected to WhatsApp!';
+    document.getElementById('logoutBtn').style.display = 'block';
+  }
+
+  function showDisconnected(message) {
+    document.getElementById('status').className = 'status disconnected';
+    document.getElementById('status').textContent = message;
+    document.getElementById('qrCode').style.display = 'block';
+    document.getElementById('logoutBtn').style.display = 'none';
+  }
+
+  function startStatusCheck() {
+    if (!statusCheckInterval) {
+      statusCheckInterval = setInterval(checkStatus, 5000);
+    }
+  }
+
+  function stopStatusCheck() {
+    if (statusCheckInterval) {
+      clearInterval(statusCheckInterval);
+      statusCheckInterval = null;
+    }
+  }
+
+  async function logout() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    const originalText = logoutBtn.textContent || 'Logout';
+
+    try {
+      logoutBtn.innerHTML = '<span class="loading"></span>Logging out...';
+      logoutBtn.disabled = true;
+
+      const response = await axios.post('/logout');
+
+      if (response.data.status === 'success') {
+        showDisconnected('Logged out successfully');
+        setTimeout(() => {
+          loadQRCode();
+        }, 1000);
+      } else {
+        throw new Error(response.data.message || 'Logout failed');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+      showDisconnected(error.response?.data?.message || 'Logout failed. Please try again.');
+    } finally {
+      logoutBtn.innerHTML = originalText;
+      logoutBtn.disabled = false;
+    }
+  }
+
+  // Inisialisasi saat halaman dimuat
+  loadQRCode();
+</script>
+
+@end
+
 @end

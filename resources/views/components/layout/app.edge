@@ -14,12 +14,14 @@
   <meta name="format-detection" content="telephone=no">
 
   <!-- PAGE TITLE HERE -->
-  <title>{{ title }}</title>
+  <title>{{ title }} | BlastCare</title>
   <!-- Form step -->
   <link href="{{ asset('vendor/jquery-smartwizard/dist/css/smart_wizard.min.css') }}" rel="stylesheet">
   <!-- FAVICONS ICON -->
   <link rel="shortcut icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+
   <link href="{{ asset('vendor/jquery-nice-select/css/nice-select.css') }}" rel="stylesheet">
+
   <link href="{{ asset('vendor/owl-carousel/owl.carousel.css') }}" rel="stylesheet">
   <!-- Daterange picker -->
   <link href="{{ asset('vendor/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet">
@@ -32,19 +34,24 @@
     rel="stylesheet">
   <!-- Pick date -->
   <link rel="stylesheet" href="{{ asset('vendor/pickadate/themes/default.css') }}">
+
   <link rel="stylesheet" href="{{ asset('vendor/pickadate/themes/default.date.css') }}">
-  <link href="{{ asset('../icon.css?family=Material+Icons') }}" rel="stylesheet">
+  {{--  <link href="{{ asset('../icon.css?family=Material+Icons') }}" rel="stylesheet">  --}}
   <!-- Sweet Alert -->
   <link href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}" rel="stylesheet">
   <!-- Style css -->
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
   {{-- qr code configuration --}}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <!-- Toastr -->
-  <link rel="stylesheet" href="vendor/toastr/css/toastr.min.css">
+  <link rel="stylesheet" href="{{ asset('vendor/toastr/css/toastr.min.css') }}">
 
-  @stack('styles')
+  @if($slots.styles)
+  {{{ await $slots.styles() }}}
+  @endif
+
 </head>
 
 <body>
@@ -133,103 +140,6 @@
   <script src="{{ asset('vendor/ckeditor/ckeditor.js') }}"></script>
   {{-- toast --}}
   <script src="vendor/toastr/js/toastr.min.js"></script>
-  {{-- qr code configuration --}}
-  <script>
-    async function loadQRCode() {
-      try {
-        const response = await axios.get('/qrcode');
-        const qrCodeImg = document.getElementById('qrCode');
-        const statusDiv = document.getElementById('status');
-        const logoutBtn = document.getElementById('logoutBtn');
-
-        if (response.data.status === 'success') {
-          if (response.data.qrCode === 'You are already logged in') {
-            qrCodeImg.style.display = 'none';
-            statusDiv.className = 'alert alert-success text-center fs-15 mb-4';
-            statusDiv.textContent = 'You are already connected to WhatsApp!';
-            logoutBtn.style.display = 'block';
-          } else {
-            qrCodeImg.src = `data:image/png;base64,${response.data.qrCode}`;
-            qrCodeImg.style.display = 'block';
-            statusDiv.className = 'alert alert-info text-center fs-15 mb-4';
-            statusDiv.textContent = 'Waiting for connection...';
-            checkStatus();
-          }
-        }
-      } catch (error) {
-        console.error('Error loading QR code:', error);
-        const statusDiv = document.getElementById('status');
-        statusDiv.className = 'alert alert-danger text-center fs-15 mb-4';
-        statusDiv.textContent = 'Failed to load QR code. Please try again.';
-      }
-    }
-
-    async function checkStatus() {
-      try {
-        const response = await axios.get('/status');
-        const qrCodeImg = document.getElementById('qrCode');
-        const statusDiv = document.getElementById('status');
-        const logoutBtn = document.getElementById('logoutBtn');
-
-        if (response.data.status === 'success') {
-          if (response.data.connected) {
-            qrCodeImg.style.display = 'none';
-            statusDiv.className = 'alert alert-success text-center fs-15 mb-4';
-            statusDiv.textContent = 'Connected to WhatsApp!';
-            logoutBtn.style.display = 'block';
-          } else {
-            statusDiv.className = 'alert alert-info text-center fs-15 mb-4';
-            statusDiv.textContent = 'Waiting for connection...';
-            logoutBtn.style.display = 'none';
-            setTimeout(checkStatus, 5000);
-          }
-        }
-      } catch (error) {
-        console.error('Error checking status:', error);
-      }
-    }
-
-    function refreshQR() {
-      document.getElementById('qrCode').style.display = 'block';
-      document.getElementById('logoutBtn').style.display = 'none';
-      document.getElementById('status').className = 'alert alert-info text-center fs-15 mb-4';
-      document.getElementById('status').textContent = 'Waiting for connection...';
-      loadQRCode();
-    }
-
-    async function logout() {
-      const logoutBtn = document.getElementById('logoutBtn');
-      const originalText = logoutBtn.textContent || 'Logout';
-
-      try {
-        logoutBtn.innerHTML = '<span class="loading"></span>Logging out...';
-        logoutBtn.disabled = true;
-
-        const response = await axios.post('/logout');
-        if (response.data.status === 'success') {
-          const statusDiv = document.getElementById('status');
-          statusDiv.className = 'alert alert-warning text-center fs-15 mb-4';
-          statusDiv.textContent = 'Logged out successfully.';
-          document.getElementById('qrCode').style.display = 'block';
-          logoutBtn.style.display = 'none';
-          setTimeout(loadQRCode, 1000);
-        } else {
-          throw new Error(response.data.message || 'Logout failed');
-        }
-      } catch (error) {
-        console.error('Error during logout:', error);
-        const statusDiv = document.getElementById('status');
-        statusDiv.className = 'alert alert-danger text-center fs-15 mb-4';
-        statusDiv.textContent = 'Logout failed. Please try again.';
-      } finally {
-        logoutBtn.innerHTML = originalText;
-        logoutBtn.disabled = false;
-      }
-    }
-
-    // Initial load
-    loadQRCode();
-  </script>
 
   <script>
     $(document).ready(function () {
@@ -281,7 +191,10 @@
 
   </script>
 
-  @stack('scripts')
+  @if($slots.scripts)
+  {{{ await $slots.scripts() }}}
+  @endif
+  
 
 </body>
 

@@ -175,11 +175,11 @@ export default class ObatPenyakitController {
     return penyakit.delete()
   }
 
-  private async createObat(data: { nama: string; dosis: string }) {
+  private async createObat(data: { nama: string; dosis: number }) {
     return Obat.create(data)
   }
 
-  private async modifyObat(uuid: string, data: { nama: string; dosis: string }) {
+  private async modifyObat(uuid: string, data: { nama: string; dosis: number }) {
     const obat = await Obat.findByOrFail('uuid', uuid)
     return obat.merge(data).save()
   }
