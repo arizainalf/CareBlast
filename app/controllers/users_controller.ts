@@ -1,6 +1,9 @@
 import { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
+import { createUserValidator } from '#validators/user'
+import { MultipartFile } from '@adonisjs/core/bodyparser'
 // import { dd } from '@adonisjs/core/services/dumper'
+
 
 export default class UsersController {
   /**
@@ -11,18 +14,43 @@ export default class UsersController {
     return view.render('users/index', { users })
   }
 
+  private async saveFile(file: MultipartFile): Promise<string> {
+    const fileName = `${new Date().getTime()}.${file.extname}`
+    await file.move('images/users', { name: fileName })
+    return `users/${fileName}`
+  }
+
   /**
    * Handle form submission for the create action
    */
   async store({ request, response, session }: HttpContext) {
     try {
-      const { name, email, password, role, phoneNumber } = request.all()
-      const user = await User.create({ fullName: name, email, password, role, phoneNumber })
-      session.flash('success', user.fullName + ' berhasil ditambahkan!')
+      const payload = await request.validateUsing(createUserValidator)
+      let fotoPath = ''
+      if(request.file('avatar')){
+        if (payload.avatar) {
+          fotoPath = await this.saveFile(payload.avatar)
+          // dd(fotoPath)
+        } else {
+          fotoPath = 'default-profile.jpg'
+        }
+      } else {
+        fotoPath = 'default-profile.jpg'
+      }
+
+      const user = await User.create({ 
+        fullName: payload.fullName,
+        email: payload.email,
+        password: payload.password,
+        foto: fotoPath,
+        phoneNumber: payload.phoneNumber,
+      })
+
+      session.flash({ 'success': 'User ' + user.fullName +' ditambahkan!' })
       return response.redirect().back()
     } catch (error) {
-      session.flash('error', 'Gagal menambahkan user! ' + error.message)
-
+      console.log(error)
+      session.flash({'error': 'Gagal menambahkan user! ' + error.message})
       return response.redirect().back()
     }
   }
@@ -62,4 +90,5 @@ export default class UsersController {
     const user = await User.findOrFail(params.id)
     await user.delete()
   }
+
 }

@@ -1,7 +1,7 @@
 @layout.app({ title: "Users" })
 
 @pushOnceTo('styles')
-{{-- css --}}
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" rel="stylesheet">
 @end
 
 @slot('content')
@@ -37,7 +37,7 @@
                 <tr>
                   <th>{{ index + 1 }}</th>
                   <td>
-                    <div class="d-flex align-items-center"><img src="images/avatar/1.jpg" class="rounded-lg me-2"
+                    <div class="d-flex align-items-center"><img src="{{ asset('images/users/')}}{{ user.foto }}" class="rounded-lg me-2"
                         width="24" alt=""> <span class="w-space-no">{{ user.fullName }}</span></div>
                   </td>
                   <td>{{ user.email }}</td>
@@ -66,18 +66,48 @@
 <div class="modal fade" id="tambahPengguna" tabindex="-1" aria-labelledby="tambahPengguna" aria-hidden="true">
   @include('users/modal/tambah-data-pengguna')
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+<script>
+  const Toast = Swal.mixin({
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+</script>
+
+@if(flashMessages.get('success'))
+<script>
+  console.log('test');
+  document.addEventListener('DOMContentLoaded', function () {
+    Toast.fire({
+      showCloseButton: true,
+      showConfirmButton: false,
+      position: "top-end",
+      toast: true,
+      title: 'Berhasil! {{ flashMessages.get('success') }}',
+      icon: "success",
+    });
+  });
+</script>
+@end
+
+@if(flashMessages.get('error'))
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    Toast.fire({
+      showCloseButton: false,
+      showConfirmButton: true,
+      toast: false,
+      title: 'Gagal!',
+      text: '{{ flashMessages.get('error') }}',
+      icon: "error",
+    });
+  });
+</script>
 @end
 
 @end
-@pushOnceTo('scripts')
-<script>
-  function notif(title, text, icon) {
-    Swal.fire({
-      title: title,
-      text: text,
-      icon: icon,
-      confirmButtonText: 'OK'
-    });
-  }
-</script>
 @end

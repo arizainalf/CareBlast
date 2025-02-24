@@ -99,7 +99,7 @@ router
 
     router.get('/qrcode', '#controllers/whatsapps_controller.getQrCode').as('qrcode')
     router.get('/status', '#controllers/whatsapps_controller.status').as('status')
-    router.get('/logoutWhatapp', '#controllers/whatsapps_controller.logout').as('logoutWhatsapp')
+    router.get('/logoutWhatsapp', '#controllers/whatsapps_controller.logout').as('logoutWhatsapp')
 
     router.get('/messages', '#controllers/whatsapps_controller.createMsg')
     router.post('/send', '#controllers/whatsapps_controller.sendMsg')

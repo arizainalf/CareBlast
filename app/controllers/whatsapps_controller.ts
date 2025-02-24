@@ -9,6 +9,7 @@ export default class WhatsappsController {
   async showqr({ view }: HttpContext) {
     return view.render('dashboard/index')
   }
+
   async getQrCode({ response }: HttpContext) {
     console.log('requesting qr code from service')
     const qrCode = await getQrCode()
@@ -32,9 +33,11 @@ export default class WhatsappsController {
       status: 'success',
     })
   }
+
   public async createMsg({ view }: HttpContext) {
     return view.render('messages/create')
   }
+
   public async sendMsg({ request, response }: HttpContext) {
     const number = request.input('number')
     const message = request.input('message')
