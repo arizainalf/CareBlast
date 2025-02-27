@@ -4,7 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Dashboard - Login</title>
+  <title>Login BlastCare</title>
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="{{ asset('css/auth.css') }}" rel="stylesheet">
@@ -20,6 +21,51 @@
     </div>
   </div>
   @include('auth/layout/footer')
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('loginForm')
+
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault() // Cegah form submit biasa
+
+        const formData = new FormData(form)
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+          },
+        })
+
+        const result = await response.json()
+
+        if (result.status === 'success') {
+          Swal.fire({
+            title: 'Login Berhasil!',
+            text: 'Anda akan diarahkan ke dashboard...',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            window.location.href = result.redirectUrl
+          })
+        } else {
+          Swal.fire({
+            title: 'Login Gagal',
+            text: result.message,
+            icon: 'error',
+          })
+        }
+      })
+    })
+  </script>
+
+
 </body>
+
+
 
 </html>

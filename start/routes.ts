@@ -21,20 +21,15 @@ router
 
 router.post('/login', '#controllers/session_controller.store').as('loginPost')
 
-router
-  .get('logout', async ({ auth, response }) => {
-    await auth.use('web').logout()
-    return response.redirect('/login')
-  })
-  .use(middleware.auth())
-  .as('logout')
-
 router.get('/forgot', async ({ view }) => {
   return view.render('auth/forgot-pw')
 })
 
 router
   .group(() => {
+
+    router.post('/logout', '#controllers/session_controller.destroy').as('logout')
+
     router.get('/', '#controllers/dashboard_controller.index').as('dashboard')
 
     router.get('/users', '#controllers/users_controller.index').as('users.index')
