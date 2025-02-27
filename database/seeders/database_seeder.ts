@@ -48,14 +48,14 @@ export default class extends BaseSeeder {
       {
         fullName: 'Super Admin',
         email: 'superadmin@gmail.com',
-        password: 'password',
+        password: '11221122',
         role: 'super_admin',
         phoneNumber: '081930865458',
       },
       {
         fullName: 'Admin',
         email: 'user@gmail.com',
-        password: 'password',
+        password: '11221122',
         role: 'admin',
         phoneNumber: '081930865458',
       },
@@ -147,7 +147,7 @@ export default class extends BaseSeeder {
       const birthYear = 1960 + Math.floor(Math.random() * 50) // Random year between 1960-2010
       const birthMonth = 1 + Math.floor(Math.random() * 12)
       const birthDay = 1 + Math.floor(Math.random() * 28)
-      const birthDate = DateTime.local(birthYear, birthMonth, birthDay).toISODate()
+      const birthDate = DateTime.local(birthYear, birthMonth, birthDay)
 
       const firstName =
         index % 2 === 0
