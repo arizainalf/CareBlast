@@ -1,14 +1,24 @@
+<!-- resources/views/pasien/modal-profile/edit-obat.edge -->
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">Edit Obat Oskadon</h5>
+      <h5 class="modal-title">Edit Obat</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form id="medicine-form">
+      <form id="edit-medicine-form">
+        {{ csrfField() }}
+        <input type="hidden" id="edit-obat-uuid" name="uuid" value="">
+        <div class="mb-2">
+          <label class="form-label">Keterangan Waktu</label>
+          <select id="edit-keterangan-waktu" class="form-select" name="keteranganWaktu">
+            <option value="Sesudah makan">Sesudah makan</option>
+            <option value="Sebelum makan">Sebelum makan</option>
+          </select>
+        </div>
         <div class="mb-2">
           <label class="form-label">Berapa kali sehari</label>
-          <select id="frequency-select" class="form-select">
+          <select id="frequency-select" class="form-select" name="frekuensi">
             <option value="1">sehari 1x</option>
             <option value="2">sehari 2x</option>
             <option value="3">sehari 3x</option>
@@ -17,8 +27,8 @@
         </div>
         <div id="time-inputs">
           <label class="form-label">Pada jam berapa?</label>
-          <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autobtn-close="true">
-            <input type="text" class="form-control" value="13:14">
+          <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
+            <input type="text" class="form-control clockpicker-input" value="08:00">
             <span class="input-group-text"><i class="far fa-clock"></i></span>
           </div>
         </div>
@@ -26,38 +36,8 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
-      <button type="button" class="btn btn-primary">Simpan</button>
+      <button type="button" class="btn btn-primary" id="save-edit-obat">Simpan</button>
     </div>
   </div>
 </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const frequencySelect = document.getElementById("frequency-select");
-    const timeInputsContainer = document.getElementById("time-inputs");
-
-    frequencySelect.addEventListener("change", function () {
-      const frequency = parseInt(this.value, 10);
-      timeInputsContainer.innerHTML = "";
-
-      for (let i = 1; i <= frequency; i++) {
-        const inputGroup = document.createElement("div");
-        inputGroup.classList.add("input-group", "clockpicker", "mb-2");
-
-        inputGroup.innerHTML = `
-          <label class="form-label">Pada jam ke-${i}?</label>
-          <div class="input-group">
-            <input type="text" class="form-control clockpicker-input" placeholder="Pilih waktu">
-            <span class="input-group-text"><i class="far fa-clock"></i></span>
-          </div>
-        `;
-        timeInputsContainer.appendChild(inputGroup);
-      }
-
-      const clockpickerElements = document.querySelectorAll(".clockpicker");
-      clockpickerElements.forEach((element) => {
-        $(element).clockpicker();
-      });
-    });
-  });
-</script>
+@include('pasien/modal-profile/script/edit-obat')

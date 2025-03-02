@@ -1,42 +1,48 @@
+<!-- pasien/partial/detail-pasien/data-diri.edge -->
 <div class="profile-about-me">
-<div class="profile-personal-info">
-  <h3 class="text-primary mb-2 mt-2">Informasi Pribadi</h3>
-  <div class="col-xl-9 col-lg-8">
-    <div class="row">
-      <div class="col-sm-6 mb-3">
-        <h6 class="text-muted mb-1">Nama Lengkap</h6>
-        <h5>Akmal Sidik</h5>
-      </div>
-      <div class="col-sm-6 mb-3">
-        <h6 class="text-muted mb-1">NIK</h6>
-        <h5>320635764786983</h5>
-      </div>
-      <div class="col-sm-6 mb-3">
-        <h6 class="text-muted mb-1">Tanggal Lahir</h6>
-        <h5>15 Januari 1990</h5>
-      </div>
-      <div class="col-sm-6 mb-3">
-        <h6 class="text-muted mb-1">Jenis Kelamin</h6>
-        <h5>Laki-laki</h5>
-      </div>
-      <div class="col-sm-6 mb-3">
-        <h6 class="text-muted mb-1">No. Telepon</h6>
-        <h5>+62 812-3456-7890</h5>
-      </div>
-      <div class="col-sm-6 mb-3">
-        <h6 class="text-muted mb-1">Golongan Darah</h6>
-        <h5>O+</h5>
-      </div>
-      <div class="col-12">
-        <h6 class="text-muted mb-1">Alamat</h6>
-        <h5>Jl. Raya Bogor No. 123, RT 02/RW 03, Kota Bogor</h5>
+  <div class="profile-personal-info">
+    <h3 class="text-primary mb-2 mt-2">Informasi Pribadi</h3>
+    <div class="col-xl-9 col-lg-8">
+      <div class="row">
+        <div class="col-sm-6 mb-3">
+          <h6 class="text-muted mb-1">Nama Lengkap</h6>
+          <h5>{{ pasien.name }}</h5>
+        </div>
+        <div class="col-sm-6 mb-3">
+          <h6 class="text-muted mb-1">NIK</h6>
+          <h5>{{ pasien.nik }}</h5>
+        </div>
+        <div class="col-sm-6 mb-3">
+          <h6 class="text-muted mb-1">Jenis Kelamin</h6>
+          <h5>{{ pasien.jenis_kelamin }}</h5>
+        </div>
+        <div class="col-sm-6 mb-3">
+          <h6 class="text-muted mb-1">Tempat, Tanggal Lahir</h6>
+          <h5>{{ pasien.tempat }}, {{ formatDate(pasien.tanggal_lahir) }}</h5>
+        </div>
+        <div class="col-sm-6 mb-3">
+          <h6 class="text-muted mb-1">No. Telepon</h6>
+          <h5>{{ pasien.no_hp }}</h5>
+        </div>
+        <div class="col-sm-6 mb-3">
+          <h6 class="text-muted mb-1">Golongan Darah</h6>
+          <h5>{{ pasien.golongan_darah || '-' }}</h5>
+        </div>
+        <div class="col-12">
+          <h6 class="text-muted mb-1">Alamat</h6>
+          <h5>{{ pasien.alamat }}</h5>
+        </div>
       </div>
     </div>
   </div>
+  <div class="pt-4 border-bottom-1 pb-3">
+    <h3 class="text-primary">Penyakit yang diderita</h3>
+    <h5 class="mb-2">{{ pasien.jenisPenyakit.nama }}</h5>
+    <p>{{ pasien.jenisPenyakit.deskripsi || 'Tidak ada deskripsi' }}</p>
+  </div>
 </div>
-<div class="pt-4 border-bottom-1 pb-3">
+{{--  <div class="pt-4 border-bottom-1 pb-3">
   <h3 class="text-primary">Penyakit yang diderita</h3>
   <p class="mb-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum esse dolores neque placeat blanditiis magni in dolorum doloribus! Blanditiis commodi dolore animi voluptas quae itaque, architecto molestias ab quasi illo, maiores ut nulla repellat incidunt quisquam at? Praesentium, debitis vero?</p>
   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque perspiciatis, hic facilis laborum soluta placeat molestiae nemo doloribus aliquam cupiditate incidunt, quasi consequuntur consectetur magni ex saepe inventore fuga repellat.</p>
-</div>
-</div>
+</div>  --}}

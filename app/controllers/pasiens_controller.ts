@@ -3,6 +3,7 @@ import Pasien from '#models/pasien'
 import JenisPenyakit from '#models/jenis_penyakit'
 import { DateTime } from 'luxon'
 import { v4 as uuidv4 } from 'uuid'
+import Obat from '#models/obat'
 
 export default class PasiensController {
   async index({ view, request }: HttpContext) {
@@ -146,5 +147,91 @@ export default class PasiensController {
     })
 
     return response.json(transformedData)
+  }
+  async show({ view, params }: HttpContext) {
+    try {
+      const uuid = params.uuid
+
+      const pasien = await Pasien.query()
+        .where('uuid', uuid)
+        .preload('jenisPenyakit', (query) => {
+          query.select('id', 'nama', 'deskripsi')
+        })
+        .preload('obatPasiens', (query) => {
+          query.preload('obat')
+        })
+        .firstOrFail()
+
+      // Get medications grouped by keteranganWaktu
+      const obatSebelumMakan = pasien.obatPasiens.filter(
+        (op: { keteranganWaktu: string }) => op.keteranganWaktu === 'Sebelum makan'
+      )
+      const obatSesudahMakan = pasien.obatPasiens.filter(
+        (op: { keteranganWaktu: string }) => op.keteranganWaktu === 'Sesudah makan'
+      )
+
+      const helpers = {
+        calculateAge: (birthDate: string | null): number => {
+          if (!birthDate) return 0
+          try {
+            const birth = DateTime.fromISO(birthDate)
+            const now = DateTime.now()
+            return Math.floor(now.diff(birth, 'years').years)
+          } catch (error) {
+            console.error('Error calculating age:', error)
+            return 0
+          }
+        },
+
+        formatDate: (date: string | null): string => {
+          if (!date) return ''
+          try {
+            const dateTime = DateTime.fromISO(date)
+            return dateTime.toFormat('dd MMMM yyyy')
+          } catch (error) {
+            console.error('Error formatting date:', error)
+            return ''
+          }
+        },
+      }
+
+      // Get all medications for dropdown
+      const obats = await Obat.all()
+
+      return view.render('pasien/profile-pasien', {
+        pasien,
+        obatSebelumMakan,
+        obatSesudahMakan,
+        obats,
+        ...helpers,
+      })
+    } catch (error) {
+      console.error('Error fetching patient details:', error)
+      return view.render('errors/not-found')
+    }
+  }
+  async destroy({ params, response }: HttpContext) {
+    try {
+      const uuid = params.uuid
+
+      await Pasien.transaction(async (trx) => {
+        // Find the patient by UUID
+        const pasien = await Pasien.query({ client: trx }).where('uuid', uuid).firstOrFail()
+
+        // Delete the patient (this will cascade to related records due to onDelete('CASCADE') in migrations)
+        await pasien.delete()
+      })
+
+      // Redirect to patient list with success message
+      return response
+        .redirect()
+        .toRoute('pasien.index', { success: 'Data pasien berhasil dihapus' })
+    } catch (error) {
+      console.error('Error deleting patient:', error)
+      // Redirect back with error message
+      return response.redirect().back({
+        error: 'Gagal menghapus data pasien. Silakan coba lagi.',
+      })
+    }
   }
 }

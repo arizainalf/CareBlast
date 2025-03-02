@@ -1,10 +1,10 @@
-@layout.app()
+@layout.app({ title: "Profile Pasien" })
 @slot('content')
 <div class="container-fluid">
   <div class="row page-titles">
     <ol class="breadcrumb">
       <li class="breadcrumb-item active"><a href="javascript:void(0)">Pasien</a></li>
-      <li class="breadcrumb-item"><a href="javascript:void(0)">Akmal Sidik</a></li>
+      <li class="breadcrumb-item"><a href="javascript:void(0)">{{ pasien.name }}</a></li>
     </ol>
   </div>
   <div class="row">
@@ -19,21 +19,21 @@
               </div>
               <div class="profile-info">
                 <div class="profile-photo" style="margin-top: -8px ;">
-                  <img src="images/profile-rege.png" class="img-fluid rounded-circle">
+                  <img src="/images/profile-rege.png" class="img-fluid rounded-circle">
                 </div>
                 <div class="profile-details">
                   <div class="profile-name px-3 pt-2">
-                    <h4 class="text-primary mb-0">Akmal Sidik </h4>
-                    <p>32780561664398001</p>
+                    <h4 class="text-primary mb-0">{{ pasien.name }}</h4>
+                    <p>{{ pasien.nik }}</p>
                   </div>
                   <div class="profile-email px-2 pt-2">
-                    <h4 class="text-muted mb-0">Tasikmalaya, 18 September 2003</h4>
-                    <p>21 tahun</p>
+                    <h4 class="text-muted mb-0">{{ pasien.tempat }}, {{ formatDate(pasien.tanggal_lahir) }}</h4>
+                    <p>{{ calculateAge(pasien.tanggal_lahir) }} tahun</p>
                   </div>
                   <div class="dropdown ms-auto">
                     <a href="#" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true"><svg
-                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px"
-                        viewbox="0 0 24 24" version="1.1">
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px"
+                        height="18px" viewbox="0 0 24 24" version="1.1">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                           <rect x="0" y="0" width="24" height="24"></rect>
                           <circle fill="#000000" cx="5" cy="12" r="2"></circle>
@@ -44,7 +44,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded">
                       <li>
-                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#tambahObatModal">
+                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                          data-bs-target="#tambahObatModal">
                           <i class="fas fa-capsules text-success me-2"></i> Tambah Obat
                         </button>
                       </li>
@@ -90,44 +91,87 @@
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title">Hapus Data Obat</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal">
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                       </div>
-                      <div class="modal-body">Data obat <b>Akmal Sidik</b> akan dihapus?</div>
+                      <div class="modal-body">
+                        Data obat <b id="obatToDelete"></b> akan dihapus?
+                      </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-danger light">Hapus</button>
+                        <form id="deleteObatForm" method="POST">
+                          {{ csrfField() }}
+                          {{-- {{ method('DELETE') }} --}}
+                          <button type="submit" class="btn btn-danger light">Hapus</button>
+                        </form>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- Medication Lists with Detail Triggers -->
                 <div class="card-body">
                   <div class="basic-list-group mb-0">
+                    <!-- Before Meals Medications -->
                     <ul class="list-group">
-                      <li class="list-group-item active">Sebelum Makan </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis
-                        in <span class="badge badge-rounded badge-outline-warning badge-lg" data-bs-toggle="modal"
-                          data-bs-target="#basicModal"><i class="fas fa-pencil-alt"></i></span><span
-                          class="badge badge-primary badge-pill">3X1</span></li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis
-                        in <span class="badge badge-rounded badge-outline-warning badge-lg" data-bs-toggle="modal"
-                          data-bs-target="#basicModal"><i
-                            class="fas fa-pencil-alt"></i></span><span class="badge badge-primary badge-pill">2X1</span>
+                      <li class="list-group-item active">Sebelum Makan</li>
+                      @if(obatSebelumMakan.length === 0)
+                      <li class="list-group-item text-center">Tidak ada obat</li>
+                      @else
+                      @each(item in obatSebelumMakan)
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="medication-name cursor-pointer" title="{{ item.obat.nama }}" data-bs-toggle="modal"
+                          data-bs-target="#medicationDetailModal" data-uuid="{{ item.uuid }}" data-nama="{{ item.obat.nama }}"
+                          data-dosis="{{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }}"
+                          data-frekuensi="{{ item.frekuensi }}" data-waktu="{{ item.waktuKonsumsi }}"
+                          data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                          <span class="text-truncate d-inline-block" style="max-width: 150px; vertical-align: middle;">
+                            {{ item.obat.nama.length > 10 ? item.obat.nama.slice(0, 10) + '...' : item.obat.nama }}
+                          </span>
+                          {{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }} mg
+                        </span>
+                        <div class="d-flex align-items-center">
+                          <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3" data-bs-toggle="modal"
+                            data-bs-target="#basicModal" data-uuid="{{ item.uuid }}" data-nama="{{ item.obat.nama }}"
+                            data-frekuensi="{{ item.frekuensi }}" data-waktu="{{ item.waktuKonsumsi }}"
+                            data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                            <i class="fas fa-pencil-alt"></i>
+                          </span>
+                          <span class="badge badge-primary badge-pill">{{ item.frekuensi }}X1</span>
+                        </div>
                       </li>
+                      @end
+                      @endif
                     </ul>
-                    <ul class="list-group">
-                      <li class="list-group-item disabled">Sesudah Makan </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac consectetur
-                        ac <span class="badge badge-rounded badge-outline-warning badge-lg" data-bs-toggle="modal"
-                          data-bs-target="#basicModal"><i
-                            class="fas fa-pencil-alt"></i></span><span
-                          class="badge badge-secondary badge-pill">1X1</span></li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">Porta ac consectetur
-                        ac<span class="badge badge-rounded badge-outline-warning badge-lg" data-bs-toggle="modal"
-                          data-bs-target="#basicModal"><i
-                            class="fas fa-pencil-alt"></i></span><span
-                          class="badge badge-secondary badge-pill">2X1</span>
+
+                    <!-- After Meals Medications -->
+                    <ul class="list-group mt-3">
+                      <li class="list-group-item disabled">Sesudah Makan</li>
+                      @if(obatSesudahMakan.length === 0)
+                      <li class="list-group-item text-center">Tidak ada obat</li>
+                      @else
+                      @each(item in obatSesudahMakan)
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="medication-name cursor-pointer" title="{{ item.obat.nama }}" data-bs-toggle="modal"
+                          data-bs-target="#medicationDetailModal" data-uuid="{{ item.uuid }}" data-nama="{{ item.obat.nama }}"
+                          data-dosis="{{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }}"
+                          data-frekuensi="{{ item.frekuensi }}" data-waktu="{{ item.waktuKonsumsi }}"
+                          data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                          <span class="text-truncate d-inline-block" style="max-width: 150px; vertical-align: middle;">
+                            {{ item.obat.nama.length > 10 ? item.obat.nama.slice(0, 10) + '...' : item.obat.nama }}
+                          </span>
+                          {{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }} mg
+                        </span>
+                        <div class="d-flex align-items-center">
+                          <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3" data-bs-toggle="modal"
+                            data-bs-target="#basicModal" data-uuid="{{ item.uuid }}" data-nama="{{ item.obat.nama }}"
+                            data-frekuensi="{{ item.frekuensi }}" data-waktu="{{ item.waktuKonsumsi }}"
+                            data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                            <i class="fas fa-pencil-alt"></i>
+                          </span>
+                          <span class="badge badge-secondary badge-pill">{{ item.frekuensi }}X1</span>
+                        </div>
                       </li>
+                      @end
+                      @endif
                     </ul>
                   </div>
                 </div>
@@ -171,13 +215,17 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="basicModal">
+<div class="modal fade" id="basicModal" tabindex="-1" role="dialog">
   @include('pasien/modal-profile/edit-obat')
 </div>
 <div class="modal fade" id="tambahObatModal">
   @include('pasien/modal-profile/tambah-obat')
 </div>
-<div class="modal fade" id="tambahKunjunganModal">
+<div class="modal fade" id="medicationDetailModal" tabindex="-1" aria-labelledby="medicationDetailModalLabel"
+  aria-hidden="true">
+  @include('pasien/modal-profile/detail-obat')
+</div>
+<div class="modal fade" id="tambahKunjunganModal" tabindex="-1">
   @include('pasien/modal-profile/tambah-kunjungan')
 </div>
 <div class="modal fade" id="hapusModal">

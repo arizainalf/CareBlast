@@ -1,0 +1,115 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get the detail modal
+    const detailModal = document.getElementById('medicationDetailModal');
+
+    // Add event listener to the modal
+    detailModal.addEventListener('show.bs.modal', function (event) {
+      // Get the medication item that triggered the modal
+      const medicationName = event.relatedTarget;
+
+      // Get data attributes from the medication item
+      const uuid = medicationName.getAttribute('data-uuid');
+      const nama = medicationName.getAttribute('data-nama');
+      const dosis = medicationName.getAttribute('data-dosis');
+      const frekuensi = medicationName.getAttribute('data-frekuensi');
+      const waktuJSON = medicationName.getAttribute('data-waktu');
+      const keteranganWaktu = medicationName.getAttribute('data-keterangan-waktu') ||
+        (medicationName.closest('.list-group').querySelector('.list-group-item:first-child').textContent.includes('Sebelum') ?
+          'Sebelum makan' : 'Sesudah makan');
+
+      // Determine theme based on meal timing
+      const isBeforeMeal = keteranganWaktu.toLowerCase().includes('sebelum');
+
+      // Set theme color variable for easier reference
+      const themeColor = isBeforeMeal ? 'primary' : 'secondary';
+
+      // Update modal elements with the correct color theme
+      const modalHeader = detailModal.querySelector('.modal-header');
+      const divider = detailModal.querySelector('hr');
+      const categoryBadge = detailModal.querySelector('.modal-medication-category');
+      const iconContainers = detailModal.querySelectorAll('.rounded-circle');
+      const editButton = detailModal.querySelector('.modal-edit-button');
+
+      // Update header color
+      modalHeader.className = `modal-header bg-${themeColor} text-white`;
+
+      // Update divider color
+      divider.className = `text-${themeColor} opacity-100 mt-2 mb-1`;
+
+      // Update category badge
+      categoryBadge.className = `badge bg-bg-white bg-opacity-10 text-${themeColor} border border-${themeColor} border-opacity-25 rounded-pill modal-medication-category px-3 py-2 fs-6`;
+
+      // Update all icon containers
+      iconContainers.forEach(container => {
+        container.className = `bg-${themeColor} bg-opacity-10 text-white rounded-circle p-3 me-3 d-flex align-items-center justify-content-center`;
+      });
+
+      // Update edit button
+      editButton.className = `btn btn-${themeColor} modal-edit-button`;
+
+      // Parse JSON waktu
+      let waktuArray = [];
+      try {
+        waktuArray = JSON.parse(waktuJSON);
+      } catch (error) {
+        console.error('Error parsing waktu JSON:', error);
+        // Fallback for string format
+        if (waktuJSON) {
+          try {
+            // Handle string format that might come from the attribute
+            waktuArray = JSON.parse(waktuJSON.replace(/'/g, '"'));
+          } catch (e) {
+            console.error('Second attempt to parse waktu failed:', e);
+            waktuArray = [waktuJSON];
+          }
+        }
+      }
+
+      // Update modal content elements
+      const nameElement = detailModal.querySelector('.modal-medication-name');
+      const doseElement = detailModal.querySelector('.modal-medication-dose');
+      const frequencyElement = detailModal.querySelector('.modal-medication-frequency');
+      const scheduleElement = detailModal.querySelector('.modal-medication-schedule');
+
+      // Set values
+      nameElement.textContent = nama;
+      categoryBadge.textContent = keteranganWaktu;
+      doseElement.textContent = `${dosis} mg`;
+      frequencyElement.textContent = `${frekuensi}x sehari`;
+
+      // Clear previous schedule
+      scheduleElement.innerHTML = '';
+
+      // Add each time to the schedule in a responsive grid
+      waktuArray.forEach(waktu => {
+        const timeCol = document.createElement('div');
+        timeCol.className = 'col-md-6 col-sm-9 col-6 mb-2';
+
+        const timeTag = document.createElement('div');
+        timeTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
+        timeTag.innerHTML = `<i class="far fa-clock me-2"></i>${waktu}`;
+
+        timeCol.appendChild(timeTag);
+        scheduleElement.appendChild(timeCol);
+      });
+
+      // Set up edit button click handler
+      editButton.onclick = function () {
+        // Find the edit button for this medication
+        const editSpan = document.querySelector(`.edit-obat[data-uuid="${uuid}"]`);
+
+        // Close detail modal
+        const detailModalInstance = bootstrap.Modal.getInstance(detailModal);
+        detailModalInstance.hide();
+
+        // Click the edit button after a short delay to allow the first modal to close
+        setTimeout(() => {
+          if (editSpan) {
+            editSpan.click();
+          }
+        }, 400);
+      };
+    });
+  });
+</script>

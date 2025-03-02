@@ -1,14 +1,30 @@
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Hapus Data pasien</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="hapusModalLabel">Konfirmasi Hapus Pasien</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i> Peringatan!
+      </div>
+      <p>Anda akan menghapus seluruh data pasien <strong>{{ pasien.name }}</strong> beserta:</p>
+      <ul>
+        <li>Riwayat kunjungan</li>
+        <li>Data obat yang terkait</li>
+        <li>Jadwal pengobatan</li>
+        <li>Dan semua data lain yang berhubungan dengan pasien ini</li>
+      </ul>
+      <p class="mb-0 fw-bold">Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+      <form action="{{ route('pasien.destroy', { uuid: pasien.uuid }) }}?_method=DELETE" method="POST">
+        {{ csrfField() }}
+        <button type="submit" class="btn btn-danger">
+          <i class="fas fa-trash-alt me-1"></i> Hapus Semua Data
         </button>
-      </div>
-      <div class="modal-body">Data pasien <b>Akmal Sidik</b> akan dihapus?</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-danger light">Hapus</button>
-      </div>
+      </form>
     </div>
   </div>
+</div>

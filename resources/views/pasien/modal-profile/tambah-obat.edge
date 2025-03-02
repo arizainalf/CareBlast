@@ -1,30 +1,42 @@
+<!-- Modal Form -->
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">Tambah data obat</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal">
-      </button>
+      <h5 class="modal-title">Tambah Data Obat</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form>
+      <form id="add-medicine-form" method="POST" action="/pasien/{{ pasien.uuid }}/obat">
+        {{ csrfField() }}
         <div class="mb-3">
-          <input type="text" class="form-control input-default" placeholder="Nama Pasien">
+          <label class="form-label">Nama Pasien</label>
+          <input type="text" class="form-control input-default" value="{{ pasien.name }}" disabled>
         </div>
         <div class="mb-3">
-          <input type="text" class="form-control input-default" placeholder="Nama obat">
+          <label class="form-label">Nama Obat</label>
+          <select class="form-select" name="obatNama" id="obat-nama">
+            <option value="">Pilih Obat</option>
+            @each(obat in obats)
+            <option value="{{ obat.nama }}">
+              {{ obat.nama }} - {{ obat.dosis % 1 == 0 ? parseInt(obat.dosis) : obat.dosis }} mg
+            </option>
+            @end
+          </select>
+          <input type="text" id="custom-obat" name="customObat" class="form-control mt-2 d-none"
+            placeholder="Masukkan nama obat baru">
         </div>
         <div class="mb-3">
-          <label class="form-label">Keterangan waktu:</label>
-          <select class="default-select  form-control ">
-            <option>Sesudah makan</option>
-            <option>Sebelum makan</option>
+          <label class="form-label">Keterangan Waktu</label>
+          <select class="form-select" name="keteranganWaktu">
+            <option value="Sesudah makan">Sesudah makan</option>
+            <option value="Sebelum makan">Sebelum makan</option>
           </select>
         </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
       </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
-      <button type="button" class="btn btn-primary">Simpan</button>
     </div>
   </div>
 </div>
