@@ -4,6 +4,7 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { v4 as uuidv4 } from 'uuid'
 import Pasien from '#models/pasien'
 import Obat from '#models/obat'
+import Kunjungan from '#models/kunjungan'
 
 export default class ObatPasien extends BaseModel {
   @column({ isPrimary: true })
@@ -17,6 +18,12 @@ export default class ObatPasien extends BaseModel {
 
   @belongsTo(() => Pasien)
   declare pasien: BelongsTo<typeof Pasien>
+
+  @column()
+  declare kunjunganId: number
+
+  @belongsTo(() => Kunjungan)
+  declare kunjungan: BelongsTo<typeof Kunjungan>
 
   @column()
   declare obatId: number

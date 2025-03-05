@@ -4,6 +4,8 @@ import JenisPenyakit from '#models/jenis_penyakit'
 import { DateTime } from 'luxon'
 import { v4 as uuidv4 } from 'uuid'
 import Obat from '#models/obat'
+import Kunjungan from '#models/kunjungan'
+import ObatPasien from '#models/obat_pasien'
 
 export default class PasiensController {
   async index({ view, request }: HttpContext) {
@@ -78,7 +80,7 @@ export default class PasiensController {
           'alamat',
           'jenis_kelamin',
           'golongan_darah',
-        ])
+        ]) as Record<string, any>
 
         const firstName = request.input('first_name', '')
         const lastName = request.input('last_name', '')
@@ -117,7 +119,16 @@ export default class PasiensController {
     }
 
     const pasienData = await Pasien.query()
-      .select(['id', 'name', 'nik', 'jenis_kelamin', 'tanggal_lahir', 'tempat', 'jenisPenyakitId'])
+      .select([
+        'id',
+        'uuid',
+        'name',
+        'nik',
+        'jenis_kelamin',
+        'tanggal_lahir',
+        'tempat',
+        'jenisPenyakitId',
+      ]) // Tambahkan 'uuid' di sini
       .preload('jenisPenyakit', (query) => {
         query.select('id', 'nama')
       })
@@ -148,25 +159,36 @@ export default class PasiensController {
 
     return response.json(transformedData)
   }
+
   async show({ view, params }: HttpContext) {
     try {
       const uuid = params.uuid
 
+      // Ambil pasien beserta data kunjungan, diurutkan dari yang terbaru
       const pasien = await Pasien.query()
         .where('uuid', uuid)
         .preload('jenisPenyakit', (query) => {
           query.select('id', 'nama', 'deskripsi')
         })
-        .preload('obatPasiens', (query) => {
-          query.preload('obat')
+        .preload('kunjungans', (query) => {
+          query.preload('obatPasiens', (obatQuery) => {
+            obatQuery.preload('obat')
+          })
+          query.orderBy('tanggalKunjungan', 'desc') // Urutkan dari terbaru
         })
         .firstOrFail()
 
-      // Get medications grouped by keteranganWaktu
-      const obatSebelumMakan = pasien.obatPasiens.filter(
+      // Ambil kunjungan terbaru
+      const kunjunganTerbaru = pasien.kunjungans.length > 0 ? pasien.kunjungans[0] : null
+
+      // Ambil obat dari kunjungan terbaru (jika ada)
+      const obatPasiens = kunjunganTerbaru ? kunjunganTerbaru.obatPasiens : []
+
+      // Kelompokkan obat berdasarkan waktu konsumsi
+      const obatSebelumMakan = obatPasiens.filter(
         (op: { keteranganWaktu: string }) => op.keteranganWaktu === 'Sebelum makan'
       )
-      const obatSesudahMakan = pasien.obatPasiens.filter(
+      const obatSesudahMakan = obatPasiens.filter(
         (op: { keteranganWaktu: string }) => op.keteranganWaktu === 'Sesudah makan'
       )
 
@@ -195,43 +217,58 @@ export default class PasiensController {
         },
       }
 
-      // Get all medications for dropdown
+      // Ambil semua daftar obat untuk dropdown
       const obats = await Obat.all()
+
+      // Siapkan daftar kunjungan untuk dropdown
+      const kunjungans = pasien.kunjungans.map((kunjungan) => ({
+        id: kunjungan.id,
+        uuid: kunjungan.uuid,
+        tema: kunjungan.tema,
+        tanggalKunjungan: kunjungan.tanggalKunjungan,
+        formattedDate: helpers.formatDate(kunjungan.tanggalKunjungan.toISO()),
+      }))
 
       return view.render('pasien/profile-pasien', {
         pasien,
         obatSebelumMakan,
         obatSesudahMakan,
         obats,
+        kunjunganTerbaru,
+        kunjungans,
         ...helpers,
       })
     } catch (error) {
       console.error('Error fetching patient details:', error)
-      return view.render('errors/not-found')
+      return view.render('pages/errors/404')
     }
   }
-  async destroy({ params, response }: HttpContext) {
-    try {
-      const uuid = params.uuid
+  async destroy({ params, response, session }: HttpContext) {
+    const pasien = await Pasien.findByOrFail('uuid', params.uuid)
 
-      await Pasien.transaction(async (trx) => {
-        // Find the patient by UUID
-        const pasien = await Pasien.query({ client: trx }).where('uuid', uuid).firstOrFail()
+    // Mulai transaksi dari model Pasien
+    await Pasien.transaction(async (trx) => {
+      try {
+        // Hapus kunjungan terkait
+        await Kunjungan.query().where('pasien_id', pasien.id).delete()
 
-        // Delete the patient (this will cascade to related records due to onDelete('CASCADE') in migrations)
-        await pasien.delete()
-      })
+        // Hapus obat pasien terkait
+        await ObatPasien.query()
+          .whereHas('kunjungan', (query) => {
+            query.where('pasien_id', pasien.id)
+          })
+          .delete()
 
-      // Redirect to patient list with success message
-      return response
-        .redirect()
-        .toRoute('pasien.index', { success: 'Data pasien berhasil dihapus' })
-    } catch (error) {
-      console.error('Error deleting patient:', error)
-      // Redirect back with error message
-      return response.redirect().back({
-        error: 'Gagal menghapus data pasien. Silakan coba lagi.',
-      })
-    }
+        // Hapus pasien
+        await pasien.useTransaction(trx).delete()
+
+        session.flash({ success: 'Data pasien berhasil dihapus' })
+      } catch (error) {
+        console.error('Error deleting patient:', error)
+        session.flash({ error: 'Gagal menghapus data pasien. Silakan coba lagi.' })
+      }
+    })
+
+    return response.redirect().toRoute('pasien.index')
   }
 }

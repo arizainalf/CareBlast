@@ -13,8 +13,19 @@
           <input type="text" class="form-control input-default" value="{{ pasien.name }}" disabled>
         </div>
         <div class="mb-3">
+          <label class="form-label">Terkait Kunjungan</label>
+          <select class="form-select" name="kunjunganId">
+            <option value="">Pilih Tanggal Kunjungan</option>
+            @each(kunjungan in pasien.kunjungans)
+            <option value="{{ kunjungan.id }}">
+              {{ formatDate(kunjungan.tanggalKunjungan) }} - {{ kunjungan.tema }}
+            </option>
+            @end
+          </select>
+        </div>
+        <div class="mb-3">
           <label class="form-label">Nama Obat</label>
-          <select class="form-select" name="obatNama" id="obat-nama">
+          <select class="form-select" name="obatNama">
             <option value="">Pilih Obat</option>
             @each(obat in obats)
             <option value="{{ obat.nama }}">
@@ -22,8 +33,6 @@
             </option>
             @end
           </select>
-          <input type="text" id="custom-obat" name="customObat" class="form-control mt-2 d-none"
-            placeholder="Masukkan nama obat baru">
         </div>
         <div class="mb-3">
           <label class="form-label">Keterangan Waktu</label>

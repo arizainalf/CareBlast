@@ -56,8 +56,7 @@
                         </button>
                       </li>
                       <li>
-                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
-                          data-bs-target="#hapusModal">
+                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#hapusModal">
                           <i class="fas fa-ban text-danger me-2"></i> Hapus Pasien
                         </button>
                       </li>
@@ -74,19 +73,22 @@
           <div class="row">
             <div class="col-xl-12">
               <div class="card">
+                <!-- Tambahkan kode ini di bagian header card Data Obat -->
                 <div class="card-header">
                   <div class="d-flex flex-column">
                     <h4 class="card-title">Data Obat</h4>
                   </div>
-                  <div class="bootstrap-badge" data-bs-toggle="modal" data-bs-target="#obatModal">
-                    <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-lg"><i
-                        class="far fa-trash-alt"></i></a>
+                  <div class="bootstrap-badge">
+                    <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-lg" data-bs-toggle="modal"
+                      data-bs-target="#bulkDeleteObatModal">
+                      <i class="far fa-trash-alt"></i>
+                    </a>
                     {{-- <a href="javascript:void(0)" class="badge badge-rounded badge-outline-warning badge-lg"><i
                         class="fas fa-pencil-alt"></i></a> --}}
                   </div>
                 </div>
-                {{-- Modal --}}
-                <div class="modal fade" id="obatModal">
+                <!-- Tambahkan modal ini di bagian bawah template -->
+                <div class="modal fade" id="bulkDeleteObatModal">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -94,15 +96,31 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                       </div>
                       <div class="modal-body">
-                        Data obat <b id="obatToDelete"></b> akan dihapus?
+                        <div class="mb-3">
+                          <label class="form-label">Pilih Kunjungan</label>
+                          <select id="kunjunganDeleteSelect" class="form-select">
+                            @if(kunjunganTerbaru)
+                            <option value="{{ kunjunganTerbaru.id }}" selected>
+                              Kunjungan Terbaru: {{ kunjunganTerbaru.tema }} ({{ formatDate(kunjunganTerbaru.tanggalKunjungan) }})
+                            </option>
+                            @endif
+
+                            @each(kunjungan in kunjungans)
+                            @if(!kunjunganTerbaru || kunjungan.id !== kunjunganTerbaru.id)
+                            <option value="{{ kunjungan.id }}">
+                              {{ kunjungan.tema }} ({{ formatDate(kunjungan.tanggalKunjungan) }})
+                            </option>
+                            @endif
+                            @end
+                          </select>
+                        </div>
+                        <p>Tindakan ini akan menghapus semua data obat yang terkait dengan kunjungan yang dipilih,
+                          tetapi data kunjungan itu sendiri tetap tersimpan.</p>
+                        <p class="text-danger"><strong>Perhatian:</strong> Tindakan ini tidak dapat dibatalkan!</p>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
-                        <form id="deleteObatForm" method="POST">
-                          {{ csrfField() }}
-                          {{-- {{ method('DELETE') }} --}}
-                          <button type="submit" class="btn btn-danger light">Hapus</button>
-                        </form>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" id="bulkDeleteObatBtn" class="btn btn-danger">Hapus</button>
                       </div>
                     </div>
                   </div>
@@ -214,6 +232,67 @@
     </div>
   </div>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Tombol hapus bulk data obat
+    const bulkDeleteObatBtn = document.getElementById('bulkDeleteObatBtn');
+    if (bulkDeleteObatBtn) {
+      bulkDeleteObatBtn.addEventListener('click', function () {
+        // Ambil kunjungan yang dipilih
+        const kunjunganSelect = document.getElementById('kunjunganDeleteSelect');
+        const kunjunganId = kunjunganSelect ? kunjunganSelect.value : '';
+
+        if (!kunjunganId) {
+          alert('Silakan pilih kunjungan terlebih dahulu');
+          return;
+        }
+
+        // Konfirmasi penghapusan
+        if (!confirm('Anda yakin ingin menghapus semua data obat dari kunjungan ini?')) {
+          return;
+        }
+
+        // Ambil CSRF token
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        if (!csrfToken) {
+          alert('CSRF token tidak ditemukan. Silakan refresh halaman dan coba lagi.');
+          return;
+        }
+
+        // Kirim request delete
+        fetch(`/pasien/{{ pasien.uuid }}/obat-kunjungan`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({ kunjunganId })
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Tutup modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('bulkDeleteObatModal'));
+            if (modal) {
+              modal.hide();
+            }
+
+            if (data.success) {
+              alert(data.message);
+              // Refresh halaman untuk menampilkan perubahan
+              window.location.reload();
+            } else {
+              alert(data.message || 'Gagal menghapus data obat');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menghapus data obat');
+          });
+      });
+    }
+  });
+</script>
 <!-- Modal -->
 <div class="modal fade" id="basicModal" tabindex="-1" role="dialog">
   @include('pasien/modal-profile/edit-obat')
@@ -228,8 +307,9 @@
 <div class="modal fade" id="tambahKunjunganModal" tabindex="-1">
   @include('pasien/modal-profile/tambah-kunjungan')
 </div>
-<div class="modal fade" id="hapusModal">
+<div class="modal fade" id="hapusModal" tabindex="-1" aria-labelledby="hapusModalLabel" aria-hidden="true">
   @include('pasien/modal-profile/hapus-pasien')
 </div>
+
 @end
 @end

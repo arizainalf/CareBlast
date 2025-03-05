@@ -19,8 +19,9 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-      <form action="{{ route('pasien.destroy', { uuid: pasien.uuid }) }}?_method=DELETE" method="POST">
+      <form action="{{ route('pasien.destroy', { uuid: pasien.uuid }) }}" method="POST">
         {{ csrfField() }}
+        <input type="hidden" name="_method" value="DELETE">
         <button type="submit" class="btn btn-danger">
           <i class="fas fa-trash-alt me-1"></i> Hapus Semua Data
         </button>

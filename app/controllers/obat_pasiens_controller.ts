@@ -3,6 +3,7 @@ import ObatPasien from '#models/obat_pasien'
 import Obat from '#models/obat'
 import { v4 as uuidv4 } from 'uuid'
 import Pasien from '#models/pasien'
+import Kunjungan from '#models/kunjungan'
 
 export default class ObatPasiensController {
   async store(ctx: HttpContext) {
@@ -10,7 +11,15 @@ export default class ObatPasiensController {
 
     try {
       const pasienUuid = params.uuid
-      const { obatNama, customObat, keteranganWaktu } = request.body()
+      const {
+        obatNama,
+        customObat,
+        keteranganWaktu,
+        kunjunganId,
+        tanggalKunjungan,
+        temaKunjungan,
+        keterangan,
+      } = request.body()
 
       const pasien = await Pasien.findByOrFail('uuid', pasienUuid)
       const actualObatName = obatNama === 'other' ? customObat : obatNama
@@ -21,15 +30,36 @@ export default class ObatPasiensController {
           .json({ success: false, message: 'Nama obat tidak boleh kosong' })
       }
 
+      // Handle obat
       let obat = await Obat.findBy('nama', actualObatName)
       if (!obat) {
         obat = await Obat.create({ nama: actualObatName, uuid: uuidv4() })
       }
 
+      // Handle kunjungan
+      let selectedKunjunganId = null
+
+      if (kunjunganId === 'new') {
+        // Buat kunjungan baru
+        const newKunjungan = await Kunjungan.create({
+          uuid: uuidv4(),
+          pasienId: pasien.id,
+          tema: temaKunjungan || 'Tanpa Tema',
+          keterangan: keterangan || 'Tidak ada keterangan',
+          tanggalKunjungan: tanggalKunjungan || new Date().toISOString().split('T')[0],
+        })
+        selectedKunjunganId = newKunjungan.id
+      } else if (kunjunganId) {
+        // Gunakan kunjungan yang sudah ada
+        selectedKunjunganId = kunjunganId
+      }
+
+      // Buat obat pasien
       const obatPasien = await ObatPasien.create({
         uuid: uuidv4(),
         pasienId: pasien.id,
         obatId: obat.id,
+        kunjunganId: selectedKunjunganId, // Bisa null jika tidak terkait dengan kunjungan
         frekuensi: 1,
         waktuKonsumsi: JSON.stringify(['08:00']),
         keteranganWaktu,
@@ -125,6 +155,90 @@ export default class ObatPasiensController {
             .status(500)
             .json({ success: false, message: 'Error menghapus obat', error: error.message })
         : response.redirect().back()
+    }
+  }
+  async destroyByKunjungan({ request, response, params }: HttpContext) {
+    try {
+      const pasienUuid = params.uuid
+      const kunjunganId = request.input('kunjunganId')
+
+      // Validasi data input
+      if (!pasienUuid) {
+        return response.status(400).json({
+          success: false,
+          message: 'UUID pasien diperlukan',
+        })
+      }
+
+      // Cari pasien berdasarkan UUID
+      const pasien = await Pasien.findByOrFail('uuid', pasienUuid)
+
+      let targetKunjunganId = kunjunganId
+
+      // Jika kunjunganId tidak disediakan, gunakan kunjungan terbaru
+      if (!targetKunjunganId) {
+        const latestKunjungan = await Kunjungan.query()
+          .where('pasienId', pasien.id)
+          .orderBy('tanggalKunjungan', 'desc')
+          .first()
+
+        if (!latestKunjungan) {
+          return response.status(404).json({
+            success: false,
+            message: 'Tidak ditemukan kunjungan untuk pasien ini',
+          })
+        }
+
+        targetKunjunganId = latestKunjungan.id
+      }
+
+      // Cek bahwa kunjungan tersebut milik pasien yang bersangkutan
+      const kunjungan = await Kunjungan.query()
+        .where('id', targetKunjunganId)
+        .where('pasienId', pasien.id)
+        .first()
+
+      if (!kunjungan) {
+        return response.status(403).json({
+          success: false,
+          message: 'Kunjungan tidak ditemukan atau bukan milik pasien ini',
+        })
+      }
+
+      // Hitung jumlah obat yang akan dihapus
+      const obatCount = await ObatPasien.query()
+        .where('kunjunganId', targetKunjunganId)
+        .where('pasienId', pasien.id)
+        .count('* as total')
+
+      const totalObat = obatCount[0].$extras.total
+
+      if (totalObat === 0) {
+        return response.status(404).json({
+          success: false,
+          message: 'Tidak ada data obat untuk kunjungan ini',
+        })
+      }
+
+      // Hapus obat dari kunjungan yang dipilih
+      await ObatPasien.query()
+        .where('kunjunganId', targetKunjunganId)
+        .where('pasienId', pasien.id)
+        .delete()
+
+      return response.json({
+        success: true,
+        message: `Berhasil menghapus ${totalObat} data obat dari kunjungan "${kunjungan.tema}"`,
+        deletedCount: totalObat,
+        kunjunganId: targetKunjunganId,
+      })
+    } catch (error) {
+      console.error('Error menghapus data obat:', error)
+      return response.status(500).json({
+        success: false,
+        message: 'Terjadi kesalahan saat menghapus data obat',
+        error: error.message,
+      })
     }
   }
 }

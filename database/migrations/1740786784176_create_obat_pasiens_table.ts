@@ -27,6 +27,15 @@ export default class ObatPasiens extends BaseSchema {
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
 
+      table
+        .integer('kunjungan_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('kunjungans')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
+
       table.integer('frekuensi').notNullable().comment('Berapa kali sehari minum obat')
 
       table
