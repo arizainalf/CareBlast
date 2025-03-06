@@ -1,4 +1,4 @@
-@layout.app({ title: "Profile Pasien" })
+@layout.app({ title: `Profile ${pasien.name}` })
 @slot('content')
 <div class="container-fluid">
   <div class="row page-titles">
@@ -9,7 +9,6 @@
   </div>
   <div class="row">
     <div class="col-xl-12">
-      <!-- row -->
       <div class="row">
         <div class="col-lg-12">
           <div class="profile card card-body px-3 pt-3 pb-0">
@@ -73,7 +72,6 @@
           <div class="row">
             <div class="col-xl-12">
               <div class="card">
-                <!-- Tambahkan kode ini di bagian header card Data Obat -->
                 <div class="card-header">
                   <div class="d-flex flex-column">
                     <h4 class="card-title">Data Obat</h4>
@@ -83,11 +81,8 @@
                       data-bs-target="#bulkDeleteObatModal">
                       <i class="far fa-trash-alt"></i>
                     </a>
-                    {{-- <a href="javascript:void(0)" class="badge badge-rounded badge-outline-warning badge-lg"><i
-                        class="fas fa-pencil-alt"></i></a> --}}
                   </div>
                 </div>
-                <!-- Tambahkan modal ini di bagian bawah template -->
                 <div class="modal fade" id="bulkDeleteObatModal">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -125,10 +120,8 @@
                     </div>
                   </div>
                 </div>
-                <!-- Medication Lists with Detail Triggers -->
                 <div class="card-body">
                   <div class="basic-list-group mb-0">
-                    <!-- Before Meals Medications -->
                     <ul class="list-group">
                       <li class="list-group-item active">Sebelum Makan</li>
                       @if(obatSebelumMakan.length === 0)
@@ -160,7 +153,6 @@
                       @endif
                     </ul>
 
-                    <!-- After Meals Medications -->
                     <ul class="list-group mt-3">
                       <li class="list-group-item disabled">Sesudah Makan</li>
                       @if(obatSesudahMakan.length === 0)
@@ -232,68 +224,8 @@
     </div>
   </div>
 </div>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Tombol hapus bulk data obat
-    const bulkDeleteObatBtn = document.getElementById('bulkDeleteObatBtn');
-    if (bulkDeleteObatBtn) {
-      bulkDeleteObatBtn.addEventListener('click', function () {
-        // Ambil kunjungan yang dipilih
-        const kunjunganSelect = document.getElementById('kunjunganDeleteSelect');
-        const kunjunganId = kunjunganSelect ? kunjunganSelect.value : '';
 
-        if (!kunjunganId) {
-          alert('Silakan pilih kunjungan terlebih dahulu');
-          return;
-        }
-
-        // Konfirmasi penghapusan
-        if (!confirm('Anda yakin ingin menghapus semua data obat dari kunjungan ini?')) {
-          return;
-        }
-
-        // Ambil CSRF token
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
-        if (!csrfToken) {
-          alert('CSRF token tidak ditemukan. Silakan refresh halaman dan coba lagi.');
-          return;
-        }
-
-        // Kirim request delete
-        fetch(`/pasien/{{ pasien.uuid }}/obat-kunjungan`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
-          },
-          body: JSON.stringify({ kunjunganId })
-        })
-          .then(response => response.json())
-          .then(data => {
-            // Tutup modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('bulkDeleteObatModal'));
-            if (modal) {
-              modal.hide();
-            }
-
-            if (data.success) {
-              alert(data.message);
-              // Refresh halaman untuk menampilkan perubahan
-              window.location.reload();
-            } else {
-              alert(data.message || 'Gagal menghapus data obat');
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat menghapus data obat');
-          });
-      });
-    }
-  });
-</script>
-<!-- Modal -->
+@include('pasien/modal-profile/script/hapus-pasien')
 <div class="modal fade" id="basicModal" tabindex="-1" role="dialog">
   @include('pasien/modal-profile/edit-obat')
 </div>

@@ -35,10 +35,10 @@ export default class ObatPasien extends BaseModel {
   declare frekuensi: number
 
   @column()
-  declare waktuKonsumsi: string // JSON array of times (e.g., '["08:00", "14:00", "20:00"]')
+  declare waktuKonsumsi: string
 
   @column()
-  declare keteranganWaktu: string // "Sebelum makan" atau "Sesudah makan"
+  declare keteranganWaktu: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

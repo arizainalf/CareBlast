@@ -128,7 +128,7 @@ export default class PasiensController {
         'tanggal_lahir',
         'tempat',
         'jenisPenyakitId',
-      ]) // Tambahkan 'uuid' di sini
+      ])
       .preload('jenisPenyakit', (query) => {
         query.select('id', 'nama')
       })
@@ -164,7 +164,6 @@ export default class PasiensController {
     try {
       const uuid = params.uuid
 
-      // Ambil pasien beserta data kunjungan, diurutkan dari yang terbaru
       const pasien = await Pasien.query()
         .where('uuid', uuid)
         .preload('jenisPenyakit', (query) => {
@@ -174,17 +173,12 @@ export default class PasiensController {
           query.preload('obatPasiens', (obatQuery) => {
             obatQuery.preload('obat')
           })
-          query.orderBy('tanggalKunjungan', 'desc') // Urutkan dari terbaru
+          query.orderBy('tanggalKunjungan', 'desc')
         })
         .firstOrFail()
 
-      // Ambil kunjungan terbaru
       const kunjunganTerbaru = pasien.kunjungans.length > 0 ? pasien.kunjungans[0] : null
-
-      // Ambil obat dari kunjungan terbaru (jika ada)
       const obatPasiens = kunjunganTerbaru ? kunjunganTerbaru.obatPasiens : []
-
-      // Kelompokkan obat berdasarkan waktu konsumsi
       const obatSebelumMakan = obatPasiens.filter(
         (op: { keteranganWaktu: string }) => op.keteranganWaktu === 'Sebelum makan'
       )
@@ -216,11 +210,10 @@ export default class PasiensController {
           }
         },
       }
-
-      // Ambil semua daftar obat untuk dropdown
       const obats = await Obat.all()
+      // Ambil keluhan dari kunjungan terbaru jika ada
+      const keluhan = kunjunganTerbaru ? kunjunganTerbaru.keterangan : 'Tidak ada keluhan'
 
-      // Siapkan daftar kunjungan untuk dropdown
       const kunjungans = pasien.kunjungans.map((kunjungan) => ({
         id: kunjungan.id,
         uuid: kunjungan.uuid,
@@ -236,6 +229,7 @@ export default class PasiensController {
         obats,
         kunjunganTerbaru,
         kunjungans,
+        keluhan,
         ...helpers,
       })
     } catch (error) {
@@ -245,21 +239,14 @@ export default class PasiensController {
   }
   async destroy({ params, response, session }: HttpContext) {
     const pasien = await Pasien.findByOrFail('uuid', params.uuid)
-
-    // Mulai transaksi dari model Pasien
     await Pasien.transaction(async (trx) => {
       try {
-        // Hapus kunjungan terkait
         await Kunjungan.query().where('pasien_id', pasien.id).delete()
-
-        // Hapus obat pasien terkait
         await ObatPasien.query()
           .whereHas('kunjungan', (query) => {
             query.where('pasien_id', pasien.id)
           })
           .delete()
-
-        // Hapus pasien
         await pasien.useTransaction(trx).delete()
 
         session.flash({ success: 'Data pasien berhasil dihapus' })

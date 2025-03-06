@@ -1,4 +1,3 @@
-<!-- pasien/partial/detail-pasien/data-diri.edge -->
 <div class="profile-about-me">
   <div class="profile-personal-info">
     <h3 class="text-primary mb-2 mt-2">Informasi Pribadi</h3>
@@ -36,13 +35,10 @@
     </div>
   </div>
   <div class="pt-4 border-bottom-1 pb-3">
-    <h3 class="text-primary">Penyakit yang diderita</h3>
-    <h5 class="mb-2">{{ pasien.jenisPenyakit.nama }}</h5>
+    <h3 class="text-primary">Hasil Diagnosis</h3>
+    <h5 class="mb-1">Nama penyakit : {{ pasien.jenisPenyakit.nama }}</h5>
     <p>{{ pasien.jenisPenyakit.deskripsi || 'Tidak ada deskripsi' }}</p>
+    <h5 class="mb-1">Keluhan Pasien</h5>
+    <p>{{ keluhan || 'Tidak ada keluhan' }}</p>
   </div>
 </div>
-{{--  <div class="pt-4 border-bottom-1 pb-3">
-  <h3 class="text-primary">Penyakit yang diderita</h3>
-  <p class="mb-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum esse dolores neque placeat blanditiis magni in dolorum doloribus! Blanditiis commodi dolore animi voluptas quae itaque, architecto molestias ab quasi illo, maiores ut nulla repellat incidunt quisquam at? Praesentium, debitis vero?</p>
-  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque perspiciatis, hic facilis laborum soluta placeat molestiae nemo doloribus aliquam cupiditate incidunt, quasi consequuntur consectetur magni ex saepe inventore fuga repellat.</p>
-</div>  --}}

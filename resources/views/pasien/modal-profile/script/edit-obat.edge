@@ -1,151 +1,139 @@
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-      const frequencySelect = document.getElementById("frequency-select");
-      const timeInputsContainer = document.getElementById("time-inputs");
-      const editButtons = document.querySelectorAll(".edit-obat");
-      const modalTitle = document.querySelector("#basicModal .modal-title");
-      const saveButton = document.getElementById("save-edit-obat");
-      const editObatUuidInput = document.getElementById("edit-obat-uuid");
-      const editKeteranganWaktu = document.getElementById("edit-keterangan-waktu"); // Tambahan
-      let currentObatUuid = null;
+    const frequencySelect = document.getElementById("frequency-select");
+    const timeInputsContainer = document.getElementById("time-inputs");
+    const editButtons = document.querySelectorAll(".edit-obat");
+    const modalTitle = document.querySelector("#basicModal .modal-title");
+    const saveButton = document.getElementById("save-edit-obat");
+    const editObatUuidInput = document.getElementById("edit-obat-uuid");
+    const editKeteranganWaktu = document.getElementById("edit-keterangan-waktu");
+    let currentObatUuid = null;
 
-      console.log("DOM Loaded, elements found:", {
-        frequencySelect: !!frequencySelect,
-        timeInputsContainer: !!timeInputsContainer,
-        editButtons: editButtons.length,
-        modalTitle: !!modalTitle,
-        saveButton: !!saveButton,
-        editKeteranganWaktu: !!editKeteranganWaktu // Tambahan
+    if (frequencySelect) {
+      frequencySelect.addEventListener("change", function () {
+        updateTimeInputs(parseInt(this.value, 10));
       });
+    }
 
-      if (frequencySelect) {
-        frequencySelect.addEventListener("change", function () {
-          updateTimeInputs(parseInt(this.value, 10));
-        });
-      }
+    function updateTimeInputs(frequency, times = []) {
+      timeInputsContainer.innerHTML = "";
 
-      function updateTimeInputs(frequency, times = []) {
-        timeInputsContainer.innerHTML = "";
+      for (let i = 0; i < frequency; i++) {
+        const defaultTime = times[i] || "";
 
-        for (let i = 0; i < frequency; i++) {
-          const defaultTime = times[i] || "";
+        const inputGroup = document.createElement("div");
+        inputGroup.classList.add("input-group", "mb-2");
 
-          const inputGroup = document.createElement("div");
-          inputGroup.classList.add("input-group", "mb-2");
-
-          inputGroup.innerHTML = `
+        inputGroup.innerHTML = `
             <label class="form-label">Pada jam ke-${i + 1}?</label>
             <div class="input-group clockpicker" data-autoclose="true">
-                <input type="text" class="form-control clockpicker-input" value="${defaultTime}" name="waktu[]" placeholder="Pilih waktu">
+                <input type="text" class="form-control clockpicker-input" value="${defaultTime}" name="waktu[]" placeholder="Pilih waktu" required>
                 <span class="input-group-text"><i class="far fa-clock"></i></span>
             </div>
+            <div class="invalid-feedback">Waktu tidak boleh kosong</div>
         `;
-          timeInputsContainer.appendChild(inputGroup);
+        timeInputsContainer.appendChild(inputGroup);
+      }
+
+      setTimeout(() => {
+        $(".clockpicker-input").clockpicker({
+          autoclose: true
+        });
+      }, 100);
+    }
+
+    editButtons.forEach(button => {
+      button.addEventListener("click", function () {
+        const obatUuid = this.getAttribute("data-uuid");
+        const obatNama = this.getAttribute("data-nama");
+        const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
+        const waktuStr = this.getAttribute("data-waktu");
+        const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
+
+        let waktuArray = [];
+        try {
+          waktuArray = JSON.parse(waktuStr);
+        } catch (e) {
+          console.error("Error parsing waktu:", e);
+          waktuArray = [];
         }
 
-        setTimeout(() => {
-          $(".clockpicker-input").clockpicker({
-            autoclose: true
-          });
-        }, 100);
-      }
+        if (modalTitle) modalTitle.textContent = `Edit Obat ${obatNama}`;
+        if (editObatUuidInput) editObatUuidInput.value = obatUuid;
+        if (editKeteranganWaktu) editKeteranganWaktu.value = keteranganWaktu;
 
-      editButtons.forEach(button => {
-        button.addEventListener("click", function () {
-          const obatUuid = this.getAttribute("data-uuid");
-          const obatNama = this.getAttribute("data-nama");
-          const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
-          const waktuStr = this.getAttribute("data-waktu");
-          const keteranganWaktu = this.getAttribute("data-keterangan-waktu"); // Tambahan
+        currentObatUuid = obatUuid;
 
-          console.log("Edit button clicked:", {
-            obatUuid,
-            obatNama,
-            frekuensi,
-            waktuStr,
-            keteranganWaktu // Tambahan
-          });
-
-          let waktuArray = [];
-          try {
-            waktuArray = JSON.parse(waktuStr);
-          } catch (e) {
-            console.error("Error parsing waktu:", e);
-            waktuArray = [];
-          }
-
-          if (modalTitle) modalTitle.textContent = `Edit Obat ${obatNama}`;
-          if (editObatUuidInput) editObatUuidInput.value = obatUuid;
-          if (editKeteranganWaktu) editKeteranganWaktu.value = keteranganWaktu; // Tambahan
-
-          currentObatUuid = obatUuid;
-
-          if (frequencySelect) {
-            frequencySelect.value = frekuensi;
-            updateTimeInputs(frekuensi, waktuArray);
-          }
-        });
+        if (frequencySelect) {
+          frequencySelect.value = frekuensi;
+          updateTimeInputs(frekuensi, waktuArray);
+        }
       });
-
-      if (saveButton) {
-        saveButton.addEventListener("click", function () {
-          console.log("Save button clicked, currentObatUuid:", currentObatUuid);
-
-          const obatUuid = editObatUuidInput ? editObatUuidInput.value : currentObatUuid;
-
-          if (!obatUuid) {
-            console.error("No obat UUID found");
-            alert('Error: ID obat tidak ditemukan');
-            return;
-          }
-
-          const frekuensi = frequencySelect.value;
-          const keteranganWaktu = editKeteranganWaktu.value; // Tambahan
-          const timeInputs = document.querySelectorAll("input[name='waktu[]']");
-          const waktuArray = Array.from(timeInputs).map(input => input.value);
-
-          console.log("Sending data:", {
-            frekuensi,
-            keteranganWaktu, // Tambahan
-            waktu: waktuArray
-          });
-
-          const csrfToken = document.querySelector('input[name="_csrf"]').value;
-
-          fetch(`/obat-pasien/${obatUuid}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest',
-              'X-CSRF-TOKEN': csrfToken
-            },
-            body: JSON.stringify({
-              frekuensi,
-              keteranganWaktu, // Tambahan
-              waktu: waktuArray
-            })
-          })
-            .then(response => {
-              console.log("Response status:", response.status);
-              return response.json();
-            })
-            .then(data => {
-              console.log("Response data:", data);
-              if (data.success) {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('basicModal'));
-                modal.hide();
-                window.location.reload();
-              } else {
-                alert('Error: ' + data.message);
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              alert('Terjadi kesalahan saat menyimpan data');
-            });
-        });
-      }
     });
 
+    if (saveButton) {
+      saveButton.addEventListener("click", function () {
+        const obatUuid = editObatUuidInput ? editObatUuidInput.value : currentObatUuid;
+
+        if (!obatUuid) {
+          alert('Error: ID obat tidak ditemukan');
+          return;
+        }
+
+        const frekuensi = frequencySelect.value;
+        const keteranganWaktu = editKeteranganWaktu.value;
+        const timeInputs = document.querySelectorAll("input[name='waktu[]']");
+
+        // Validasi input waktu
+        let isValid = true;
+        timeInputs.forEach((input, index) => {
+          if (!input.value.trim()) {
+            input.classList.add('is-invalid');
+            isValid = false;
+          } else {
+            input.classList.remove('is-invalid');
+          }
+        });
+
+        // Jika tidak valid, hentikan proses
+        if (!isValid) {
+          alert('Harap isi semua waktu konsumsi');
+          return;
+        }
+
+        const waktuArray = Array.from(timeInputs).map(input => input.value);
+
+        const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+        fetch(`/obat-pasien/${obatUuid}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({
+            frekuensi,
+            keteranganWaktu,
+            waktu: waktuArray
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const modal = bootstrap.Modal.getInstance(document.getElementById('basicModal'));
+              modal.hide();
+              window.location.reload();
+            } else {
+              alert('Error: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan data');
+          });
+      });
+    }
+  });
 </script>

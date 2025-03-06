@@ -21,7 +21,10 @@ export default class ObatPasiensController {
         keterangan,
       } = request.body()
 
-      const pasien = await Pasien.findByOrFail('uuid', pasienUuid)
+      const pasien = await Pasien.query()
+        .select('id', 'uuid')
+        .where('uuid', pasienUuid)
+        .firstOrFail()
       const actualObatName = obatNama === 'other' ? customObat : obatNama
 
       if (!actualObatName) {
@@ -30,17 +33,14 @@ export default class ObatPasiensController {
           .json({ success: false, message: 'Nama obat tidak boleh kosong' })
       }
 
-      // Handle obat
-      let obat = await Obat.findBy('nama', actualObatName)
-      if (!obat) {
-        obat = await Obat.create({ nama: actualObatName, uuid: uuidv4() })
-      }
+      const obat = await Obat.firstOrCreate(
+        { nama: actualObatName },
+        { nama: actualObatName, uuid: uuidv4() }
+      )
 
-      // Handle kunjungan
-      let selectedKunjunganId = null
+      let selectedKunjunganId = kunjunganId
 
       if (kunjunganId === 'new') {
-        // Buat kunjungan baru
         const newKunjungan = await Kunjungan.create({
           uuid: uuidv4(),
           pasienId: pasien.id,
@@ -49,17 +49,13 @@ export default class ObatPasiensController {
           tanggalKunjungan: tanggalKunjungan || new Date().toISOString().split('T')[0],
         })
         selectedKunjunganId = newKunjungan.id
-      } else if (kunjunganId) {
-        // Gunakan kunjungan yang sudah ada
-        selectedKunjunganId = kunjunganId
       }
 
-      // Buat obat pasien
       const obatPasien = await ObatPasien.create({
         uuid: uuidv4(),
         pasienId: pasien.id,
         obatId: obat.id,
-        kunjunganId: selectedKunjunganId, // Bisa null jika tidak terkait dengan kunjungan
+        kunjunganId: selectedKunjunganId,
         frekuensi: 1,
         waktuKonsumsi: JSON.stringify(['08:00']),
         keteranganWaktu,
@@ -70,11 +66,11 @@ export default class ObatPasiensController {
         : response.redirect().toPath(`/pasien/${pasienUuid}`)
     } catch (error) {
       console.error('Error adding medication:', error)
-      return request.accepts(['html', 'json']) === 'json'
-        ? response
-            .status(500)
-            .json({ success: false, message: 'Error menambahkan obat', error: error.message })
-        : response.redirect().back()
+      return response.status(500).json({
+        success: false,
+        message: 'Error menambahkan obat',
+        error: error.message,
+      })
     }
   }
 
@@ -82,155 +78,89 @@ export default class ObatPasiensController {
     const { request, response, params } = ctx
 
     try {
-      console.log('Update obat request:', request.body())
-
       const obatPasienUuid = params.uuid
       const { frekuensi, waktu, keteranganWaktu } = request.body()
-
-      // Log data for debugging
-      console.log('Updating obat with UUID:', obatPasienUuid)
-      console.log('Data:', { frekuensi, waktu, keteranganWaktu })
-
-      // Ensure waktu is always an array
       const waktuArray = Array.isArray(waktu) ? waktu : [waktu]
 
-      // Find the medication record
-      const obatPasien = await ObatPasien.findByOrFail('uuid', obatPasienUuid)
-
-      // Update the record
-      await obatPasien
-        .merge({
+      const updated = await ObatPasien.query()
+        .where('uuid', obatPasienUuid)
+        .update({
           frekuensi: Number.parseInt(frekuensi, 10),
           waktuKonsumsi: JSON.stringify(waktuArray),
-          keteranganWaktu: keteranganWaktu,
+          keteranganWaktu,
         })
-        .save()
 
-      // Find the related patient
-      const pasien = await Pasien.findOrFail(obatPasien.pasienId)
+      if (!updated) {
+        return response.status(404).json({ success: false, message: 'Obat tidak ditemukan' })
+      }
 
-      console.log('Obat updated successfully')
-
-      return request.accepts(['html', 'json']) === 'json'
-        ? response.json({
-            success: true,
-            message: 'Jadwal obat berhasil diperbarui',
-            data: {
-              uuid: obatPasien.uuid,
-              frekuensi: obatPasien.frekuensi,
-              waktuKonsumsi: JSON.parse(obatPasien.waktuKonsumsi),
-              keteranganWaktu: obatPasien.keteranganWaktu,
-            },
-          })
-        : response.redirect().toPath(`/pasiens/${pasien.uuid}`)
+      return response.json({ success: true, message: 'Jadwal obat berhasil diperbarui' })
     } catch (error) {
       console.error('Error updating medication:', error)
-      return request.accepts(['html', 'json']) === 'json'
-        ? response.status(500).json({
-            success: false,
-            message: 'Error memperbarui jadwal obat',
-            error: error.message,
-          })
-        : response.redirect().back()
+      return response
+        .status(500)
+        .json({ success: false, message: 'Error memperbarui jadwal obat', error: error.message })
     }
   }
 
   async destroy(ctx: HttpContext) {
-    const { params, response, request } = ctx
+    const { params, response } = ctx
 
     try {
       const obatPasienUuid = params.uuid
-      const obatPasien = await ObatPasien.findByOrFail('uuid', obatPasienUuid)
+      const deleted = await ObatPasien.query().where('uuid', obatPasienUuid).delete()
 
-      const pasien = await Pasien.findOrFail(obatPasien.pasienId)
-      await obatPasien.delete()
+      if (!deleted) {
+        return response.status(404).json({ success: false, message: 'Obat tidak ditemukan' })
+      }
 
-      return request.accepts(['html', 'json']) === 'json'
-        ? response.json({ success: true, message: 'Obat berhasil dihapus' })
-        : response.redirect().toPath(`/pasiens/${pasien.uuid}`)
+      return response.json({ success: true, message: 'Obat berhasil dihapus' })
     } catch (error) {
       console.error('Error deleting medication:', error)
-      return request.accepts(['html', 'json']) === 'json'
-        ? response
-            .status(500)
-            .json({ success: false, message: 'Error menghapus obat', error: error.message })
-        : response.redirect().back()
+      return response
+        .status(500)
+        .json({ success: false, message: 'Error menghapus obat', error: error.message })
     }
   }
+
   async destroyByKunjungan({ request, response, params }: HttpContext) {
     try {
       const pasienUuid = params.uuid
-      const kunjunganId = request.input('kunjunganId')
+      let kunjunganId = request.input('kunjunganId')
 
-      // Validasi data input
-      if (!pasienUuid) {
-        return response.status(400).json({
-          success: false,
-          message: 'UUID pasien diperlukan',
-        })
-      }
+      const pasien = await Pasien.query()
+        .select('id', 'uuid')
+        .where('uuid', pasienUuid)
+        .firstOrFail()
 
-      // Cari pasien berdasarkan UUID
-      const pasien = await Pasien.findByOrFail('uuid', pasienUuid)
-
-      let targetKunjunganId = kunjunganId
-
-      // Jika kunjunganId tidak disediakan, gunakan kunjungan terbaru
-      if (!targetKunjunganId) {
+      if (!kunjunganId) {
         const latestKunjungan = await Kunjungan.query()
           .where('pasienId', pasien.id)
           .orderBy('tanggalKunjungan', 'desc')
+          .select('id', 'tema')
           .first()
 
         if (!latestKunjungan) {
-          return response.status(404).json({
-            success: false,
-            message: 'Tidak ditemukan kunjungan untuk pasien ini',
-          })
+          return response.status(404).json({ success: false, message: 'Tidak ditemukan kunjungan' })
         }
-
-        targetKunjunganId = latestKunjungan.id
+        kunjunganId = latestKunjungan.id
       }
 
-      // Cek bahwa kunjungan tersebut milik pasien yang bersangkutan
-      const kunjungan = await Kunjungan.query()
-        .where('id', targetKunjunganId)
-        .where('pasienId', pasien.id)
-        .first()
-
-      if (!kunjungan) {
-        return response.status(403).json({
-          success: false,
-          message: 'Kunjungan tidak ditemukan atau bukan milik pasien ini',
-        })
-      }
-
-      // Hitung jumlah obat yang akan dihapus
-      const obatCount = await ObatPasien.query()
-        .where('kunjunganId', targetKunjunganId)
-        .where('pasienId', pasien.id)
-        .count('* as total')
-
-      const totalObat = obatCount[0].$extras.total
-
-      if (totalObat === 0) {
-        return response.status(404).json({
-          success: false,
-          message: 'Tidak ada data obat untuk kunjungan ini',
-        })
-      }
-
-      // Hapus obat dari kunjungan yang dipilih
-      await ObatPasien.query()
-        .where('kunjunganId', targetKunjunganId)
+      const deleted = await ObatPasien.query()
+        .where('kunjunganId', kunjunganId)
         .where('pasienId', pasien.id)
         .delete()
 
+      if (!deleted) {
+        return response
+          .status(404)
+          .json({ success: false, message: 'Tidak ada data obat untuk kunjungan ini' })
+      }
+
       return response.json({
         success: true,
-        message: `Berhasil menghapus ${totalObat} data obat dari kunjungan "${kunjungan.tema}"`,
-        deletedCount: totalObat,
-        kunjunganId: targetKunjunganId,
+        message: `Berhasil menghapus ${deleted} data obat`,
+        deletedCount: deleted,
       })
     } catch (error) {
       console.error('Error menghapus data obat:', error)

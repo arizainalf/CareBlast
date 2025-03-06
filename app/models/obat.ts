@@ -23,6 +23,6 @@ export default class Obat extends BaseModel {
 
   @beforeCreate()
   public static async generateUuid(obat: Obat) {
-    obat.uuid = uuidv4() // Generate UUID sebelum insert
+    obat.uuid = uuidv4()
   }
 }
