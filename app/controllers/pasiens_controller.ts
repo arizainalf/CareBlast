@@ -3,6 +3,9 @@ import Pasien from '#models/pasien'
 import JenisPenyakit from '#models/jenis_penyakit'
 import { DateTime } from 'luxon'
 import { v4 as uuidv4 } from 'uuid'
+import Obat from '#models/obat'
+import Kunjungan from '#models/kunjungan'
+import ObatPasien from '#models/obat_pasien'
 
 export default class PasiensController {
   async index({ view, request }: HttpContext) {
@@ -77,7 +80,7 @@ export default class PasiensController {
           'alamat',
           'jenis_kelamin',
           'golongan_darah',
-        ])
+        ]) as Record<string, any>
 
         const firstName = request.input('first_name', '')
         const lastName = request.input('last_name', '')
@@ -116,7 +119,16 @@ export default class PasiensController {
     }
 
     const pasienData = await Pasien.query()
-      .select(['id', 'name', 'nik', 'jenis_kelamin', 'tanggal_lahir', 'tempat', 'jenisPenyakitId'])
+      .select([
+        'id',
+        'uuid',
+        'name',
+        'nik',
+        'jenis_kelamin',
+        'tanggal_lahir',
+        'tempat',
+        'jenisPenyakitId',
+      ])
       .preload('jenisPenyakit', (query) => {
         query.select('id', 'nama')
       })
@@ -146,5 +158,104 @@ export default class PasiensController {
     })
 
     return response.json(transformedData)
+  }
+
+  async show({ view, params }: HttpContext) {
+    try {
+      const uuid = params.uuid
+
+      const pasien = await Pasien.query()
+        .where('uuid', uuid)
+        .preload('jenisPenyakit', (query) => {
+          query.select('id', 'nama', 'deskripsi')
+        })
+        .preload('kunjungans', (query) => {
+          query.preload('obatPasiens', (obatQuery) => {
+            obatQuery.preload('obat')
+          })
+          query.orderBy('tanggalKunjungan', 'desc')
+        })
+        .firstOrFail()
+
+      const kunjunganTerbaru = pasien.kunjungans.length > 0 ? pasien.kunjungans[0] : null
+      const obatPasiens = kunjunganTerbaru ? kunjunganTerbaru.obatPasiens : []
+      const obatSebelumMakan = obatPasiens.filter(
+        (op: { keteranganWaktu: string }) => op.keteranganWaktu === 'Sebelum makan'
+      )
+      const obatSesudahMakan = obatPasiens.filter(
+        (op: { keteranganWaktu: string }) => op.keteranganWaktu === 'Sesudah makan'
+      )
+
+      const helpers = {
+        calculateAge: (birthDate: string | null): number => {
+          if (!birthDate) return 0
+          try {
+            const birth = DateTime.fromISO(birthDate)
+            const now = DateTime.now()
+            return Math.floor(now.diff(birth, 'years').years)
+          } catch (error) {
+            console.error('Error calculating age:', error)
+            return 0
+          }
+        },
+
+        formatDate: (date: string | null): string => {
+          if (!date) return ''
+          try {
+            const dateTime = DateTime.fromISO(date)
+            return dateTime.toFormat('dd MMMM yyyy')
+          } catch (error) {
+            console.error('Error formatting date:', error)
+            return ''
+          }
+        },
+      }
+      const obats = await Obat.all()
+      // Ambil keluhan dari kunjungan terbaru jika ada
+      const keluhan = kunjunganTerbaru ? kunjunganTerbaru.keterangan : 'Tidak ada keluhan'
+
+      const kunjungans = pasien.kunjungans.map((kunjungan) => ({
+        id: kunjungan.id,
+        uuid: kunjungan.uuid,
+        tema: kunjungan.tema,
+        tanggalKunjungan: kunjungan.tanggalKunjungan,
+        formattedDate: helpers.formatDate(kunjungan.tanggalKunjungan.toISO()),
+      }))
+
+      return view.render('pasien/profile-pasien', {
+        pasien,
+        obatSebelumMakan,
+        obatSesudahMakan,
+        obats,
+        kunjunganTerbaru,
+        kunjungans,
+        keluhan,
+        ...helpers,
+      })
+    } catch (error) {
+      console.error('Error fetching patient details:', error)
+      return view.render('pages/errors/404')
+    }
+  }
+  async destroy({ params, response, session }: HttpContext) {
+    const pasien = await Pasien.findByOrFail('uuid', params.uuid)
+    await Pasien.transaction(async (trx) => {
+      try {
+        await Kunjungan.query().where('pasien_id', pasien.id).delete()
+        await ObatPasien.query()
+          .whereHas('kunjungan', (query) => {
+            query.where('pasien_id', pasien.id)
+          })
+          .delete()
+        await pasien.useTransaction(trx).delete()
+
+        session.flash({ success: 'Data pasien berhasil dihapus' })
+      } catch (error) {
+        console.error('Error deleting patient:', error)
+        session.flash({ error: 'Gagal menghapus data pasien. Silakan coba lagi.' })
+      }
+    })
+
+    return response.redirect().toRoute('pasien.index')
   }
 }

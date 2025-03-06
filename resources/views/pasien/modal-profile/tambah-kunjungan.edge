@@ -1,47 +1,56 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">Tambah data kunjungan pasien</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal">
-      </button>
+      <h5 class="modal-title">Tambah Data Kunjungan Pasien</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form>
+      <form id="form-kunjungan" method="POST" action="/pasien/{{ pasien.uuid }}/kunjungan">
+        {{ csrfField() }}
+
         <div class="row mb-2">
           <div class="col-sm-6">
-            <input class="form-control" list="GFGOptions" placeholder="Nama Pasien">
+            <input class="form-control" list="GFGOptions" name="pasienNama" placeholder="Nama Pasien"
+              value="{{ pasien.name }}" disabled>
             <datalist id="GFGOptions">
-              <option value="Budi Santoso">Budi Santoso</option>
-              <option value="Siti Nurhaliza">Siti Nurhaliza</option>
-              <option value="Agus Setiawan">Agus Setiawan</option>
-              <option value="Dewi Lestari">Dewi Lestari</option>
-              <option value="Joko Widodo">Joko Widodo</option>
-              <option value="Megawati Soekarnoputri">Megawati Soekarnoputri</option>
-              <option value="Susilo Bambang Yudhoyono">Susilo Bambang Yudhoyono</option>
-              <option value="Abdurrahman Wahid">Abdurrahman Wahid</option>
-              <option value="Soekarno">Soekarno</option>
-              <option value="Hatta Rajasa">Hatta Rajasa</option>
+              @each(pasien in pasiens)
+              <option value="{{ pasien.nama }}">{{ pasien.nama }}</option>
+              @end
             </datalist>
           </div>
-          <div class="col-sm-6 mt-2 mt-sm-0">
-            <input type="text" class="form-control" inputmode="numeric" placeholder="NIK">
+          <div class="col-sm-6">
+            <input type="text" class="form-control" name="pasienNik" inputmode="numeric" placeholder="NIK"
+              value="{{ pasien.nik }}" disabled>
           </div>
         </div>
+
         <div class="mb-3">
-          <input type="text" class="form-control input-default " placeholder="Tema kunjungan">
+          <label for="obat">Pilih Jenis Obat:</label>
+          <select class="multi-select" name="obatList[]" multiple="multiple" id="obat">
+            @each(obat in obats)
+            <option value="{{ obat.id }}">{{ obat.nama }} - {{ obat.dosis % 1 == 0 ? parseInt(obat.dosis) : obat.dosis
+              }} mg</option>
+            @end
+          </select>
         </div>
-        <div class="mb-2">
-          <input type="text" class="form-control input-default " placeholder="Keterangan">
+
+        <div class="mb-3">
+          <input type="text" class="form-control input-default" name="temaKunjungan" placeholder="Tema kunjungan" required>
         </div>
+
         <div class="mb-2">
-          <input name="datepicker" class="datepicker-default form-control" placeholder="Tanggal kunjungan4"
-            id="datepicker">
+          <input type="text" class="form-control input-default" name="keterangan" placeholder="Keterangan/keluhan pasien" required>
+        </div>
+
+        <div class="mb-2">
+          <input type="date" name="tanggalKunjungan" class="form-control" placeholder="Tanggal kunjungan" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
         </div>
       </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
-      <button type="button" class="btn btn-primary">Simpan</button>
     </div>
   </div>
 </div>

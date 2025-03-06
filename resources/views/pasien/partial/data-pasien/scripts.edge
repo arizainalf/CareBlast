@@ -2,13 +2,11 @@
   document.getElementById('searchPasien').addEventListener('input', function () {
     let query = this.value.trim();
 
-    // Don't perform search if query is too short
     if (query.length < 2) {
       document.getElementById('searchResults').innerHTML = '';
       return;
     }
 
-    // Function to calculate age
     function calculateAge(tanggalLahir) {
       if (!tanggalLahir) return '-';
       try {
@@ -28,7 +26,6 @@
       }
     }
 
-    // Function to format date
     function formatDate(tanggalLahir) {
       if (!tanggalLahir) return '-';
       try {
@@ -46,8 +43,7 @@
       }
     }
 
-    // Perform search query
-    fetch(`/data-pasien/search?q=${query}`)  <!-- Updated to match your route -->
+    fetch(`/data-pasien/search?q=${query}`)
       .then(response => response.json())
       .then(data => {
         let resultsContainer = document.getElementById('searchResults');
@@ -85,7 +81,7 @@
                   </div>
                 </div>
                 <div class="card-footer mt-0">
-                  <a class="text-white" href="#">
+                  <a class="text-white" href="/pasien/${pasien.uuid}">
                     <button class="btn btn-primary btn-lg btn-block">Detail Pasien</button>
                   </a>
                 </div>
@@ -99,7 +95,6 @@
   });
 </script>
 
-{{-- SweetAlert for success --}}
 @if(request.qs('success'))
 <script>
   Swal.fire({
@@ -112,7 +107,6 @@
 </script>
 @endif
 
-{{-- SweetAlert for error --}}
 @if(request.qs('error'))
 <script>
   Swal.fire({

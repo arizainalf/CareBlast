@@ -9,7 +9,10 @@
           <span class="nav-text">Dashboard</span>
         </a>
       </li>
-      <li><a href="javascript:void()" class="has-arrow" aria-expanded="false">
+      <li
+        class="{{ request.url().startsWith('/pasien/') || request.url().startsWith('/data-pasien') || request.url().startsWith('/obat-penyakit') || request.url().startsWith('/data-kunjungan') ? 'mm-active' : '' }}">
+        <a href="javascript:void()"
+          class="has-arrow {{ request.url().startsWith('/pasien/') || request.url().startsWith('/data-pasien') || request.url().startsWith('/obat-penyakit') || request.url().startsWith('/data-kunjungan') ? 'aria-expanded=true' : 'aria-expanded=false' }}">
           <i class="fas fa-hospital-user"></i>
           <span class="nav-text">Pasien</span>
         </a>

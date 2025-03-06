@@ -27,7 +27,6 @@ router.get('/forgot', async ({ view }) => {
 
 router
   .group(() => {
-
     router.post('/logout', '#controllers/session_controller.destroy').as('logout')
 
     router.get('/', '#controllers/dashboard_controller.index').as('dashboard')
@@ -78,6 +77,21 @@ router
     router
       .get('/obat-penyakit/obat/search', [ObatPenyakitController, 'searchObat'])
       .as('search-obat')
+
+    // Prpfile routes
+    router.get('/pasien/:uuid', '#controllers/pasiens_controller.show').as('profile.pasien')
+    router
+      .post('/pasien/:uuid/delete', '#controllers/pasiens_controller.destroy')
+      .as('pasien.destroy')
+    router.post('/pasien/:uuid/obat', '#controllers/obat_pasiens_controller.store')
+    router.patch('/obat-pasien/:uuid', '#controllers/obat_pasiens_controller.update')
+    router.delete('/obat-pasien/:uuid', '#controllers/obat_pasiens_controller.destroy')
+    router.post('/pasien/:uuid/kunjungan', '#controllers/kunjungans_controller.store')
+    // Tambahkan route ini di file router
+    router.delete(
+      '/pasien/:uuid/obat-kunjungan',
+      '#controllers/obat_pasiens_controller.destroyByKunjungan'
+    )
 
     router.get('/data-kunjungan', async ({ view }) => {
       return view.render('kunjungan/data-kunjungan')

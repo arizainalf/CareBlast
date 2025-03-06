@@ -8,8 +8,11 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('uuid').notNullable().unique()
       table.integer('pasien_id').unsigned().references('id').inTable('pasiens').onDelete('CASCADE')
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.string('tema').notNullable().defaultTo('Tanpa Tema')
+      table.text('keterangan').nullable()
+      table.date('tanggal_kunjungan').notNullable()
+      table.timestamp('created_at').defaultTo(this.now())
+      table.timestamp('updated_at').defaultTo(this.now())
     })
   }
 

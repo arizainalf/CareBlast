@@ -1,0 +1,81 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const detailModal = document.getElementById('medicationDetailModal');
+
+    detailModal.addEventListener('show.bs.modal', function (event) {
+      const medicationName = event.relatedTarget;
+      const uuid = medicationName.getAttribute('data-uuid');
+      const nama = medicationName.getAttribute('data-nama');
+      const dosis = medicationName.getAttribute('data-dosis');
+      const frekuensi = medicationName.getAttribute('data-frekuensi');
+      const waktuJSON = medicationName.getAttribute('data-waktu');
+      const keteranganWaktu = medicationName.getAttribute('data-keterangan-waktu') ||
+        (medicationName.closest('.list-group').querySelector('.list-group-item:first-child').textContent.includes('Sebelum') ?
+          'Sebelum makan' : 'Sesudah makan');
+      const isBeforeMeal = keteranganWaktu.toLowerCase().includes('sebelum');
+      const themeColor = isBeforeMeal ? 'primary' : 'secondary';
+      const modalHeader = detailModal.querySelector('.modal-header');
+      const divider = detailModal.querySelector('hr');
+      const categoryBadge = detailModal.querySelector('.modal-medication-category');
+      const iconContainers = detailModal.querySelectorAll('.rounded-circle');
+      const editButton = detailModal.querySelector('.modal-edit-button');
+
+      modalHeader.className = `modal-header bg-${themeColor} text-white`;
+      divider.className = `text-${themeColor} opacity-100 mt-2 mb-1`;
+      categoryBadge.className = `badge bg-bg-white bg-opacity-10 text-${themeColor} border border-${themeColor} border-opacity-25 rounded-pill modal-medication-category px-3 py-2 fs-6`;
+      iconContainers.forEach(container => {
+        container.className = `bg-${themeColor} bg-opacity-10 text-white rounded-circle p-3 me-3 d-flex align-items-center justify-content-center`;
+      });
+      editButton.className = `btn btn-${themeColor} modal-edit-button`;
+
+      let waktuArray = [];
+      try {
+        waktuArray = JSON.parse(waktuJSON);
+      } catch (error) {
+        console.error('Error parsing waktu JSON:', error);
+        if (waktuJSON) {
+          try {
+            waktuArray = JSON.parse(waktuJSON.replace(/'/g, '"'));
+          } catch (e) {
+            console.error('Second attempt to parse waktu failed:', e);
+            waktuArray = [waktuJSON];
+          }
+        }
+      }
+
+      const nameElement = detailModal.querySelector('.modal-medication-name');
+      const doseElement = detailModal.querySelector('.modal-medication-dose');
+      const frequencyElement = detailModal.querySelector('.modal-medication-frequency');
+      const scheduleElement = detailModal.querySelector('.modal-medication-schedule');
+
+      nameElement.textContent = nama;
+      categoryBadge.textContent = keteranganWaktu;
+      doseElement.textContent = `${dosis} mg`;
+      frequencyElement.textContent = `${frekuensi}x sehari`;
+      scheduleElement.innerHTML = '';
+      waktuArray.forEach(waktu => {
+        const timeCol = document.createElement('div');
+        timeCol.className = 'col-md-6 col-sm-9 col-6 mb-2';
+
+        const timeTag = document.createElement('div');
+        timeTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
+        timeTag.innerHTML = `<i class="far fa-clock me-2"></i>${waktu}`;
+
+        timeCol.appendChild(timeTag);
+        scheduleElement.appendChild(timeCol);
+      });
+
+      editButton.onclick = function () {
+        const editSpan = document.querySelector(`.edit-obat[data-uuid="${uuid}"]`);
+        const detailModalInstance = bootstrap.Modal.getInstance(detailModal);
+        detailModalInstance.hide();
+
+        setTimeout(() => {
+          if (editSpan) {
+            editSpan.click();
+          }
+        }, 400);
+      };
+    });
+  });
+</script>

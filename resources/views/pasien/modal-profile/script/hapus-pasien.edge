@@ -1,0 +1,54 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const bulkDeleteObatBtn = document.getElementById('bulkDeleteObatBtn');
+    if (bulkDeleteObatBtn) {
+      bulkDeleteObatBtn.addEventListener('click', function () {
+        const kunjunganSelect = document.getElementById('kunjunganDeleteSelect');
+        const kunjunganId = kunjunganSelect ? kunjunganSelect.value : '';
+
+        if (!kunjunganId) {
+          alert('Silakan pilih kunjungan terlebih dahulu');
+          return;
+        }
+
+        if (!confirm('Anda yakin ingin menghapus semua data obat dari kunjungan ini?')) {
+          return;
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        if (!csrfToken) {
+          alert('CSRF token tidak ditemukan. Silakan refresh halaman dan coba lagi.');
+          return;
+        }
+
+        fetch(`/pasien/{{ pasien.uuid }}/obat-kunjungan`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({ kunjunganId })
+        })
+          .then(response => response.json())
+          .then(data => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('bulkDeleteObatModal'));
+            if (modal) {
+              modal.hide();
+            }
+
+            if (data.success) {
+              alert(data.message);
+              window.location.reload();
+            } else {
+              alert(data.message || 'Gagal menghapus data obat');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menghapus data obat');
+          });
+      });
+    }
+  });
+</script>

@@ -1,0 +1,26 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("add-medicine-form");
+    const submitButton = form.querySelector("button[type='submit']");
+    const inputs = form.querySelectorAll("input:not([disabled]), select:not([disabled])");
+
+    function validateForm() {
+      let isValid = true;
+
+      inputs.forEach((input) => {
+        if (!input.value.trim()) {
+          isValid = false;
+        }
+      });
+
+      submitButton.disabled = !isValid;
+    }
+
+    inputs.forEach((input) => {
+      input.addEventListener("input", validateForm);
+      input.addEventListener("change", validateForm);
+    });
+
+    validateForm();
+  });
+</script>

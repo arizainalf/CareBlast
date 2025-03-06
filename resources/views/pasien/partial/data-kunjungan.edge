@@ -1,32 +1,33 @@
 <div class="card-body">
   <div id="DZ_W_TimeLine" class="widget-timeline dlab-scroll height370">
     <ul class="timeline">
+      @each((kunjungan, index) in pasien.kunjungans)
       <li>
-        <div class="timeline-badge primary"></div>
+        <div class="timeline-badge {{ index === 0 ? 'info' : 'dark' }}"></div>
         <a class="timeline-panel text-muted" href="#">
-          <span>10 november 2024</span>
-          <h6 class="mb-0">Pemeiksaan rurin gula darah <strong class="text-primary">Ke 5</strong>.
-            <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, in!</p>
+          <span>{{ formatDate(kunjungan.tanggalKunjungan) }}</span>
+          <h6 class="mb-0">
+            {{ kunjungan.tema }}
+            <strong class="{{ index === 0 ? 'text-info' : 'text-dark' }}">{{ kunjungan.keterangan }}</strong>
           </h6>
+          <ul>
+            @each(obatPasien in kunjungan.obatPasiens)
+            <li>{{ obatPasien.obat.nama }} - {{ obatPasien.frekuensi }}x sehari</li>
+            @else
+            <li class="text-muted">Tidak ada obat</li>
+            @end
+          </ul>
         </a>
       </li>
+      @else
       <li>
-        <div class="timeline-badge info">
-        </div>
+        <div class="timeline-badge dark"></div>
         <a class="timeline-panel text-muted" href="#">
-          <span>10 Desember 2024</span>
-          <h6 class="mb-0">New order placed <strong class="text-info">#XF-2356.</strong></h6>
-          <p class="mb-0">Quisque a consequat ante Sit amet magna at volutapt...</p>
+          <span>-</span>
+          <h6 class="mb-0">Belum ada kunjungan</h6>
         </a>
       </li>
-      <li>
-        <div class="timeline-badge dark">
-        </div>
-        <a class="timeline-panel text-muted" href="#">
-          <span>20 minutes ago</span>
-          <h6 class="mb-0">Mashable, a news website and blog, goes live.</h6>
-        </a>
-      </li>
+      @end
     </ul>
   </div>
 </div>
