@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       
       table.string('name')
       table.text('message')
+      table.string('file').nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

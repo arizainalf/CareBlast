@@ -10,6 +10,10 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="{{ asset('css/auth.css') }}" rel="stylesheet">
 
+  @if($slots.styles)
+  {{{ await $slots.styles() }}}
+  @endif
+
 </head>
 
 <body class="h-100 d-flex align-items-center">
@@ -22,13 +26,20 @@
   </div>
   @include('auth/layout/footer')
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
+  <script src="{{asset('js/custom.js')}}"></script>
+
+  @if($slots.styles)
+  {{{ await $slots.styles() }}}
+  @endif
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const form = document.getElementById('loginForm')
 
+      const form = document.getElementById('loginForm')
       form.addEventListener('submit', async function (event) {
-        event.preventDefault() // Cegah form submit biasa
+        event.preventDefault()
 
         const formData = new FormData(form)
         const response = await fetch(form.action, {
@@ -42,22 +53,19 @@
 
         const result = await response.json()
 
+        Swal.fire({
+          title: result.title,
+          text: result.message,
+          icon: result.status,
+          timer: 2000,
+          showConfirmButton: false,
+        })
+
         if (result.status === 'success') {
-          Swal.fire({
-            title: 'Login Berhasil!',
-            text: 'Anda akan diarahkan ke dashboard...',
-            icon: 'success',
-            timer: 2000,
-            showConfirmButton: false,
-          }).then(() => {
-            window.location.href = result.redirectUrl
-          })
-        } else {
-          Swal.fire({
-            title: 'Login Gagal',
-            text: result.message,
-            icon: 'error',
-          })
+
+          setTimeout(() => {
+            window.location.href = result.redirectUrl;
+          }, 2000);
         }
       })
     })

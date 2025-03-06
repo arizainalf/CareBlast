@@ -1,6 +1,6 @@
 @layout.auth()
 @slot('auth')
-{{--  {{ inspect(flashMessages.all())}}  --}}
+{{-- {{ inspect(flashMessages.all())}} --}}
 <div class="card p-4">
   <div class="card-body">
     <div class="login-icon">
@@ -20,12 +20,12 @@
           </span>
           <input type="email" value="{{ old('email') || '' }}" name="email" class="form-control border-start-0"
             placeholder="Enter your email" />
-          </div>
-          @if(flashMessages.get('errors.email'))
-          <p class="text-danger text-sm">
-            {{ flashMessages.get('errors.email') }}
-          </p>
-          @end
+        </div>
+        @if(flashMessages.get('errors.email'))
+        <p class="text-danger text-sm">
+          {{ flashMessages.get('errors.email') }}
+        </p>
+        @end
       </div>
 
       <div class="mb-4">
@@ -34,8 +34,12 @@
           <span class="input-group-text bg-light border-end-0">
             <i class="fas fa-lock text-muted"></i>
           </span>
-          <input minlength=8 type="password" value="{{ old('password') || '' }}" name="password"
+          <input minlength=8 type="password" value="{{ old('password') || '' }}" id="password" name="password"
             class="form-control border-start-0" placeholder="Enter your password" />
+          <a class="input-group-text"
+            onclick="togglePasswordVisibility('#password', '#toggle-password'); event.preventDefault();">
+            <i id="toggle-password" class="fas fa-eye"></i>
+          </a>
         </div>
         @if(flashMessages.get('errors.password'))
         <p class="text-danger text-sm">
@@ -59,6 +63,7 @@
     </form>
   </div>
 </div>
+
 @end
 
 

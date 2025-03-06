@@ -18,8 +18,7 @@
                 <h5 class="card-title text-primary mb-0">
                   <i class="ri-history-line me-2"></i>Riwayat Kirim
                 </h5>
-                <button type="button" class="btn btn-primary btn-sm d-flex align-items-center" data-bs-toggle="modal"
-                  data-bs-target="#kirimHasilModal">
+                <button type="button" class="btn btn-primary btn-sm d-flex align-items-center" id="btnKirim">
                   <i class="ri-add-line me-1 ri-lg"></i>Kirim Hasil
                 </button>
               </div>
@@ -29,7 +28,8 @@
                 <form action="#">
                   <div class="input-group search-area">
                     <input type="text" class="form-control" placeholder="Cari riwayt kirim...">
-                    <span class="input-group-text"><a href="javascript:void(0)"><i class="flaticon-381-search-2"></i></a></span>
+                    <span class="input-group-text"><a href="javascript:void(0)"><i
+                          class="flaticon-381-search-2"></i></a></span>
                   </div>
                 </form>
               </div>
@@ -104,8 +104,34 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="kirimHasilModal" tabindex="-1" aria-labelledby="kirimHasilModalLabel" aria-hidden="true">
+<div class="modal fade" id="kirimHasilModal" tabindex="-1" >
   @include('hasil-lab/modal/kirim-hasil-lab')
 </div>
 @end
+
+@slot('scripts')
+<script>
+  $(document).ready(function () {
+
+    $('#btnKirim').on('click', () => {
+      showModal('kirimHasilModal');
+    });
+
+    $('#formHasilLab').on('submit', function (e) {
+      e.preventDefault();
+
+      let formData = new FormData(this);
+      let url = '/send-file';
+      let method = 'POST';
+
+      ajaxRequest(url, method, formData, "Data berhasil disimpan!", () => {
+        hideModal('kirimHasilModal');
+        location.reload();
+      });
+    });
+
+  });
+</script>
+@end
+
 @end

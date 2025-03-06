@@ -150,6 +150,7 @@
   <script src="{{ asset('js/plugins-init/select2-init.js') }}"></script>
   {{-- toast --}}
   <script src="vendor/toastr/js/toastr.min.js"></script>
+  <script src="{{asset('js/custom.js')}}"></script>
 
   <script>
     $(document).ready(function () {
@@ -249,10 +250,9 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const logoutButton = document.getElementById('logoutButton') // Sesuaikan dengan ID tombol logout
-
+      const logoutButton = document.getElementById('logoutButton')
       logoutButton.addEventListener('click', function (event) {
-        event.preventDefault() // Cegah logout langsung
+        event.preventDefault()
 
         Swal.fire({
           title: 'Konfirmasi Logout',
