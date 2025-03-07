@@ -34,11 +34,13 @@
           <span class="nav-text">Hasil Lab</span>
         </a>
       </li>
+      @if(auth.user.role  == 'super_admin') 
       <li><a href="/users" class="" aria-expanded="false">
           <i class="fas fa-user-cog"></i>
           <span class="nav-text">List Pengguna</span>
         </a>
       </li>
+      @end
       <li><a href="{{ route('edit-profile')}}" class="" aria-expanded="false">
           <i class="fas fa-user-edit"></i>
           <span class="nav-text">Edit Profile</span>
