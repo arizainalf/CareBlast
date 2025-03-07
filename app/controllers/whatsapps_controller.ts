@@ -3,7 +3,6 @@
 import { getQrCode, logoutWhatsapp, getStatus, sendMsg, sendFile } from '#services/whatsapp_service'
 import { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { dd } from '@adonisjs/core/services/dumper'
 
 @inject()
 export default class WhatsappsController {
@@ -56,10 +55,10 @@ export default class WhatsappsController {
     try {
       const responseMsg = await sendFile(jid, file, caption)
       console.log('responseMsg:', responseMsg)
-      return response.json(responseMsg)
+      return response.json({ success: true, message: 'Hasil Lab Telah Terkirim untuk '+nama , responseMsg })
     } catch (error) {
       console.error('Error sending file:', error)
-      return response.internalServerError({ message: 'Gagal mengirim file' })
+      return response.badRequest({ success: false, message: 'Gagal mengirim file '+ error })
     }
   }
 

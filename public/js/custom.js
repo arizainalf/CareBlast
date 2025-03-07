@@ -54,7 +54,7 @@ const loadDataToModal = (url, modalId, callback) => {
 };
 
 // 🔹 Fungsi untuk AJAX Request (CRUD)
-const ajaxRequest = (url, method, formData, successMessage, callback) => {
+const ajaxRequest = (url, method, formData, callback) => {
   $.ajax({
     url: url,
     enctype: "multipart/form-data",
@@ -64,16 +64,16 @@ const ajaxRequest = (url, method, formData, successMessage, callback) => {
     contentType: false,
     success: (response) => {
       if (response.success) {
-        showSwal("success", "Sukses", successMessage, () => {
+        showSwal("success", "Sukses", response.message, () => {
           if (callback) callback();
         });
       } else {
-        
-        showSwal("error", "Error Boss", response.message);
+
+        showSwal("error", "Error Boss" + response.message);
       }
     },
-    error: (error) => {
-      showSwal("error", "Gagal", "Terjadi kesalahan!" + error);
+    error: (response) => {
+      showSwal("error", "Gagal", "Terjadi kesalahan!" + response.message);
     }
   });
 };

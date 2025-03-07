@@ -124,7 +124,7 @@
       let url = '/send-file';
       let method = 'POST';
 
-      ajaxRequest(url, method, formData, "Data berhasil disimpan!", () => {
+      ajaxRequest(url, method, formData () => {
         hideModal('kirimHasilModal');
         location.reload();
       });

@@ -91,6 +91,8 @@ export async function getStatus() {
 }
 
 export async function sendFile(jid: string, file: any, caption: string) {
+  const NumberFormatted = NumberHelper(jid)
+  const no = `${NumberFormatted}@s.whatsapp.net`
   if (!socket) {
     throw new Error('Socket not connected')
   }
@@ -99,24 +101,22 @@ export async function sendFile(jid: string, file: any, caption: string) {
     throw new Error('No file uploaded')
   }
 
-  // Baca file dari path sementara
   const filePath = file.tmpPath
   const fileBuffer = fs.readFileSync(filePath)
 
-  const sentMsg = await socket.sendMessage(jid, {
-    document: fileBuffer,
-    fileName: file.clientName,
-    mimetype: file.headers['content-type'],
-    caption: caption,
-  })
+  try {
+    const sentMsg = await socket.sendMessage(no, {
+      document: fileBuffer,
+      fileName: file.clientName,
+      mimetype: file.headers['content-type'],
+      caption: caption,
+    })
 
-  if (!sentMsg) {
-    console.log('❌ Failed to send file')
-  } else {
-    console.log('✅ Sent file:', sentMsg)
+    return sentMsg
+  } catch (error) {
+    console.log('Error '+ error)
+    return error
   }
-
-  return sentMsg
 }
 
 async function saveMessage(sender: string, text: string) {
