@@ -237,7 +237,7 @@
       logoutBtn.innerHTML = '<span class="loading"></span>Logging out...';
       logoutBtn.disabled = true;
 
-      const response = await axios.post('/logout');
+      const response = await axios.get('logoutWhatsapp');
 
       if (response.data.status === 'success') {
         showDisconnected('Logged out successfully');

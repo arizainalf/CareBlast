@@ -9,14 +9,25 @@
           <span class="nav-text">Dashboard</span>
         </a>
       </li>
-      <li
-        class="{{ request.url().startsWith('/pasien/') || request.url().startsWith('/data-pasien') || request.url().startsWith('/obat-penyakit') || request.url().startsWith('/data-kunjungan') ? 'mm-active' : '' }}">
-        <a href="javascript:void()"
-          class="has-arrow {{ request.url().startsWith('/pasien/') || request.url().startsWith('/data-pasien') || request.url().startsWith('/obat-penyakit') || request.url().startsWith('/data-kunjungan') ? 'aria-expanded=true' : 'aria-expanded=false' }}">
+      <li class="{{
+        request.url().startsWith('/pasien/') ||
+        request.url().startsWith('/data-pasien') ||
+        request.url().startsWith('/obat-penyakit') ||
+        request.url().startsWith('/data-kunjungan')
+        ? 'mm-active' : ''
+      }}">
+        <a href="javascript:void(0)" class="has-arrow" data-bs-toggle="collapse" data-bs-target="#menuPasien">
           <i class="fas fa-hospital-user"></i>
           <span class="nav-text">Pasien</span>
         </a>
-        <ul aria-expanded="false">
+        <ul id="menuPasien" class="collapse {{
+            request.url().startsWith('/pasien/') ||
+            request.url().startsWith('/data-pasien') ||
+            request.url().startsWith('/obat-penyakit') ||
+            request.url().startsWith('/data-kunjungan')
+            ? 'show'
+            : ''
+        }}">
           <li><a href="/data-pasien">Data Pasien</a></li>
           <li><a href="/obat-penyakit">Obat & Penyakit</a></li>
           <li><a href="/data-kunjungan">Data Kunjungan</a></li>
@@ -34,8 +45,9 @@
           <span class="nav-text">Hasil Lab</span>
         </a>
       </li>
-      @if(auth.user.role  == 'super_admin') 
-      <li><a href="/users" class="" aria-expanded="false">
+      @if(auth.user.role == 'super_admin')
+      <li class="{{ request.url().startsWith('/users') ? 'mm-active' : '' }}">
+        <a href="/users" class="{{ request.url().startsWith('/users') ? 'aria-expanded=true' : 'aria-expanded=false' }}">
           <i class="fas fa-user-cog"></i>
           <span class="nav-text">List Pengguna</span>
         </a>
