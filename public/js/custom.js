@@ -68,7 +68,6 @@ const ajaxRequest = (url, method, formData, callback) => {
           if (callback) callback();
         });
       } else {
-
         showSwal("error", "Error Boss" + response.message);
       }
     },

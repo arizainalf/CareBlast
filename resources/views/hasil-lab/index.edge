@@ -1,4 +1,4 @@
-@layout.app()
+@layout.app({ title: "Hasil Lab" })
 @slot('content')
 <div class="container-fluid">
   <div class="row page-titles" style="margin-bottom: -4px;">
@@ -36,6 +36,21 @@
 
               <!-- List Catatan -->
               <div class="list-group">
+                <a href="javascript:void(0)"
+                  class="list-group-item list-group-item-action border-0 mb-2 rounded hover-shadow">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="mb-1">Jajang</h6>
+                      <p class="mb-1 text-muted small">085615678935</p>
+                    </div>
+                    <div class="text-end">
+                      <small class="text-muted d-block">2025-01-01</small>
+                      <span class="badge bg-success rounded-pill mt-1">
+                        <i class="ri-attachment-2 me-1"></i>Terkirim
+                      </span>
+                    </div>
+                  </div>
+                </a>
                 <a href="javascript:void(0)"
                   class="list-group-item list-group-item-action border-0 mb-2 rounded hover-shadow">
                   <div class="d-flex justify-content-between align-items-center">

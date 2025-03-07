@@ -9,8 +9,13 @@ import { Boom } from '@hapi/boom'
 import qrImage from 'qr-image'
 import NumberHelper from '#services/number_service'
 import Message from '#models/message'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 let socket: any
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export async function connectToWhatsApp() {
   try {
@@ -90,9 +95,10 @@ export async function getStatus() {
   })
 }
 
-export async function sendFile(jid: string, file: any, caption: string) {
+export async function sendFile(jid: string, file: any, caption: string, name: string) {
   const NumberFormatted = NumberHelper(jid)
   const no = `${NumberFormatted}@s.whatsapp.net`
+
   if (!socket) {
     throw new Error('Socket not connected')
   }
@@ -101,8 +107,20 @@ export async function sendFile(jid: string, file: any, caption: string) {
     throw new Error('No file uploaded')
   }
 
-  const filePath = file.tmpPath
-  const fileBuffer = fs.readFileSync(filePath)
+  // **Path untuk menyimpan file**
+  const uploadDir = path.join(__dirname, '../../uploads') // Folder uploads/
+  const uploadPath = path.join(uploadDir, file.clientName) // Path lengkap file
+
+  await file.move(uploadDir)
+
+  if (!fs.existsSync(uploadPath)) {
+    throw new Error('File upload failed')
+  }
+
+  // **Ambil hanya bagian 'uploads/nama-file.ekstensi'**
+  const relativePath = path.relative(path.join(__dirname, '../../'), uploadPath).replace(/\\/g, '/')
+
+  const fileBuffer = fs.readFileSync(uploadPath)
 
   try {
     const sentMsg = await socket.sendMessage(no, {
@@ -112,22 +130,30 @@ export async function sendFile(jid: string, file: any, caption: string) {
       caption: caption,
     })
 
+    // **Simpan path relatif ke database**
+    await saveMessage(name, caption, relativePath, jid)
+
     return sentMsg
   } catch (error) {
-    console.log('Error '+ error)
+    console.log('Error di service:', error)
     return error
   }
 }
 
-async function saveMessage(sender: string, text: string) {
+
+async function saveMessage(name: string, message: string, filepath: string, no: string) {
   try {
-    await Message.create({
-      sender,
-      message: text,
+    const msg = await Message.create({
+      name,
+      no,
+      message,
+      filepath
     })
     console.log('Pesan berhasil disimpan')
+    return msg
   } catch (error) {
     console.error('Gagal menyimpan pesan:', error)
+    return error
   }
 }
 
@@ -141,7 +167,7 @@ export async function upsert() {
         console.log(`Pesan dari ${sender}: ${text}`)
 
         // Simpan ke database jika perlu
-        await saveMessage(sender, text)
+        // await saveMessage(name, text)
       }
     }
   })
