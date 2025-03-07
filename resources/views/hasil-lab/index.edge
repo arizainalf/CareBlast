@@ -112,8 +112,9 @@
 @slot('scripts')
 <script>
   $(document).ready(function () {
-
+console.log('ready')
     $('#btnKirim').on('click', () => {
+      console.log('btnKirim')
       showModal('kirimHasilModal');
     });
 
@@ -124,7 +125,7 @@
       let url = '/send-file';
       let method = 'POST';
 
-      ajaxRequest(url, method, formData () => {
+      ajaxRequest(url, method, formData, () => {
         hideModal('kirimHasilModal');
         location.reload();
       });
