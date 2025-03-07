@@ -5,6 +5,7 @@ tmp
 
 #auth key whatsapp
 whatsappAuth
+uploads
 
 # Secrets
 .env
