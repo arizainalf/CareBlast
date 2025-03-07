@@ -53,12 +53,13 @@ export default class WhatsappsController {
     }
 
     try {
-      const responseMsg = await sendFile(jid, file, caption)
-      console.log('responseMsg:', responseMsg)
-      return response.json({ success: true, message: 'Hasil Lab Telah Terkirim untuk '+nama , responseMsg })
+
+      const responseMsg = await sendFile(jid, file, caption, nama)
+
+      return response.json({ success: true, message: 'Hasil Lab Telah Terkirim untuk ' + nama, data: responseMsg })
     } catch (error) {
-      console.error('Error sending file:', error)
-      return response.badRequest({ success: false, message: 'Gagal mengirim file '+ error })
+      console.log('error di controller')
+      return response.badRequest({ success: false, message: 'Error controller Gagal mengirim file ' + error })
     }
   }
 

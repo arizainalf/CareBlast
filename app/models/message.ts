@@ -6,13 +6,16 @@ export default class Message extends BaseModel {
   declare id: number
 
   @column()
-  declare sender: string
+  declare name: string
+
+  @column()
+  declare no: string
 
   @column()
   declare message: string
 
   @column()
-  declare file: string
+  declare filepath: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
