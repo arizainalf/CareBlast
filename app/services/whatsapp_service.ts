@@ -90,6 +90,35 @@ export async function getStatus() {
   })
 }
 
+export async function sendFile(jid: string, file: any, caption: string) {
+  const NumberFormatted = NumberHelper(jid)
+  const no = `${NumberFormatted}@s.whatsapp.net`
+  if (!socket) {
+    throw new Error('Socket not connected')
+  }
+
+  if (!file) {
+    throw new Error('No file uploaded')
+  }
+
+  const filePath = file.tmpPath
+  const fileBuffer = fs.readFileSync(filePath)
+
+  try {
+    const sentMsg = await socket.sendMessage(no, {
+      document: fileBuffer,
+      fileName: file.clientName,
+      mimetype: file.headers['content-type'],
+      caption: caption,
+    })
+
+    return sentMsg
+  } catch (error) {
+    console.log('Error '+ error)
+    return error
+  }
+}
+
 async function saveMessage(sender: string, text: string) {
   try {
     await Message.create({

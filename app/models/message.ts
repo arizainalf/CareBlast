@@ -11,6 +11,9 @@ export default class Message extends BaseModel {
   @column()
   declare message: string
 
+  @column()
+  declare file: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

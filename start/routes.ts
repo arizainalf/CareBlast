@@ -33,9 +33,17 @@ router
 
     router.get('/users', '#controllers/users_controller.index').as('users.index')
     router.post('/users', '#controllers/users_controller.store').as('users.create')
-    router.get('/users/:id', '#controllers/users_controller.show')
-    router.put('/users/:id', '#controllers/users_controller.update')
-    router.delete('/users/:id', '#controllers/users_controller.destroy')
+    router.get('/users/:id/show', '#controllers/users_controller.show').as('users.show')
+    router.get('/users/:id/edit', '#controllers/users_controller.edit').as('users.edit')
+    router.put('/users/:id/update', '#controllers/users_controller.update').as('users.update')
+    router.delete('/users/:id', '#controllers/users_controller.destroy').as('users.delete')
+
+    router.get('/users/edit-profile', '#controllers/users_controller.editProfile').as('edit-profile')
+    router.post('/users/edit-profile', '#controllers/users_controller.editProfile').as('edit-profile.post')
+    router.post('/users/edit-password', '#controllers/users_controller.editPassword').as('edit-password')
+
+    router.get('/send-file', '#controllers/whatsapps_controller.sendFile').as('send-file')
+    router.post('/send-file', '#controllers/whatsapps_controller.sendFile').as('send-file.post')
 
     router.get('/data-pasien', [PasiensController, 'index']).as('pasien.index')
     router.post('/data-pasien', [PasiensController, 'store']).as('pasien.store')

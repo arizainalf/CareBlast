@@ -1,7 +1,6 @@
 @layout.app({ title: "Users" })
 
 @slot('styles')
-{{--  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" rel="stylesheet">  --}}
 @end
 
 @slot('content')
@@ -12,8 +11,7 @@
         <div class="card-header">
           <h4 class="card-title">Data Pengguna</h4>
           <div>
-            <button type="button" class="btn btn-rounded fs-14 btn-primary align-items-center gap-2"
-              data-bs-toggle="modal" data-bs-target="#tambahPengguna">
+            <button type="button" class="btn btn-rounded fs-14 btn-primary align-items-center gap-2" id="btnTambah">
               <span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i></span>
               Pengguna
             </button>
@@ -37,8 +35,8 @@
                 <tr>
                   <th>{{ index + 1 }}</th>
                   <td>
-                    <div class="d-flex align-items-center"><img src="{{ asset('images/users/')}}{{ user.foto }}"
-                        class="rounded-lg me-2" width="24" alt=""> <span class="w-space-no">{{ user.fullName }}</span>
+                    <div class="d-flex align-items-center"><img src="{{ asset('images/')}}{{ user.foto }}"
+                        class="rounded-lg me-2" width="24" alt=""><span class="w-space-no">{{ user.fullName }}</span>
                     </div>
                   </td>
                   <td>{{ user.email }}</td>
@@ -50,8 +48,11 @@
                   </td>
                   <td>
                     <div class="d-flex">
-                      <a href="#" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></a>
+                      <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-id="{{ user.id }}" id="btnEdit">
+                        <i class="fas fa-pencil-alt"></i>
+                      </a>
+                      <a href="#" class="btn btn-danger shadow btn-xs sharp" id="btnDelete" data-id="{{ user.id }}"><i
+                          class="fa fa-trash"></i></a>
                     </div>
                   </td>
                 </tr>
@@ -70,7 +71,146 @@
 @end
 
 @slot('scripts')
-{{--  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>  --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+  document.getElementById('avatar').addEventListener('change', function (e) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      document.getElementById('preview-avatar').src = event.target.result;
+    }
+    reader.readAsDataURL(e.target.files[0]);
+  });
+
+  function showSwal(type, title, message, callback = null) {
+    let swalOptions = {
+      title: title,
+      text: message,
+      icon: type,
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "OK",
+    };
+
+    // Jika modal konfirmasi (delete), tambahkan opsi tambahan
+    if (type === "warning") {
+      swalOptions.showCancelButton = true;
+      swalOptions.cancelButtonColor = "#d33";
+      swalOptions.cancelButtonText = "Batal";
+      swalOptions.confirmButtonText = "Ya, Hapus!";
+    }
+
+    Swal.fire(swalOptions).then((result) => {
+      if (result.isConfirmed && callback) {
+        callback();
+      }
+    });
+  }
+
+  $(document).ready(function () {
+    let modalUser = new bootstrap.Modal($('#tambahPengguna')[0]);
+
+    // Event Edit User
+    $(document).on('click', '#btnEdit', function (e) {
+      e.preventDefault();
+
+      let userId = $(this).data('id');
+
+      $.get(`/users/${userId}/edit`, function (user) {
+        if (!user) {
+          showSwal("error", "Gagal", "Data pengguna tidak ditemukan!");
+          return;
+        }
+
+        $('#formUser').attr('data-id', user.id);
+        $('#fullName').val(user.fullName);
+        $('#email').val(user.email);
+        $('#phoneNumber').val(user.phoneNumber);
+        $('#role').val(user.role);
+
+        // Sembunyikan password saat edit
+        $('#passwordField, #passwordConfirmationField').hide().prop('required', false);
+
+        modalUser.show();
+      }).fail(function () {
+        showSwal("error", "Gagal", "Gagal mengambil data pengguna!");
+      });
+    });
+
+    // Tambah Data
+    $('#btnTambah').on('click', function () {
+      $('#formUser')[0].reset();
+      $('#formUser').attr('data-id', ''); // Reset ID
+
+      // Tampilkan password saat tambah
+      $('#passwordField, #passwordConfirmationField').show().prop('required', true);
+
+      modalUser.show();
+    });
+
+    // Submit Form
+    $('#formUser').on('submit', function (e) {
+      e.preventDefault();
+
+      let formData = new FormData(this);
+      let userId = $(this).attr('data-id');
+      let url = userId ? `/users/${userId}/update` : '/users/create';
+      let method = userId ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: url,
+        type: method,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if (response.success) {
+            showSwal("success", "Sukses", response.message, function () {
+              modalUser.hide();
+              location.reload(); // Refresh tabel
+            });
+          } else {
+            showSwal("error", "Error", response.message);
+          }
+        },
+        error: function (error) {
+          showSwal("error", "Gagal", "Terjadi kesalahan dalam menyimpan data!");
+        }
+      });
+    });
+
+    // Hapus User
+    $(document).on('click', '#btnDelete', function (e) {
+      e.preventDefault();
+
+      let userId = $(this).data('id');
+
+      showSwal("warning", "Konfirmasi", "Apakah Anda yakin ingin menghapus pengguna ini?", function () {
+        $.ajax({
+          url: `/users/${userId}`,
+          type: "DELETE",
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function (response) {
+            if (response.success) {
+              showSwal("success", "Terhapus", response.message, function () {
+                location.reload();
+              });
+            } else {
+              showSwal("error", "Error", response.message);
+            }
+          },
+          error: function (error) {
+            console.log(error);
+            showSwal("error", "Gagal", "Terjadi kesalahan saat menghapus data!");
+          }
+        });
+      });
+    });
+
+  });
+</script>
+
 @end
 
 @end

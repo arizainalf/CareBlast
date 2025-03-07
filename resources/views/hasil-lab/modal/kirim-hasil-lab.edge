@@ -5,30 +5,31 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal">
       </button>
     </div>
-    <div class="modal-body">
-      <form>
+    <form id="formHasilLab">
+      <div class="modal-body">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <input type="text" class="form-control" placeholder="Nama Penerima">
+            {{ csrfField() }}
+            <input type="text" class="form-control" placeholder="Nama Penerima" required name="nama">
           </div>
           <div class="col-sm-6 mt-2 mt-sm-0">
-            <input type="text" type="numeric" class="form-control" placeholder="No Whatsapp">
+            <input type="text" type="numeric" class="form-control" placeholder="No Whatsapp" required name="nomor">
           </div>
         </div>
         <div class="input-group mb-3">
           <span class="input-group-text">2Mb<span class="text-danger">*</span></span>
           <div class="form-file">
-            <input type="file" class="form-file-input form-control">
+            <input type="file" class="form-file-input form-control" name="file" required>
           </div>
         </div>
         <div class="mb-3">
-          <textarea class="form-control" rows="4" id="pesan" placeholder="Isi pesan..."></textarea>
+          <textarea class="form-control" rows="4" name="caption" id="pesan" placeholder="Isi pesan..."></textarea>
         </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary">Kirim</button>
-    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Kirim</button>
+      </div>
+    </form>
   </div>
 </div>

@@ -39,12 +39,13 @@
           <span class="nav-text">List Pengguna</span>
         </a>
       </li>
-      <li><a href="/edit-profile" class="" aria-expanded="false">
+      <li><a href="{{ route('edit-profile')}}" class="" aria-expanded="false">
           <i class="fas fa-user-edit"></i>
           <span class="nav-text">Edit Profile</span>
         </a>
       </li>
-      <li><a href="{{ route('logout') }}" id="logoutButton" class="" aria-expanded="false">
+      <li>
+        <a href="{{ route('logout') }}" id="logoutButton" class="" aria-expanded="false">
           <i class="fas fa-sign-out-alt"></i>
           <span class="nav-text">Sign Out</span>
         </a>
