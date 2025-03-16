@@ -1,30 +1,208 @@
+<!-- Modal Edit Obat -->
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">Tambah data obat</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal">
-      </button>
+      <h5 class="modal-title">Edit Obat</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form>
-        <div class="mb-3">
-          <input type="text" class="form-control input-default" placeholder="Nama Pasien">
+      <form id="edit-medicine-form">
+        {{ csrfField() }}
+        <input type="hidden" id="edit-obat-uuid" name="uuid" value="">
+        <div class="mb-3" style="display: none;">
+          <label class="form-label">Nama Pasien</label>
+          <input type="text"  class="form-control input-default" value="{{ kunjungan.pasien.name }}" disabled>
         </div>
         <div class="mb-3">
-          <input type="text" class="form-control input-default" placeholder="Nama obat">
+          <label class="form-label">Tanggal Kunjungan</label>
+          <input type="text" class="form-control input-default"
+            value="{{ formatDate(kunjungan.tanggalKunjungan) }} - {{ kunjungan.tema }}" disabled>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Keterangan waktu:</label>
-          <select class="default-select  form-control ">
-            <option>Sesudah makan</option>
-            <option>Sebelum makan</option>
+        <div class="mb-2">
+          <label class="form-label">Keterangan Waktu</label>
+          <select id="edit-keterangan-waktu" class="form-select" name="keteranganWaktu">
+            <option value="Sesudah makan">Sesudah makan</option>
+            <option value="Sebelum makan">Sebelum makan</option>
           </select>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Berapa kali sehari</label>
+          <select id="edit-frequency-select" class="form-select" name="frekuensi">
+            <option value="1">sehari 1x</option>
+            <option value="2">sehari 2x</option>
+            <option value="3">sehari 3x</option>
+            <option value="4">sehari 4x</option>
+          </select>
+        </div>
+        <div id="edit-time-inputs">
+          <label class="form-label">Pada jam berapa?</label>
+          <div class="input-group clockpicker mb-2" data-placement="bottom" data-align="top" data-autoclose="true">
+            <input type="text" class="form-control clockpicker-input" name="waktu[]" value="08:00">
+            <span class="input-group-text"><i class="far fa-clock"></i></span>
+          </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
-      <button type="button" class="btn btn-primary">Simpan</button>
+      <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+      <button type="button" class="btn btn-primary" id="save-edit-obat">Simpan</button>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const editFrequencySelect = document.getElementById("edit-frequency-select");
+    const editTimeInputsContainer = document.getElementById("edit-time-inputs");
+    const editButtons = document.querySelectorAll(".edit-obat");
+    const editModalTitle = document.querySelector("#editObatModal .modal-title");
+    const saveEditButton = document.getElementById("save-edit-obat");
+    const editObatUuidInput = document.getElementById("edit-obat-uuid");
+    const editKeteranganWaktu = document.getElementById("edit-keterangan-waktu");
+    let currentObatUuid = null;
+
+    if (editFrequencySelect) {
+      editFrequencySelect.addEventListener("change", function () {
+        updateEditTimeInputs(parseInt(this.value, 10));
+      });
+    }
+
+    function updateEditTimeInputs(frequency, times = []) {
+      editTimeInputsContainer.innerHTML = "";
+
+      const label = document.createElement("label");
+      label.classList.add("form-label");
+      label.textContent = "Pada jam berapa?";
+      editTimeInputsContainer.appendChild(label);
+
+      for (let i = 0; i < frequency; i++) {
+        const defaultTime = times[i] || "08:00";
+
+        const inputGroup = document.createElement("div");
+        inputGroup.classList.add("input-group", "mb-2", "clockpicker");
+        inputGroup.setAttribute("data-autoclose", "true");
+
+        inputGroup.innerHTML = `
+          <input type="text" class="form-control clockpicker-input" value="${defaultTime}" name="waktu[]" required>
+          <span class="input-group-text"><i class="far fa-clock"></i></span>
+          <div class="invalid-feedback">Waktu tidak boleh kosong</div>
+        `;
+
+        editTimeInputsContainer.appendChild(inputGroup);
+      }
+
+      // Initialize clockpicker
+      setTimeout(() => {
+        $(".clockpicker").clockpicker({
+          autoclose: true
+        });
+      }, 100);
+    }
+
+    editButtons.forEach(button => {
+      button.addEventListener("click", function () {
+        const obatUuid = this.getAttribute("data-uuid");
+        const obatNama = this.getAttribute("data-nama");
+        const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
+        const waktuStr = this.getAttribute("data-waktu");
+        const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
+
+        let waktuArray = [];
+        try {
+          waktuArray = JSON.parse(waktuStr);
+        } catch (e) {
+          console.error("Error parsing waktu:", e);
+          waktuArray = ["08:00"];
+        }
+
+        if (editModalTitle) editModalTitle.textContent = `Edit Obat ${obatNama}`;
+        if (editObatUuidInput) editObatUuidInput.value = obatUuid;
+        if (editKeteranganWaktu) editKeteranganWaktu.value = keteranganWaktu;
+
+        currentObatUuid = obatUuid;
+
+        if (editFrequencySelect) {
+          editFrequencySelect.value = frekuensi;
+          updateEditTimeInputs(frekuensi, waktuArray);
+        }
+      });
+    });
+
+    if (saveEditButton) {
+      saveEditButton.addEventListener("click", function () {
+        const obatUuid = editObatUuidInput ? editObatUuidInput.value : currentObatUuid;
+
+        if (!obatUuid) {
+          alert('Error: ID obat tidak ditemukan');
+          return;
+        }
+
+        const frekuensi = editFrequencySelect.value;
+        const keteranganWaktu = editKeteranganWaktu.value;
+        const timeInputs = document.querySelectorAll("input[name='waktu[]']");
+
+        // Validasi input waktu
+        let isValid = true;
+        timeInputs.forEach((input) => {
+          if (!input.value.trim()) {
+            input.classList.add('is-invalid');
+            isValid = false;
+          } else {
+            input.classList.remove('is-invalid');
+          }
+        });
+
+        // Jika tidak valid, hentikan proses
+        if (!isValid) {
+          alert('Harap isi semua waktu konsumsi');
+          return;
+        }
+
+        const waktuArray = Array.from(timeInputs).map(input => input.value);
+
+        // Dapatkan token CSRF dari form
+        const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+
+        if (!csrfToken) {
+          console.error('CSRF token not found');
+          alert('Error: CSRF token not found');
+          return;
+        }
+
+        fetch(`/obat-pasien/${obatUuid}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({
+            frekuensi,
+            keteranganWaktu,
+            waktu: waktuArray
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const modal = bootstrap.Modal.getInstance(document.getElementById('editObatModal'));
+              modal.hide();
+              window.location.reload();
+            } else {
+              alert('Error: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan data');
+          });
+      });
+    }
+
+    // Initialize with default value
+    if (editFrequencySelect) {
+      updateEditTimeInputs(parseInt(editFrequencySelect.value, 10));
+    }
+  });
+</script>

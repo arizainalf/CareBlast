@@ -1,25 +1,26 @@
-<!-- Tambahkan JavaScript -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const showMoreBtn = document.getElementById('showMoreBtn');
     const hiddenItems = document.querySelectorAll('.timeline-item.hidden');
     let isExpanded = false;
 
-    showMoreBtn.addEventListener('click', function () {
-      if (!isExpanded) {
-        hiddenItems.forEach(item => {
-          item.style.display = 'block';
-        });
-        showMoreBtn.textContent = 'Show Less';
-        isExpanded = true;
-      } else {
-        hiddenItems.forEach(item => {
-          item.style.display = 'none';
-        });
-        showMoreBtn.textContent = 'Show All';
-        isExpanded = false;
-      }
-    });
+    if (showMoreBtn) {
+      showMoreBtn.addEventListener('click', function () {
+        if (!isExpanded) {
+          hiddenItems.forEach(item => {
+            item.style.display = 'block';
+          });
+          showMoreBtn.textContent = 'Show Less';
+          isExpanded = true;
+        } else {
+          hiddenItems.forEach(item => {
+            item.style.display = 'none';
+          });
+          showMoreBtn.textContent = 'Show All';
+          isExpanded = false;
+        }
+      });
+    }
 
     // Fungsi untuk menyesuaikan tinggi
     function adjustHeight() {
@@ -27,7 +28,16 @@
       const leftColumn = document.querySelector('.col-lg-4 .card');
       if (rightColumn && leftColumn) {
         const rightHeight = rightColumn.offsetHeight;
-        leftColumn.style.height = `${rightHeight}px`;
+        leftColumn.style.minHeight = `${rightHeight}px`;
+
+        // Adjust timeline scroll area
+        const timelineContainer = document.getElementById('DZ_W_TimeLine');
+        const timelineFooter = document.querySelector('.timeline-footer');
+
+        if (timelineContainer && timelineFooter) {
+          const footerHeight = timelineFooter.offsetHeight;
+          timelineContainer.style.bottom = `${footerHeight + 10}px`; // Add some padding
+        }
       }
     }
 
@@ -36,5 +46,46 @@
 
     // Jalankan saat window diresize
     window.addEventListener('resize', adjustHeight);
+
+    // Fungsi untuk highlight kunjungan yang aktif
+    function highlightActiveVisit() {
+      const currentUrl = window.location.pathname;
+      const timelineLinks = document.querySelectorAll('.timeline-panel');
+
+      timelineLinks.forEach(link => {
+        if (link.getAttribute('href') === currentUrl) {
+          link.classList.add('active-visit');
+          const badge = link.previousElementSibling;
+          if (badge) {
+            badge.classList.add('primary');
+            badge.classList.remove('dark');
+          }
+        }
+      });
+    }
+
+    // Highlight kunjungan aktif
+    highlightActiveVisit();
+
+    // Inisialisasi tooltip jika ada
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    if (tooltips.length > 0) {
+      tooltips.forEach(tooltip => {
+        new bootstrap.Tooltip(tooltip);
+      });
+    }
+
+    // Preload data untuk modal edit
+    const editButtons = document.querySelectorAll('[data-bs-target^="#editModal"]');
+    editButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const targetModalId = this.getAttribute('data-bs-target');
+        const modal = document.querySelector(targetModalId);
+        if (modal) {
+          // Jika perlu pre-populate data tambahan dari backend
+          // bisa ditambahkan logika fetch API disini
+        }
+      });
+    });
   });
 </script>

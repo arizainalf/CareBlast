@@ -1,0 +1,80 @@
+@if(pasiens && pasiens.length > 0)
+@each((pasien, index) in pasiens)
+<div class="col-xl-4 col-xxl-6 col-lg-6 patient-card">
+  <div class="card">
+    <div class="card-header border-0 pb-0">
+      <div class="d-flex flex-column">
+        <h4 class="card-title">{{ pasien.name }}</h4>
+        <small class="text-muted">{{ pasien.nik }}</small>
+      </div>
+      <div class="dropdown">
+        <button type="button" class="btn btn-sm btn-primary light sharp" data-bs-toggle="dropdown">
+          <i class="fa fa-ellipsis-v"></i>
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="/pasien/{{ pasien.uuid }}">
+            <i class="fas fa-eye text-success me-2"></i> Detail Pasien
+          </a>
+          <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+            data-bs-target="#tambahKunjunganModal" data-patient-uuid="{{ pasien.uuid }}"
+            data-patient-name="{{ pasien.name }}" data-patient-nik="{{ pasien.nik }}">
+            <i class="fas fa-walking text-primary me-2"></i> Tambah Kunjungan
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="DZ_W_TimeLine" class="widget-timeline dlab-scroll height370">
+        <ul class="timeline">
+          @if(pasien.kunjungans && pasien.kunjungans.length > 0)
+          @each((kunjungan, index) in pasien.kunjungans)
+          <li>
+            <div class="timeline-badge {{ index === 0 ? 'info' : (index === 1 ? 'primary' : 'dark') }}">
+            </div>
+            <a class="timeline-panel text-muted" href="/kunjungan/{{ kunjungan.uuid }}">
+              <span>{{ formatDate(kunjungan.tanggalKunjungan) }}</span>
+              <h6 class="mb-0">
+                {{ kunjungan.tema }}
+                <strong class="{{ index === 0 ? 'text-info' : (index === 1 ? 'text-primary' : 'text-dark') }}">{{
+                  kunjungan.keterangan }}</strong>
+              </h6>
+              <ul>
+                @if(kunjungan.obatPasiens && kunjungan.obatPasiens.length > 0)
+                @each(obatPasien in kunjungan.obatPasiens)
+                <li>{{ obatPasien.obat ? obatPasien.obat.nama : 'Tidak ada obat' }} - {{
+                  obatPasien.frekuensi }}x sehari</li>
+                @end
+                @else
+                <li class="text-muted">Tidak ada obat</li>
+                @end
+              </ul>
+            </a>
+          </li>
+          @end
+          @else
+          <li>
+            <div class="timeline-badge dark"></div>
+            <a class="timeline-panel text-muted" href="#">
+              <span>-</span>
+              <h6 class="mb-0">Belum ada kunjungan</h6>
+            </a>
+          </li>
+          @end
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+@end
+@else
+<div class="col-12">
+  <div class="card">
+    <div class="card-body text-center">
+      <h4>Belum ada data pasien{{ search ? ' yang sesuai dengan pencarian' : '' }}</h4>
+      @if(search)
+      <a href="/kunjungan" class="btn btn-primary mt-3">Lihat Semua Pasien</a>
+      @endif
+    </div>
+  </div>
+</div>
+@end

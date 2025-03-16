@@ -62,16 +62,16 @@ export default class extends BaseSeeder {
     ])
 
     const obatData = [
+      { nama: 'Amlodipine', dosis: 5 },
+      { nama: 'Captopril', dosis: 25 },
+      { nama: 'Metformin', dosis: 500 },
+      { nama: 'Gliclazide', dosis: 30 },
+      { nama: 'Isoniazid (INH)', dosis: 300 },
+      { nama: 'Rifampicin', dosis: 450 },
+      { nama: 'Fluoxetine', dosis: 20 },
+      { nama: 'Risperidone', dosis: 2 },
       { nama: 'Paracetamol', dosis: 500 },
-      { nama: 'Amoxicillin', dosis: 250 },
-      { nama: 'Ibuprofen', dosis: 200 },
-      { nama: 'Cetirizine', dosis: 10 },
-      { nama: 'Metformin', dosis: 850 },
-      { nama: 'Simvastatin', dosis: 20 },
-      { nama: 'Omeprazole', dosis: 40 },
-      { nama: 'Ciprofloxacin', dosis: 500 },
-      { nama: 'Dexamethasone', dosis: 0.5 },
-      { nama: 'Losartan', dosis: 50 },
+      { nama: 'Amoxicillin', dosis: 500 },
     ]
 
     await Obat.createMany(
@@ -85,36 +85,29 @@ export default class extends BaseSeeder {
     // Seed Jenis Penyakit
     const jenisPenyakitData = [
       {
-        nama: 'Demam Berdarah',
-        deskripsi: 'Penyakit yang ditularkan melalui gigitan nyamuk Aedes aegypti',
+        nama: 'Hipertensi 1',
+        deskripsi:
+          'Tekanan darah sistolik antara 130-139 mmHg atau tekanan darah diastolik antara 80-89 mmHg. Pada tahap ini, perubahan gaya hidup sangat penting untuk mencegah perkembangan lebih lanjut.',
       },
       {
-        nama: 'Diabetes Mellitus',
-        deskripsi: 'Penyakit metabolik yang ditandai dengan tingginya kadar gula darah',
+        nama: 'Hipertensi 2',
+        deskripsi:
+          'Tekanan darah sistolik 140 mmHg atau lebih tinggi, atau tekanan darah diastolik 90 mmHg atau lebih tinggi. Pada tahap ini, pengobatan dengan obat-obatan biasanya diperlukan selain perubahan gaya hidup.',
       },
       {
-        nama: 'Hipertensi',
-        deskripsi: 'Tekanan darah tinggi yang dapat menyebabkan berbagai komplikasi',
+        nama: 'Diabetes',
+        deskripsi:
+          'penyakit kronis yang memengaruhi kemampuan tubuh untuk memproses gula darah (glukosa). Glukosa adalah sumber energi utama bagi tubuh, tetapi kadar glukosa yang berlebihan dalam darah dapat menyebabkan masalah kesehatan yang serius.',
       },
       {
-        nama: 'ISPA',
-        deskripsi: 'Infeksi Saluran Pernapasan Akut yang menyerang sistem pernapasan',
+        nama: 'Tuberkulosis Paru',
+        deskripsi:
+          'Penyakit menular yang disebabkan oleh bakteri Mycobacterium tuberculosis. TB biasanya menyerang paru-paru, tetapi juga dapat memengaruhi organ lain.',
       },
       {
-        nama: 'Asma',
-        deskripsi: 'Penyakit kronis yang menyebabkan peradangan dan penyempitan saluran napas',
-      },
-      {
-        nama: 'Gastritis',
-        deskripsi: 'Peradangan pada lapisan dinding lambung',
-      },
-      {
-        nama: 'Tuberkulosis',
-        deskripsi: 'Penyakit infeksi yang umumnya menyerang paru-paru',
-      },
-      {
-        nama: 'Malaria',
-        deskripsi: 'Penyakit yang disebabkan oleh parasit Plasmodium',
+        nama: 'Jiwa',
+        deskripsi:
+          'kondisi kesehatan yang memengaruhi pikiran, perasaan, suasana hati, dan perilaku seseorang. Gangguan jiwa dapat memengaruhi kemampuan seseorang untuk berfungsi dalam kehidupan sehari-hari.',
       },
     ]
 
