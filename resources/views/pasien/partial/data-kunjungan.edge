@@ -4,7 +4,7 @@
       @each((kunjungan, index) in pasien.kunjungans)
       <li>
         <div class="timeline-badge {{ index === 0 ? 'info' : 'dark' }}"></div>
-        <a class="timeline-panel text-muted" href="#">
+        <a class="timeline-panel text-muted" href="/kunjungan/{{ kunjungan.uuid }}">
           <span>{{ formatDate(kunjungan.tanggalKunjungan) }}</span>
           <h6 class="mb-0">
             {{ kunjungan.tema }}
