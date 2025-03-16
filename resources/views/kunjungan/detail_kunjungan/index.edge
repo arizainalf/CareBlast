@@ -1,100 +1,81 @@
-@layout.app()
+@layout.app({ title: `Detail Kunjungan ${kunjungan.pasien.name}` })
 @slot('content')
 <div class="container-fluid">
   <div class="row page-titles" style="margin-bottom: -4px;">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active"><a href="javascript:void(0)">Pasien</a></li>
-      <li class="breadcrumb-item active"><a href="javascript:void(0)">Data Kunjungan</a></li>
+      <li class="breadcrumb-item active"><a href="/data-kunjungan">Pasien</a></li>
+      <li class="breadcrumb-item active"><a href="/data-kunjungan">Data Kunjungan</a></li>
       <li class="breadcrumb-item active"><a href="javascript:void(0)">Detail Kunjungan</a></li>
-      <li class="breadcrumb-item"><a href="javascript:void(0)">Akmal Sidik</a></li>
+      <li class="breadcrumb-item"><a href="/pasien/{{ kunjungan.pasien.uuid }}">{{ kunjungan.pasien.name }}</a></li>
     </ol>
   </div>
 
   <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
       <div class="row">
-        <!-- List Kunjungan - Kolom Kiri -->
         <div class="col-lg-4 equal-height">
           <div class="card shadow-sm">
             <div class="card-header border-0 pb-0">
               <div class="d-flex flex-column">
-                <h4 class="card-title">Akmal Sidik</h4>
-                <small class="text-muted">32780561664398</small>
+                <h4 class="card-title">{{ kunjungan.pasien.name }}</h4>
+                <small class="text-muted">{{ kunjungan.pasien.nik }}</small>
               </div>
             </div>
             <div class="card-body">
               <div id="DZ_W_TimeLine" class="widget-timeline dlab-scroll">
                 <ul class="timeline" id="timelineList">
-                  <li>
-                    <div class="timeline-badge primary"></div>
-                    <a class="timeline-panel text-muted" href="detail-kunjungan">
-                      <span class="text-info">10 november 2024</span>
-                      <h6 class="mb-0">kontrol rutin gula darah <strong class="text-info">Ke 5</strong>.
-                        <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, in!</p>
+                  @each((visit, index) in allKunjunganPasien)
+                  <li class="{{ index >= 3 ? 'timeline-item hidden' : '' }}">
+                    <div class="timeline-badge {{ visit.uuid === currentKunjunganId ? 'primary' : 'dark' }}"></div>
+                    <a class="timeline-panel text-muted" href="/kunjungan/{{ visit.uuid }}">
+                      <span class="text-info">{{ formatDate(visit.tanggalKunjungan) }}</span>
+                      <h6 class="mb-0">{{ visit.tema }}
+                        <strong class="{{ visit.uuid === currentKunjunganId ? 'text-primary' : 'text-dark' }}">
+                          {{ visit.keterangan }}
+                        </strong>
                       </h6>
+                      <p class="mb-0">
+                        @if(visit.obatPasiens && visit.obatPasiens.length > 0)
+                        Obat: {{ visit.obatPasiens.length }} item
+                        @else
+                        Tidak ada obat
+                        @endif
+                      </p>
                     </a>
                   </li>
-                  <li>
-                    <div class="timeline-badge dark"></div>
-                    <a class="timeline-panel text-muted" href="#">
-                      <span class="text-info">10 Desember 2024</span>
-                      <h6 class="mb-0">New order placed <strong class="text-info">#XF-2356.</strong></h6>
-                      <p class="mb-0">Quisque a consequat ante Sit amet magna at volutapt...</p>
-                    </a>
-                  </li>
-                  <li>
-                    <div class="timeline-badge dark"></div>
-                    <a class="timeline-panel text-muted" href="#">
-                      <span class="text-info">20 minutes ago</span>
-                      <h6 class="mb-0">Mashable, a news website and blog, goes live.</h6>
-                    </a>
-                  </li>
-                  <!-- Items yang tersembunyi secara default -->
-                  <li class="timeline-item hidden">
-                    <div class="timeline-badge dark"></div>
-                    <a class="timeline-panel text-muted" href="#">
-                      <span class="text-info">15 Desember 2024</span>
-                      <h6 class="mb-0">Pemeriksaan lanjutan <strong class="text-info">Ke 6</strong></h6>
-                      <p class="mb-0">Follow up pemeriksaan sebelumnya...</p>
-                    </a>
-                  </li>
-                  <li class="timeline-item hidden">
-                    <div class="timeline-badge dark"></div>
-                    <a class="timeline-panel text-muted" href="#">
-                      <span class="text-info">20 Desember 2024</span>
-                      <h6 class="mb-0">Kontrol rutin <strong class="text-info">Ke 7</strong></h6>
-                      <p class="mb-0">Pemeriksaan kesehatan rutin bulanan...</p>
-                    </a>
-                  </li>
+                  @end
                 </ul>
               </div>
-              <!-- Pindahkan tombol ke dalam div baru -->
+              @if(allKunjunganPasien.length > 3)
               <div class="timeline-footer">
                 <div class="text-center">
                   <button id="showMoreBtn" class="btn btn-primary btn-sm">Show All</button>
                 </div>
               </div>
+              @endif
             </div>
           </div>
         </div>
 
-        <!-- Detail Kunjungan - Kolom Kanan -->
         <div class="col-lg-8 equal-height">
           <div class="card shadow-sm">
             <div class="card-header bg-primary">
               <h5 class="text-white m-0">Detail Kunjungan</h5>
             </div>
             <div class="card-body">
-              <p class="mt-2"><strong>Tanggal :</strong> 10 November 2024</p>
-              <p><strong>Jenis Pemeriksaan :</strong> Pemeriksaan rutin gula darah</p>
-              <p><strong>Catatan :</strong> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, in!</p>
+              <p class="mt-2"><strong>Tanggal :</strong> {{ formatDate(kunjungan.tanggalKunjungan) }}</p>
+              <p><strong>Jenis Pemeriksaan :</strong> {{ kunjungan.tema }}</p>
+              <p><strong>Catatan :</strong> {{ kunjungan.keterangan }}</p>
               <hr style="margin-top: -1px;">
               <div class="mt-2">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <h6 class="mb-0"><strong>Obat pada kunjungan ini</strong></h6>
                   <button type="button" class="btn btn-rounded fs-15 btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#tambahObat"><span class="btn-icon-start text-primary text-lg"><i class="fa fa-plus color-info"></i>
-                    </span>Obat</button>
+                    data-bs-target="#tambahObat">
+                    <span class="btn-icon-start text-primary text-lg">
+                      <i class="fa fa-plus color-info"></i>
+                    </span>Obat
+                  </button>
                 </div>
                 <div class="table-responsive">
                   <table class="table table-hover table-responsive-sm">
@@ -103,44 +84,47 @@
                         <th>#</th>
                         <th>Nama Obat</th>
                         <th>Aturan Pakai</th>
+                        <th>Frekuensi</th>
                         <th>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
+                      @if(kunjungan.obatPasiens && kunjungan.obatPasiens.length > 0)
+                      @each((obatPasien, index) in kunjungan.obatPasiens)
                       <tr>
-                        <th>1</th>
-                        <td>Bodrexin</td>
-                        <td><span class="badge badge-primary">Sesudah Makan</span></td>
+                        <th>{{ index + 1 }}</th>
+                        <td>{{ obatPasien.obat ? obatPasien.obat.nama : 'Tidak ada obat' }}</td>
+                        <td>
+                          <span class="badge {{ obatPasien.keteranganWaktu === 'Sebelum makan' ? 'badge-primary' : 'badge-info' }}">
+                            {{ obatPasien.keteranganWaktu }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="d-block mt-1">{{ obatPasien.frekuensi }}x sehari</span>
+                        </td>
                         <td>
                           <div class="d-flex">
                             <!-- Tombol Edit -->
-                            <button class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal" data-bs-target="#editModal">
+                            <button class="btn btn-primary shadow btn-xs sharp me-1 edit-obat" data-bs-toggle="modal"
+                              data-bs-target="#editObatModal" data-uuid="{{ obatPasien.uuid }}"
+                              data-nama="{{ obatPasien.obat ? obatPasien.obat.nama : 'Obat' }}" data-frekuensi="{{ obatPasien.frekuensi }}"
+                              data-waktu="{{ obatPasien.waktuKonsumsi }}" data-keterangan-waktu="{{ obatPasien.keteranganWaktu }}">
                               <i class="fas fa-pencil-alt"></i>
                             </button>
                             <!-- Tombol Hapus -->
-                            <button class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal" data-bs-target="#hapusModal">
+                            <button class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
+                              data-bs-target="#hapusModal{{ obatPasien.uuid }}">
                               <i class="fa fa-trash"></i>
                             </button>
                           </div>
                         </td>
                       </tr>
+                      @end
+                      @else
                       <tr>
-                        <th>2</th>
-                        <td>Parasetamol</td>
-                        <td><span class="badge badge-secondary">Sebelum Makan</span></td>
-                        <td>
-                          <div class="d-flex">
-                            <!-- Tombol Edit -->
-                            <button class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal" data-bs-target="#editModal">
-                              <i class="fas fa-pencil-alt"></i>
-                            </button>
-                            <!-- Tombol Hapus -->
-                            <button class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal" data-bs-target="#hapusModal">
-                              <i class="fa fa-trash"></i>
-                            </button>
-                          </div>
-                        </td>
+                        <td colspan="4" class="text-center">Belum ada data obat untuk kunjungan ini</td>
                       </tr>
+                      @endif
                     </tbody>
                   </table>
                 </div>
@@ -152,11 +136,36 @@
     </div>
   </div>
 </div>
-<!-- Modal -->
+
+<!-- Modal Hapus Obat -->
+@each(obatPasien in kunjungan.obatPasiens)
+<div class="modal fade" id="hapusModal{{ obatPasien.uuid }}">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Konfirmasi Hapus</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="/obat-pasien/{{ obatPasien.uuid }}" method="POST">
+        {{ csrfField() }}
+        <input type="hidden" name="_method" value="DELETE">
+        <div class="modal-body">
+          <p>Apakah Anda yakin ingin menghapus obat "{{ obatPasien.obat ? obatPasien.obat.nama : 'Tidak ada obat' }}"?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-danger">Hapus</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="tambahObat">
   @include('kunjungan/detail_kunjungan/modal/tambah-obat')
 </div>
-<div class="modal fade" id="editModal">
+<div class="modal fade" id="editObatModal">
   @include('kunjungan/detail_kunjungan/modal/edit-obat')
 </div>
 <div class="modal fade" id="hapusModal">
@@ -164,5 +173,6 @@
 </div>
 @include('kunjungan/detail_kunjungan/style/css')
 @include('kunjungan/detail_kunjungan/style/js')
+@end
 @end
 @end

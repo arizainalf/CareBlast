@@ -1,0 +1,340 @@
+<!-- Modal Tambah Kunjungan dari Dropdown -->
+<div class="modal fade" id="tambahKunjunganModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah Data Kunjungan Pasien</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-kunjungan-dropdown" method="POST">
+          {{ csrfField() }}
+
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <label for="pasienNama">Nama Pasien:</label>
+              <input class="form-control" id="pasienNama" name="pasienNama" placeholder="Nama Pasien" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="pasienNik">NIK:</label>
+              <input type="text" class="form-control" id="pasienNik" name="pasienNik" placeholder="NIK" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="obatDropdown">Pilih Jenis Obat:</label>
+            <select class="multi-select" name="obatList[]" multiple="multiple" id="obatDropdown">
+              @if(obats && obats.length > 0)
+              @each(obat in obats)
+              <option value="{{ obat.id }}">{{ obat.nama }} - {{ obat.dosis % 1 == 0 ? parseInt(obat.dosis) : obat.dosis
+                }} mg</option>
+              @end
+              @end
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="temaKunjunganDropdown">Tema Kunjungan:</label>
+            <input type="text" class="form-control input-default" id="temaKunjunganDropdown" name="temaKunjungan"
+              placeholder="Tema kunjungan" required>
+          </div>
+
+          <div class="mb-2">
+            <label for="keteranganDropdown">Keterangan:</label>
+            <input type="text" class="form-control input-default" id="keteranganDropdown" name="keterangan"
+              placeholder="Keterangan/keluhan pasien" required>
+          </div>
+
+          <div class="mb-2">
+            <label for="tanggalKunjunganDropdown">Tanggal Kunjungan:</label>
+            <input type="date" id="tanggalKunjunganDropdown" name="tanggalKunjungan" class="form-control"
+              value="{{ new Date().toISOString().split('T')[0] }}" required>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .dlab-scroll {
+    max-height: 300px;
+    /* Sesuaikan dengan kebutuhan */
+    overflow-y: auto;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Initialize any required plugins (like select2)
+    if ($('#obatDropdown').length > 0) {
+      $('#obatDropdown').select2({
+        dropdownParent: $('#tambahKunjunganModal'),
+        placeholder: 'Pilih Obat',
+        allowClear: true
+      });
+    }
+
+    // Set action and data form when modal is opened from patient dropdown
+    $('#tambahKunjunganModal').on('show.bs.modal', function (event) {
+      const button = $(event.relatedTarget);
+      const patientUuid = button.data('patient-uuid');
+      const patientName = button.data('patient-name');
+      const patientNik = button.data('patient-nik');
+
+      const modal = $(this);
+      modal.find('#pasienNama').val(patientName);
+      modal.find('#pasienNik').val(patientNik);
+      modal.find('#form-kunjungan-dropdown').attr('action', `/pasien/${patientUuid}/kunjungan`);
+    });
+
+    // Improved search functionality
+    const searchInput = document.getElementById('searchPasien');
+    const searchResults = document.getElementById('searchResults');
+    const patientListContainer = document.getElementById('patientListContainer');
+
+    // Function to format date using Luxon
+    function formatDate(date) {
+      if (!date) return '';
+      try {
+        return new Date(date).toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        });
+      } catch (error) {
+        console.error('Error formatting date:', error);
+        return '';
+      }
+    }
+
+    // Search handler with debounce
+    let searchTimeout;
+    searchInput.addEventListener('input', function () {
+      const query = this.value.trim();
+
+      // Clear previous timeout
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+
+      // Set new timeout to debounce requests
+      searchTimeout = setTimeout(() => {
+        if (query.length === 0) {
+          // Show original list if search is empty
+          searchResults.innerHTML = '';
+          patientListContainer.style.display = 'flex'; // Changed to flex to match original display
+          return;
+        }
+
+        // Make API request to fetch search results
+        fetch(`/kunjungan/search?search=${encodeURIComponent(query)}`, {
+          headers: {
+            'Accept': 'application/json'
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Hide original list
+              patientListContainer.style.display = 'none';
+
+              // Build search results
+              if (data.pasiens.length === 0) {
+                searchResults.innerHTML = `
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h4>Tidak ada data pasien yang sesuai dengan pencarian</h4>
+                  <button class="btn btn-primary mt-3" id="resetSearch">Lihat Semua Pasien</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+                // Add event listener to reset button
+                document.getElementById('resetSearch').addEventListener('click', function () {
+                  searchInput.value = '';
+                  searchResults.innerHTML = '';
+                  patientListContainer.style.display = 'flex'; // Changed to flex to match original display
+                });
+
+                return;
+              }
+
+              // Create identical structure to the original patient list
+              let resultsHTML = '<div class="row">';
+
+              data.pasiens.forEach(pasien => {
+                resultsHTML += `
+            <div class="col-xl-4 col-xxl-6 col-lg-6 patient-card">
+              <div class="card">
+                <div class="card-header border-0 pb-0">
+                  <div class="d-flex flex-column">
+                    <h4 class="card-title">${pasien.name}</h4>
+                    <small class="text-muted">${pasien.nik}</small>
+                  </div>
+                  <div class="dropdown">
+                    <button type="button" class="btn btn-sm btn-primary light sharp" data-bs-toggle="dropdown">
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="/pasien/${pasien.uuid}">
+                        <i class="fas fa-eye text-success me-2"></i> Detail Pasien
+                      </a>
+                      <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                        data-bs-target="#tambahKunjunganModal" data-patient-uuid="${pasien.uuid}"
+                        data-patient-name="${pasien.name}" data-patient-nik="${pasien.nik}">
+                        <i class="fas fa-walking text-primary me-2"></i> Tambah Kunjungan
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div id="DZ_W_TimeLine" class="widget-timeline dlab-scroll height370">
+                    <ul class="timeline">`;
+
+                if (pasien.kunjungans && pasien.kunjungans.length > 0) {
+                  pasien.kunjungans.forEach((kunjungan, index) => {
+                    resultsHTML += `
+                <li>
+                  <div class="timeline-badge ${index === 0 ? 'info' : (index === 1 ? 'primary' : 'dark')}">
+                  </div>
+                  <a class="timeline-panel text-muted" href="/kunjungan/${kunjungan.uuid}">
+                    <span>${formatDate(kunjungan.tanggalKunjungan)}</span>
+                    <h6 class="mb-0">
+                      ${kunjungan.tema}
+                      <strong
+                        class="${index === 0 ? 'text-info' : (index === 1 ? 'text-primary' : 'text-dark')}">${kunjungan.keterangan}</strong>
+                    </h6>
+                    <ul>`;
+
+                    if (kunjungan.obatPasiens && kunjungan.obatPasiens.length > 0) {
+                      kunjungan.obatPasiens.forEach(obatPasien => {
+                        resultsHTML += `
+                    <li>${obatPasien.obat ? obatPasien.obat.nama : 'Tidak ada obat'} - ${obatPasien.frekuensi}x sehari</li>`;
+                      });
+                    } else {
+                      resultsHTML += `<li class="text-muted">Tidak ada obat</li>`;
+                    }
+
+                    resultsHTML += `
+                    </ul>
+                  </a>
+                </li>`;
+                  });
+                } else {
+                  resultsHTML += `
+              <li>
+                <div class="timeline-badge dark"></div>
+                <a class="timeline-panel text-muted" href="#">
+                  <span>-</span>
+                  <h6 class="mb-0">Belum ada kunjungan</h6>
+                </a>
+              </li>`;
+                }
+
+                resultsHTML += `
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+              });
+
+              resultsHTML += '</div>';
+              searchResults.innerHTML = resultsHTML;
+
+              // Add a reset button at the top
+              const resetButton = document.createElement('div');
+              resetButton.className = 'text-center mb-3';
+              resetButton.innerHTML = '<button class="btn btn-outline-primary" id="resetSearch">Lihat Semua Pasien</button>';
+              searchResults.insertBefore(resetButton, searchResults.firstChild);
+
+              // Add event listener to reset button
+              document.getElementById('resetSearch').addEventListener('click', function () {
+                searchInput.value = '';
+                searchResults.innerHTML = '';
+                patientListContainer.style.display = 'flex'; // Changed to flex to match original display
+              });
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            searchResults.innerHTML = `
+        <div class="alert alert-danger">
+          Terjadi kesalahan saat mencari data. Silakan coba lagi.
+        </div>
+      `;
+          });
+      }, 300); // 300ms debounce delay
+    });
+
+    // Clear search when clear button is clicked or when search input is empty
+    document.querySelector('.input-group-text').addEventListener('click', function () {
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+      patientListContainer.style.display = 'flex'; // Changed to flex to match original display
+    });
+
+    // Add event listener for direct clearing of search input
+    searchInput.addEventListener('keyup', function (event) {
+      if (event.key === 'Escape' || this.value.trim() === '') {
+        if (this.value.trim() === '') {
+          searchResults.innerHTML = '';
+          patientListContainer.style.display = 'flex'; // Changed to flex to match original display
+        }
+      }
+    });
+
+    // Set default date for inputs
+    const setDefaultDate = () => {
+      const today = new Date().toISOString().split('T')[0];
+      const dateInputs = document.querySelectorAll('input[type="date"]');
+
+      dateInputs.forEach(input => {
+        if (!input.value) {
+          input.value = today;
+        }
+      });
+    };
+
+    setDefaultDate();
+
+    // Validate form before submit
+    const validateForm = (formId) => {
+      const form = document.getElementById(formId);
+
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          const requiredFields = form.querySelectorAll('[required]');
+          let isValid = true;
+
+          requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+              isValid = false;
+              field.classList.add('is-invalid');
+            } else {
+              field.classList.remove('is-invalid');
+            }
+          });
+
+          if (!isValid) {
+            e.preventDefault();
+            alert('Silakan isi semua field yang diperlukan');
+          }
+        });
+      }
+    };
+
+    validateForm('form-kunjungan-dropdown');
+
+    // Auto-dismiss alert after 5 seconds
+    setTimeout(function () {
+      $('.alert-dismissible').alert('close');
+    }, 5000);
+  });
+</script>

@@ -13,7 +13,8 @@
         request.url().startsWith('/pasien/') ||
         request.url().startsWith('/data-pasien') ||
         request.url().startsWith('/obat-penyakit') ||
-        request.url().startsWith('/data-kunjungan')
+        request.url().startsWith('/data-kunjungan') ||
+        request.url().startsWith('/kunjungan/')
         ? 'mm-active' : ''
       }}">
         <a href="javascript:void(0)" class="has-arrow" data-bs-toggle="collapse" data-bs-target="#menuPasien">
@@ -24,7 +25,9 @@
             request.url().startsWith('/pasien/') ||
             request.url().startsWith('/data-pasien') ||
             request.url().startsWith('/obat-penyakit') ||
-            request.url().startsWith('/data-kunjungan')
+            request.url().startsWith('/data-kunjungan') ||
+            request.url().startsWith('/detail-kunjungan') ||
+            request.url().startsWith('/kunjungan/')
             ? 'show'
             : ''
         }}">
@@ -46,14 +49,18 @@
         </a>
       </li>
       @if(auth.user.role == 'super_admin')
-      <li class="{{ request.url().startsWith('/users') ? 'mm-active' : '' }}">
-        <a href="/users" class="{{ request.url().startsWith('/users') ? 'aria-expanded=true' : 'aria-expanded=false' }}">
+      <li
+        class="{{ request.url().startsWith('/users') && !request.url().includes(route('edit-profile')) ? 'mm-active' : '' }}">
+        <a href="/users"
+          class="{{ request.url().startsWith('/users') && !request.url().includes(route('edit-profile')) ? 'aria-expanded=true' : 'aria-expanded=false' }}">
           <i class="fas fa-user-cog"></i>
           <span class="nav-text">List Pengguna</span>
         </a>
       </li>
       @end
-      <li><a href="{{ route('edit-profile')}}" class="" aria-expanded="false">
+      <li class="{{ request.url().includes(route('edit-profile')) ? 'mm-active' : '' }}">
+        <a href="{{ route('edit-profile')}}"
+          class="{{ request.url().includes(route('edit-profile')) ? 'aria-expanded=true' : 'aria-expanded=false' }}">
           <i class="fas fa-user-edit"></i>
           <span class="nav-text">Edit Profile</span>
         </a>
