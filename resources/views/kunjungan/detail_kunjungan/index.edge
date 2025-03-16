@@ -13,7 +13,6 @@
   <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
       <div class="row">
-        <!-- List Kunjungan - Kolom Kiri -->
         <div class="col-lg-4 equal-height">
           <div class="card shadow-sm">
             <div class="card-header border-0 pb-0">
@@ -47,7 +46,6 @@
                   @end
                 </ul>
               </div>
-              <!-- Tombol Show More -->
               @if(allKunjunganPasien.length > 3)
               <div class="timeline-footer">
                 <div class="text-center">
@@ -59,7 +57,6 @@
           </div>
         </div>
 
-        <!-- Detail Kunjungan - Kolom Kanan -->
         <div class="col-lg-8 equal-height">
           <div class="card shadow-sm">
             <div class="card-header bg-primary">
@@ -164,7 +161,7 @@
     </div>
   </div>
 </div>
-<!-- Modal -->
+
 <div class="modal fade" id="tambahObat">
   @include('kunjungan/detail_kunjungan/modal/tambah-obat')
 </div>

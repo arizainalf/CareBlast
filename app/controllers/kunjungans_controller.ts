@@ -132,7 +132,6 @@ export default class KunjungansController {
     }
   }
 
-  // Modified KunjungansController search method
   async search({ request, response }: HttpContext) {
     const search = request.input('search', '')
 
@@ -140,7 +139,6 @@ export default class KunjungansController {
       return response.redirect().toPath('/kunjungan')
     }
 
-    // Instead of redirecting, we'll fetch the data directly
     const query = Pasien.query()
       .orderBy('createdAt', 'desc')
       .preload('kunjungans', (kunjunganQuery) => {
@@ -149,14 +147,12 @@ export default class KunjungansController {
         })
       })
 
-    // Apply search filter
     if (search) {
       query.where((builder) => {
         builder.whereILike('name', `%${search}%`).orWhereILike('nik', `%${search}%`)
       })
     }
 
-    // Get all matching patients without pagination
     const pasiens = await query.exec()
     const obats = await Obat.all()
     const allPasiens = await Pasien.all()

@@ -6,20 +6,14 @@ import { DateTime } from 'luxon'
 
 export default class DashboardController {
   async index({ view }: HttpContext) {
-    // Mengambil data jumlah pasien baru bulan ini
     const currentMonth = DateTime.now().startOf('month')
     const pasienBaruCount = await Pasien.query()
       .whereRaw('EXTRACT(MONTH FROM created_at) = ?', [currentMonth.month])
       .whereRaw('EXTRACT(YEAR FROM created_at) = ?', [currentMonth.year])
       .count('* as total')
 
-    // Mengambil data total pasien
     const totalPasien = await Pasien.query().count('* as total')
-
-    // Mengambil data jumlah obat
     const totalObat = await Obat.query().count('* as total')
-
-    // Define colors array
     const colors = [
       '#886CC0',
       '#FFCF6D',
@@ -31,14 +25,12 @@ export default class DashboardController {
       '#DFA73A',
     ]
 
-    // Mendapatkan data penyakit dan jumlah pasien per penyakit
     const jenisPenyakitData = await JenisPenyakit.query()
       .select('jenis_penyakits.id', 'jenis_penyakits.nama')
       .withCount('pasiens', (query) => {
         query.as('pasien_count')
       })
 
-    // Mengambil data bulanan penyakit 6 bulan terakhir
     const monthlyData = []
 
     for (let i = 5; i >= 0; i--) {
@@ -72,14 +64,14 @@ export default class DashboardController {
       pasienBaruCount: Number(pasienBaruCount[0].$extras.total),
       totalPasien: Number(totalPasien[0].$extras.total),
       totalObat: Number(totalObat[0].$extras.total),
-      jenisPenyakitData: jenisPenyakitData.map((jp, index) => ({
+      jenisPenyakitData: jenisPenyakitData.map((jp, _index) => ({
         id: jp.id,
         nama: jp.nama,
         pasien_count: Number(jp.$extras.pasien_count),
-        color: colors[(jp.id - 1) % colors.length], // Add color directly to each item
+        color: colors[(jp.id - 1) % colors.length],
       })),
       monthlyData: monthlyData,
-      colors: colors, // Pass the colors array for use in charts
+      colors: colors,
     })
   }
 }
