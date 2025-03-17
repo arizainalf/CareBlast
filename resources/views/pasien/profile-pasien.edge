@@ -55,7 +55,8 @@
                         </button>
                       </li>
                       <li>
-                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#hapusModal">
+                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                          data-bs-target="#hapusModal">
                           <i class="fas fa-ban text-danger me-2"></i> Hapus Pasien
                         </button>
                       </li>
@@ -77,8 +78,8 @@
                     <h4 class="card-title">Data Obat</h4>
                   </div>
                   <div class="bootstrap-badge">
-                    <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-lg" data-bs-toggle="modal"
-                      data-bs-target="#bulkDeleteObatModal">
+                    <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-lg"
+                      data-bs-toggle="modal" data-bs-target="#bulkDeleteObatModal">
                       <i class="far fa-trash-alt"></i>
                     </a>
                   </div>
@@ -96,7 +97,8 @@
                           <select id="kunjunganDeleteSelect" class="form-select">
                             @if(kunjunganTerbaru)
                             <option value="{{ kunjunganTerbaru.id }}" selected>
-                              Kunjungan Terbaru: {{ kunjunganTerbaru.tema }} ({{ formatDate(kunjunganTerbaru.tanggalKunjungan) }})
+                              Kunjungan Terbaru: {{ kunjunganTerbaru.tema }} ({{
+                              formatDate(kunjunganTerbaru.tanggalKunjungan) }})
                             </option>
                             @endif
 
@@ -130,7 +132,8 @@
                       @each(item in obatSebelumMakan)
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span class="medication-name cursor-pointer" title="{{ item.obat.nama }}" data-bs-toggle="modal"
-                          data-bs-target="#medicationDetailModal" data-uuid="{{ item.uuid }}" data-nama="{{ item.obat.nama }}"
+                          data-bs-target="#medicationDetailModal" data-uuid="{{ item.uuid }}"
+                          data-nama="{{ item.obat.nama }}"
                           data-dosis="{{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }}"
                           data-frekuensi="{{ item.frekuensi }}" data-waktu="{{ item.waktuKonsumsi }}"
                           data-keterangan-waktu="{{ item.keteranganWaktu }}">
@@ -140,10 +143,10 @@
                           {{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }} mg
                         </span>
                         <div class="d-flex align-items-center">
-                          <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3" data-bs-toggle="modal"
-                            data-bs-target="#basicModal" data-uuid="{{ item.uuid }}" data-nama="{{ item.obat.nama }}"
-                            data-frekuensi="{{ item.frekuensi }}" data-waktu="{{ item.waktuKonsumsi }}"
-                            data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                          <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3"
+                            data-bs-toggle="modal" data-bs-target="#basicModal" data-uuid="{{ item.uuid }}"
+                            data-nama="{{ item.obat.nama }}" data-frekuensi="{{ item.frekuensi }}"
+                            data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}">
                             <i class="fas fa-pencil-alt"></i>
                           </span>
                           <span class="badge badge-primary badge-pill">{{ item.frekuensi }}X1</span>
@@ -161,7 +164,8 @@
                       @each(item in obatSesudahMakan)
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span class="medication-name cursor-pointer" title="{{ item.obat.nama }}" data-bs-toggle="modal"
-                          data-bs-target="#medicationDetailModal" data-uuid="{{ item.uuid }}" data-nama="{{ item.obat.nama }}"
+                          data-bs-target="#medicationDetailModal" data-uuid="{{ item.uuid }}"
+                          data-nama="{{ item.obat.nama }}"
                           data-dosis="{{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }}"
                           data-frekuensi="{{ item.frekuensi }}" data-waktu="{{ item.waktuKonsumsi }}"
                           data-keterangan-waktu="{{ item.keteranganWaktu }}">
@@ -171,10 +175,10 @@
                           {{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }} mg
                         </span>
                         <div class="d-flex align-items-center">
-                          <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3" data-bs-toggle="modal"
-                            data-bs-target="#basicModal" data-uuid="{{ item.uuid }}" data-nama="{{ item.obat.nama }}"
-                            data-frekuensi="{{ item.frekuensi }}" data-waktu="{{ item.waktuKonsumsi }}"
-                            data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                          <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3"
+                            data-bs-toggle="modal" data-bs-target="#basicModal" data-uuid="{{ item.uuid }}"
+                            data-nama="{{ item.obat.nama }}" data-frekuensi="{{ item.frekuensi }}"
+                            data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}">
                             <i class="fas fa-pencil-alt"></i>
                           </span>
                           <span class="badge badge-secondary badge-pill">{{ item.frekuensi }}X1</span>
@@ -244,4 +248,31 @@
 </div>
 
 @end
+
+@slot('scripts')
+<script>
+  $(document).ready(function () {
+    console.log('ready')
+    // $('#btnKirim').on('click', () => {
+    //   console.log('btnKirim')
+    //   showModal('kirimHasilModal');
+    // });
+
+    $('#formHasilLab').on('submit', function (e) {
+      e.preventDefault();
+
+      let formData = new FormData(this);
+      let url = '/send-file';
+      let method = 'POST';
+
+      ajaxRequest(url, method, formData, () => {
+        // hideModal('kirimHasilModal');
+        location.reload();
+      });
+    });
+
+  });
+</script>
+@end
+
 @end

@@ -35,38 +35,8 @@
               </div>
 
               <!-- List Catatan -->
-              <div class="list-group">
-                <a href="javascript:void(0)"
-                  class="list-group-item list-group-item-action border-0 mb-2 rounded hover-shadow">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                      <h6 class="mb-1">Jajang</h6>
-                      <p class="mb-1 text-muted small">085615678935</p>
-                    </div>
-                    <div class="text-end">
-                      <small class="text-muted d-block">2025-01-01</small>
-                      <span class="badge bg-success rounded-pill mt-1">
-                        <i class="ri-attachment-2 me-1"></i>Terkirim
-                      </span>
-                    </div>
-                  </div>
-                </a>
-                <a href="javascript:void(0)"
-                  class="list-group-item list-group-item-action border-0 mb-2 rounded hover-shadow">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                      <h6 class="mb-1">Jajang</h6>
-                      <p class="mb-1 text-muted small">085615678935</p>
-                    </div>
-                    <div class="text-end">
-                      <small class="text-muted d-block">2025-01-01</small>
-                      <span class="badge bg-success rounded-pill mt-1">
-                        <i class="ri-attachment-2 me-1"></i>Terkirim
-                      </span>
-                    </div>
-                  </div>
-                </a>
-              </div>
+              <div class="list-group" id="contact-list"></div>
+
             </div>
           </div>
         </div>
@@ -119,15 +89,87 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="kirimHasilModal" tabindex="-1" >
+<div class="modal fade" id="kirimHasilModal" tabindex="-1">
   @include('hasil-lab/modal/kirim-hasil-lab')
 </div>
 @end
 
 @slot('scripts')
 <script>
+
+  async function getChat(number) {
+    const response = await axios.get('/get-chat/' + number);
+    if (response.data.status === 'success') {
+      console.log(response.data.messages)
+    }
+  }
+
+  async function loadContact() {
+    try {
+      const response = await axios.get('/get-contacts');
+      if (response.data.status === 'success') {
+        if (response.data.contact) {
+          console.log(response.data.contact)
+        } else {
+          console.log('data tidak ada')
+        }
+      } else {
+        console.log('eweh')
+      }
+    } catch (error) {
+      console.error('Error loading QR code:', error);
+      showDisconnected('Failed to load QR code. Please try again.');
+    }
+  }
+
+  $.get('/get-contacts', function (data) {
+    console.log(data)
+    const contacts = data.contact
+    console.log(contacts)
+
+    $('#contactList').html('')
+    contacts.forEach(contact => {
+      $('#contact-list').append(`
+        <a href="javascript:void(0)" data-number='${contact.number}' class="list-group-item list-group-item-action border-0 mb-2 rounded hover-shadow hasilLab">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1">${contact.number}</h6>
+              <p class="mb-1 text-muted small">${contact.username || 'Tidak ada pesan'}</p>
+            </div>
+            <div class="text-end">
+              
+              <span class="badge bg-success rounded-pill mt-1">
+                <i class="ri-attachment-2 me-1"></i>Terkirim
+              </span>
+            </div>
+          </div>
+        </a>
+      `)
+    })
+
+    $(document).on('click', '.hasilLab', function (e) {
+      e.preventDefault();
+  
+      const number = $(this).data('number');
+      console.log(number);
+      getChat(number);
+    });
+
+  })
+
+
   $(document).ready(function () {
-console.log('ready')
+    console.log('ready')
+
+    $('#hasilLab').on('click', function (e) {
+      e.preventDefault();
+
+      const number = $(this).attr('data-number');
+      console.log(number)
+      getChat(number)
+
+    })
+
     $('#btnKirim').on('click', () => {
       console.log('btnKirim')
       showModal('kirimHasilModal');
@@ -145,6 +187,8 @@ console.log('ready')
         location.reload();
       });
     });
+
+    loadContact();
 
   });
 </script>

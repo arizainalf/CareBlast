@@ -1,36 +1,33 @@
 <div class="pt-3">
   <div class="settings-form">
-    <h4 class="text-primary">Account Setting</h4>
-    <form>
+    <h4 class="text-primary">Kirim Hasil Lab</h4>
+    <form id="formHasilLab">
       <div class="row">
+        {{ csrfField() }}
         <div class="mb-3 col-md-6">
           <label class="form-label">Nama Pasien</label>
-          <input type="text" placeholder="Nama pasien" class="form-control">
+          <input type="text" placeholder="Nama pasien" class="form-control" name="nama" value="{{ pasien.name }}">
         </div>
         <div class="mb-3 col-md-6">
           <label class="form-label">NIK</label>
-          <input type="text" inputmode="numeric" placeholder="3278098****" class="form-control">
+          <input type="text" inputmode="numeric" placeholder="3278098****" class="form-control" value="{{ pasien.nik }}">
         </div>
         <div class="mb-3 col-md-6">
           <label class="form-label">No Whatsapp Aktif</label>
-          <input type="text" inputmode="numeric" placeholder="08586166****" class="form-control">
-        </div>
-        <div class="mb-3 col-md-6">
-          <label class="form-label">Nama Pengirim</label>
-          <input type="text" placeholder="Contoh : Admin Puskesmas panglayungan" class="form-control">
+          <input type="text" inputmode="numeric" name="nomor" placeholder="08586166****" class="form-control" value="{{ pasien.no_hp }}">
         </div>
         <label class="form-label">Kirim hasil lab</label>
         <div class="input-group mb-3">
           <span class="input-group-text">2Mb<span class="text-danger">*</span></span>
           <div class="form-file">
-            <input type="file" class="form-file-input form-control">
+            <input type="file" class="form-file-input form-control" name="file">
           </div>
         </div>
       </div>
       <div class="col-lg-12 mb-3">
         <div class="mb-3">
           <label class="text-label form-label">Isi pesan / keterangan</label>
-          <Textarea type="text" name="place" row="4" class="form-control" required=""></Textarea>
+          <Textarea type="text" name="caption" row="4" class="form-control" required="" ></Textarea>
         </div>
       </div>
       <button class="btn btn-primary" type="submit"><i class="far fa-paper-plane"></i> Kirim</button>
