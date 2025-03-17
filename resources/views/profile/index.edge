@@ -34,8 +34,9 @@
                         <div class="row">
                           <div class="col-12">
                             <div class="mb-4">
-                              <label class="form-label">Nama Lengkap</label>
-                              <input type="text" class="form-control" name="fullName" value="{{ auth.user.fullName || '' }}">
+                              <label class="form-label" for="fullName">Nama Lengkap</label>
+                              <input type="text" class="form-control" id="fullName" name="fullName"
+                                value="{{ auth.user.fullName || '' }}">
                             </div>
                           </div>
                           <div class="col-12">
@@ -118,6 +119,7 @@
 
 
 <script>
+
   document.addEventListener('DOMContentLoaded', function () {
     const profileForm = document.getElementById('editProfile')
     const passwordForm = document.getElementById('editPassword')

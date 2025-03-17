@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import WhatsappsController from '#controllers/whatsapps_controller'
 const ObatPenyakitController = () => import('#controllers/obat_penyakits_controller')
 const PasiensController = () => import('#controllers/pasiens_controller')
 
@@ -61,6 +62,9 @@ router
       router.get('/profile', async ({ view }) => {
         return view.render('pasien/profile-pasien')
       })
+
+      router.get('/get-contacts', [WhatsappsController, 'getContacts']).as('get.contact')
+      router.get('/get-chat/:number', [WhatsappsController, 'getChat']).as('get.chat')
 
       // start/routes.ts
       router.get('/obat-penyakit', [ObatPenyakitController, 'index']).as('obat-penyakit')
