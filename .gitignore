@@ -27,3 +27,7 @@ yarn-error.log
 
 # Platform specific
 .DS_Store
+
+#data
+messages.json
+contacts.json

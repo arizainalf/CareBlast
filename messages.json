@@ -545,5 +545,36 @@
     },
     "timestamp": 1742184768,
     "text": "test"
+  },
+  {
+    "from": "6281930865458@s.whatsapp.net",
+    "pushName": "arizainalf",
+    "messageId": "3FB2DCA169FCA4AF11C4",
+    "messageType": "extendedTextMessage",
+    "content": {
+      "extendedTextMessage": {
+        "text": "COMMIT MESSAGE\n1. feat: Menambahkan fitur baru\n2. fix: Memperbaiki Bug\n3. docs: Memperbarui dokumentasi\n4. style: Memperbaiki format atau gaya kode\n5. refactor: Merubah penulisan kode atau memperbaikinya\n6. test: Menambahkan atau memperbaiki unit test\n7. chore: Mengatur task atau konfirmasi\nCONTOH\n- feat(sidebar): Menambahkan menu baru\n- refactor(modal): mengubah judul modal",
+        "contextInfo": {
+          "forwardingScore": 1,
+          "isForwarded": true,
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "CSgTlUQn9Wj21w==",
+          "senderTimestamp": "1741423114",
+          "recipientKeyHash": "xi9sXf546Skm/Q==",
+          "recipientTimestamp": "1741360430"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "timestamp": 1742185634,
+    "text": "COMMIT MESSAGE\n1. feat: Menambahkan fitur baru\n2. fix: Memperbaiki Bug\n3. docs: Memperbarui dokumentasi\n4. style: Memperbaiki format atau gaya kode\n5. refactor: Merubah penulisan kode atau memperbaikinya\n6. test: Menambahkan atau memperbaiki unit test\n7. chore: Mengatur task atau konfirmasi\nCONTOH\n- feat(sidebar): Menambahkan menu baru\n- refactor(modal): mengubah judul modal"
   }
 ]
