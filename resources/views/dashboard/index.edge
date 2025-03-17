@@ -175,8 +175,160 @@
 @end
 
 @slot('scripts')
+
 @include('dashboard/partials/script')
 
+  // Inisialisasi saat halaman dimuat
+  loadQRCode();
+
+  const jenisPenyakitData = {{{ JSON.stringify(jenisPenyakitData) }}};
+  const monthlyData = {{{ JSON.stringify(monthlyData) }}};
+  const colors = ['#886CC0', '#FFCF6D', '#FFA7D7', '#6CBCB7', '#FF7778', '#5FAAE3', '#50C45E', '#DFA73A'];
+
+  function initCharts() {
+    if (document.getElementById('penyakitChart')) {
+      const months = monthlyData.map(item => item.month);
+      const series = jenisPenyakitData.map((penyakit, index) => {
+        return {
+          name: penyakit.nama,
+          data: monthlyData.map(month => {
+            const penyakitData = month.data.find(p => p.penyakit_id === penyakit.id);
+            return penyakitData ? penyakitData.count : 0;
+          }),
+          color: colors[index % colors.length]
+        };
+      });
+
+      const options = {
+        series: series,
+        chart: {
+          type: 'bar',
+          height: 300,
+          stacked: true,
+          toolbar: {
+            show: false
+          },
+          zoom: {
+            enabled: false
+          }
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }],
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            borderRadius: 5,
+            columnWidth: '60%',
+          },
+        },
+        xaxis: {
+          categories: months,
+          labels: {
+            style: {
+              fontSize: '12px',
+              fontFamily: 'Poppins, sans-serif',
+            },
+          },
+        },
+        yaxis: {
+          labels: {
+            style: {
+              fontSize: '12px',
+              fontFamily: 'Poppins, sans-serif',
+            },
+          },
+        },
+        legend: {
+          position: 'bottom',
+          offsetY: 0,
+          fontSize: '12px',
+          fontFamily: 'Poppins, sans-serif',
+          markers: {
+            fillColors: colors,
+            width: 15,
+            height: 15,
+            strokeWidth: 0,
+            radius: 12,
+          },
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + " pasien";
+            }
+          }
+        }
+      };
+
+      const chart = new ApexCharts(document.getElementById('penyakitChart'), options);
+      chart.render();
+    }
+
+    if (document.getElementById('penyakitPieChart')) {
+      const labels = jenisPenyakitData.map(item => item.nama);
+      const series = jenisPenyakitData.map(item => item.pasien_count);
+
+      const options = {
+        series: series,
+        chart: {
+          width: '100%',
+          height: 300,
+          type: 'pie',
+        },
+        labels: labels,
+        colors: colors.slice(0, jenisPenyakitData.length),
+        legend: {
+          position: 'bottom',
+          fontSize: '12px',
+          fontFamily: 'Poppins, sans-serif',
+          markers: {
+            width: 15,
+            height: 15,
+            strokeWidth: 0,
+            radius: 12,
+          },
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 300
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }],
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + " pasien";
+            }
+          }
+        },
+      };
+
+      const chart = new ApexCharts(document.getElementById('penyakitPieChart'), options);
+      chart.render();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    loadQRCode();
+    initCharts();
+  });
+</script>
 @end
 
 @inject({
