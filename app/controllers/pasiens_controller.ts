@@ -211,7 +211,6 @@ export default class PasiensController {
         },
       }
       const obats = await Obat.all()
-      // Ambil keluhan dari kunjungan terbaru jika ada
       const keluhan = kunjunganTerbaru ? kunjunganTerbaru.keterangan : 'Tidak ada keluhan'
 
       const kunjungans = pasien.kunjungans.map((kunjungan) => ({

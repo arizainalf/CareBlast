@@ -1,0 +1,28 @@
+@if(meta && meta.total > meta.perPage)
+<div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
+  <h4 class="mb-3">Showing {{ meta.perPage }} from {{ meta.total }} data</h4>
+  <ul class="pagination mb-3">
+    @if (meta.currentPage > 1)
+    <li class="page-item page-indicator">
+      <a class="page-link" href="?page={{ meta.currentPage - 1 }}{{ search ? '&search=' + search : '' }}">
+        <i class="fas fa-angle-double-left me-2"></i>Previous
+      </a>
+    </li>
+    @endif
+
+    @each(page in Array.from({ length: meta.lastPage }, (_, i) => i + 1))
+    <li class="page-item {{ page === meta.currentPage ? 'active' : '' }}">
+      <a class="page-link" href="?page={{ page }}{{ search ? '&search=' + search : '' }}">{{ page }}</a>
+    </li>
+    @end
+
+    @if (meta.currentPage < meta.lastPage)
+    <li class="page-item page-indicator">
+      <a class="page-link" href="?page={{ meta.currentPage + 1 }}{{ search ? '&search=' + search : '' }}">
+        Next<i class="fas fa-angle-double-right ms-2"></i>
+      </a>
+      </li>
+      @endif
+  </ul>
+</div>
+@end

@@ -1,35 +1,112 @@
+<!-- Modal Tambah Obat -->
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">Tambah data obat</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal">
-      </button>
+      <h5 class="modal-title">Tambah Data Obat</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form>
+      <form id="add-medicine-form" method="POST" action="/pasien/{{ kunjungan.pasien.uuid }}/obat">
+        {{ csrfField() }}
+        <input type="hidden" name="kunjunganId" value="{{ kunjungan.id }}">
+
         <div class="mb-3">
-          <input type="text" class="form-control input-default" placeholder="Nama Pasien">
+          <label class="form-label">Nama Pasien</label>
+          <input type="text" class="form-control input-default" value="{{ kunjungan.pasien.name }}" disabled>
         </div>
+
         <div class="mb-3">
-          <input class="form-control" list="GFGOptions" placeholder="Nama Obat">
-          <datalist id="GFGOptions">
-            <option value="Paramex">Paramex</option>
-            <option value="Parasetamol">Parasetamol</option>
-            <option value="Panadol">Panadol</option>
-          </datalist>
+          <label class="form-label">Tanggal Kunjungan</label>
+          <input type="text" class="form-control input-default"
+            value="{{ formatDate(kunjungan.tanggalKunjungan) }} - {{ kunjungan.tema }}" disabled>
         </div>
+
         <div class="mb-3">
-          <label class="form-label">Aturan Pakai</label>
-          <select class="default-select  form-control ">
-            <option>Sesudah makan</option>
-            <option>Sebelum makan</option>
+          <label class="form-label">Nama Obat <span class="text-danger">*</span></label>
+          <select class="form-select" name="obatNama" required>
+            <option value="">Pilih Obat</option>
+            @each(obat in obats)
+            <option value="{{ obat.nama }}">
+              {{ obat.nama }} {{ obat.dosis ? '- ' + (obat.dosis % 1 == 0 ? parseInt(obat.dosis) : obat.dosis) + ' mg' :
+              '' }}
+            </option>
+            @end
+            <option value="other">Lainnya</option>
           </select>
+        </div>
+
+        <div class="mb-3 custom-obat-container" style="display: none;">
+          <label class="form-label">Nama Obat Lainnya <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" name="customObat" placeholder="Masukkan nama obat">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Keterangan Waktu <span class="text-danger">*</span></label>
+          <select class="form-select" name="keteranganWaktu" required>
+            <option value="Sesudah makan">Sesudah makan</option>
+            <option value="Sebelum makan">Sebelum makan</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-add">Simpan</button>
         </div>
       </form>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
-      <button type="button" class="btn btn-primary">Simpan</button>
-    </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("add-medicine-form");
+    const submitButton = document.getElementById("btn-save-add");
+    const inputs = form.querySelectorAll("select[required], input[required]");
+    const obatSelect = form.querySelector("select[name='obatNama']");
+    const customObatContainer = form.querySelector(".custom-obat-container");
+    const customObatInput = form.querySelector("input[name='customObat']");
+
+    // Toggle custom obat field
+    obatSelect.addEventListener("change", function () {
+      if (this.value === "other") {
+        customObatContainer.style.display = "block";
+        customObatInput.setAttribute("required", "required");
+      } else {
+        customObatContainer.style.display = "none";
+        customObatInput.removeAttribute("required");
+        customObatInput.value = "";
+      }
+      validateForm();
+    });
+
+    // Validate the form
+    function validateForm() {
+      let isValid = true;
+
+      inputs.forEach((input) => {
+        if (input.hasAttribute("required") && !input.value.trim()) {
+          isValid = false;
+        }
+      });
+
+      // Additional validation for custom obat
+      if (obatSelect.value === "other" && !customObatInput.value.trim()) {
+        isValid = false;
+      }
+
+      submitButton.disabled = !isValid;
+    }
+
+    // Add event listeners
+    inputs.forEach((input) => {
+      input.addEventListener("input", validateForm);
+      input.addEventListener("change", validateForm);
+    });
+
+    customObatInput.addEventListener("input", validateForm);
+    customObatInput.addEventListener("change", validateForm);
+
+    // Initial validation
+    validateForm();
+  });
+</script>
