@@ -5,13 +5,16 @@ const WhatsappsController = () => import('#controllers/whatsapps_controller')
 const KunjungansController = () => import('#controllers/kunjungans_controller')
 const ObatPenyakitController = () => import('#controllers/obat_penyakits_controller')
 const PasiensController = () => import('#controllers/pasiens_controller')
+const UsersController  = () => import('#controllers/users_controller')
+const SessionController  = () => import('#controllers/session_controller')
+const DashboardController  = () => import('#controllers/dashboard_controller')
 
 // Authentication Routes
 router
   .get('/login', async ({ view }) => view.render('auth/login-page'))
   .use(middleware.guest())
   .as('login')
-router.post('/login', '#controllers/session_controller.store').as('loginPost')
+router.post('/login', [SessionController, 'store']).as('loginPost')
 router.get('/forgot', async ({ view }) => view.render('auth/forgot-pw'))
 
 // Protected Routes
@@ -20,31 +23,31 @@ router
     // User Management
     router
       .group(() => {
-        router.get('/users', '#controllers/users_controller.index').as('users.index')
-        router.post('/users', '#controllers/users_controller.store').as('users.create')
-        router.get('/users/:id/show', '#controllers/users_controller.show').as('users.show')
-        router.get('/users/:id/edit', '#controllers/users_controller.edit').as('users.edit')
-        router.put('/users/:id/update', '#controllers/users_controller.update').as('users.update')
-        router.delete('/users/:id', '#controllers/users_controller.destroy').as('users.delete')
+        router.get('/users', [UsersController, 'index']).as('users.index')
+        router.post('/users', [UsersController, 'store']).as('users.create')
+        router.get('/users/:id/show', [UsersController, 'show']).as('users.show')
+        router.get('/users/:id/edit', [UsersController, 'edit']).as('users.edit')
+        router.put('/users/:id/update', [UsersController, 'update']).as('users.update')
+        router.delete('/users/:id', [UsersController, 'destroy']).as('users.delete')
       })
       .use(middleware.role(['super_admin']))
 
     // General Routes
-    router.post('/logout', '#controllers/session_controller.destroy').as('logout')
-    router.get('/', '#controllers/dashboard_controller.index').as('dashboard')
+    router.post('/logout', [SessionController, 'destroy']).as('logout')
+    router.get('/', [DashboardController, 'index']).as('dashboard')
     router
-      .get('/users/edit-profile', '#controllers/users_controller.editProfile')
+      .get('/users/edit-profile', [UsersController, 'editProfile'])
       .as('edit-profile')
     router
-      .post('/users/edit-profile', '#controllers/users_controller.editProfile')
+      .post('/users/edit-profile', [UsersController, 'editProfile'])
       .as('edit-profile.post')
     router
-      .post('/users/edit-password', '#controllers/users_controller.editPassword')
+      .post('/users/edit-password', [UsersController, 'editPassword'])
       .as('edit-password')
 
     // WhatsApp Features
-    router.get('/send-file', '#controllers/whatsapps_controller.sendFile').as('send-file')
-    router.post('/send-file', '#controllers/whatsapps_controller.sendFile').as('send-file.post')
+    router.get('/send-file',[WhatsappsController, 'sendFile']).as('send-file')
+    router.post('/send-file', [WhatsappsController, 'sendFile']).as('send-file.post')
     router.get('/get-contacts', [WhatsappsController, 'getContacts']).as('get.contact')
     router.get('/get-chat/:number', [WhatsappsController, 'getChat']).as('get.chat')
 
@@ -52,9 +55,9 @@ router
     router.get('/data-pasien', [PasiensController, 'index']).as('pasien.index')
     router.post('/data-pasien', [PasiensController, 'store']).as('pasien.store')
     router.get('/data-pasien/search', [PasiensController, 'search']).as('pasien.search')
-    router.get('/pasien/:uuid', '#controllers/pasiens_controller.show').as('profile.pasien')
+    router.get('/pasien/:uuid', [PasiensController, 'show']).as('profile.pasien')
     router
-      .post('/pasien/:uuid/delete', '#controllers/pasiens_controller.destroy')
+      .post('/pasien/:uuid/delete', [PasiensController, 'destroy'])
       .as('pasien.destroy')
 
     // Obat dan Penyakit
@@ -84,7 +87,7 @@ router
       .as('search-obat')
 
     // Kunjungan
-    router.post('/pasien/:uuid/kunjungan', '#controllers/kunjungans_controller.store')
+    router.post('/pasien/:uuid/kunjungan', [KunjungansController, 'store'] )
     router.get('/data-kunjungan', [KunjungansController, 'index'])
     router.get('/kunjungan/search', [KunjungansController, 'search'])
     router.get('/kunjungan/:uuid', [KunjungansController, 'show'])
@@ -94,13 +97,13 @@ router
     router.get('/whatsapps', async ({ view }) => view.render('whatsapps/whatsapp'))
 
     // WhatsApp Bot Status
-    router.get('/qrcode', '#controllers/whatsapps_controller.getQrCode').as('qrcode')
-    router.get('/status', '#controllers/whatsapps_controller.status').as('status')
-    router.get('/logoutWhatsapp', '#controllers/whatsapps_controller.logout').as('logoutWhatsapp')
+    router.get('/qrcode', [WhatsappsController, 'getQrCode']).as('qrcode')
+    router.get('/status', [WhatsappsController, 'status']).as('status')
+    router.get('/logoutWhatsapp', [WhatsappsController, 'logout']).as('logoutWhatsapp')
 
     // Messaging
-    router.get('/messages', '#controllers/whatsapps_controller.createMsg')
-    router.post('/send', '#controllers/whatsapps_controller.sendMsg')
+    router.get('/messages',[WhatsappsController, 'createMsg'])
+    router.post('/send', [WhatsappsController, 'sendMsg'])
 
     // Error Pages
     router.get('/bad-request', async ({ view }) => view.render('pages/errors/400'))
