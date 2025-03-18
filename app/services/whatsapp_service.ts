@@ -15,6 +15,7 @@ import Message from '#models/message'
 import { DateTime } from 'luxon'
 import Contact from '#models/contact'
 import Group from '#models/group'
+import HasilLab from '#models/hasil_lab'
 
 let socket: any
 
@@ -52,11 +53,13 @@ async function saveMessages(message: WAMessage) {
     || msgContent?.documentMessage?.caption
     || ''
 
+    const messageType = msgContent ? Object.keys(msgContent)[0] : 'unknown'
+
   let data = {
     from: from,
     pushName: key.fromMe ? 'Saya (Owner)' : (pushName ? pushName : 'Unknown'),
     messageId: key.id ?? '',
-    messageType: Object.keys(msgContent || {})[0],
+    messageType: messageType,
     content: msgContent,
     timestamp: messageTimestamp,
     text: text,
@@ -67,7 +70,7 @@ async function saveMessages(message: WAMessage) {
   await Message.create({
     from: from ?? '',
     messageId: key.id ?? '',
-    messageType: Object.keys(msgContent || {})[0],
+    messageType: messageType,
     content: text,
     timestamp: messageTimestamp ? DateTime.fromMillis(Number(messageTimestamp)) : DateTime.now(),
     groupJid: groupJid ?? undefined,
@@ -239,7 +242,6 @@ export async function connectToWhatsApp() {
         await saveGroup(receiverJid, metadata)
       }
 
-      // Simpan kontak penerima (jika chat private)
       const username = 'Saya (Owner)'
       await saveContact(receiverJid, username)
 
@@ -353,6 +355,7 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
       name,
       profilePicture: pp
     })
+
     console.log(saveContact)
   }
 
@@ -378,6 +381,16 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
       mimetype: file.headers['content-type'],
       caption: caption,
     })
+
+    const saveHasilLab = HasilLab.create({
+      waId: no,
+      name: name,
+      fileName: file.clientName,
+      filePath: uploadPath,
+      caption: caption
+    })
+
+    console.log('berhasil simpan!', saveHasilLab)
 
     return sentMsg
   } catch (error) {
