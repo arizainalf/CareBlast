@@ -62,6 +62,7 @@ export default class WhatsappsController {
     const jid = request.input('nomor')
     const file = request.file('file')
     const caption = request.input('caption', '')
+    const name = request.input('nama')
 
     if (!jid || !file) {
       return response.badRequest({ message: 'Nomor WA dan file wajib diisi' })
@@ -69,7 +70,7 @@ export default class WhatsappsController {
 
     try {
 
-      const responseMsg = await sendFile(jid, file, caption)
+      const responseMsg = await sendFile(jid, file, caption, name)
 
       return response.json({ success: true, message: 'Hasil Lab Telah Terkirim!' , data: responseMsg })
     } catch (error) {

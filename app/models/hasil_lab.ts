@@ -1,21 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
-export default class Contact extends BaseModel {
+export default class HasilLab extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
-
-  @column()
-  declare waId: string
-
-  @column()
-  declare username: string
-
-  @column()
-  declare name: string
-
-  @column()
-  declare profilePicture: string | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
