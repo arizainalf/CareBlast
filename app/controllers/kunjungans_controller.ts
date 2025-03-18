@@ -115,7 +115,9 @@ export default class KunjungansController {
           query.preload('obat')
         })
 
-      const obats = await Obat.all()
+      let obats = await Obat.all()
+      const existingObatIds = kunjungan.obatPasiens.filter((op) => op.obat).map((op) => op.obat.id)
+      obats = obats.filter((obat) => !existingObatIds.includes(obat.id))
 
       return view.render('kunjungan/detail_kunjungan/index', {
         kunjungan,
