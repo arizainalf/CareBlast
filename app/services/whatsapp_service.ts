@@ -13,6 +13,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import Message from '#models/message'
 import { DateTime } from 'luxon'
+import Contact from '#models/contact'
+import Group from '#models/group'
 
 let socket: any
 
@@ -48,7 +50,7 @@ async function saveMessages(message: WAMessage) {
     || msgContent?.extendedTextMessage?.text
     || msgContent?.videoMessage?.caption
     || msgContent?.documentMessage?.caption
-    || null
+    || ''
 
   let data = {
     from: from,
@@ -72,11 +74,13 @@ async function saveMessages(message: WAMessage) {
     groupName: groupName ?? undefined
   })
 
+  console.log(text)
+
   messages.push(data)
   fs.writeFileSync('./messages.json', JSON.stringify(messages, null, 2))
 }
 
-// ✅ Fungsi untuk mendapatkan semua chat berdasarkan nomor WA
+// Fungsi untuk mendapatkan semua chat berdasarkan nomor WA
 export async function getAllMessagesByNumber(number: string) {
 
   const messages = loadMessages()
@@ -94,22 +98,66 @@ function loadContacts(): any[] {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'))
 }
 
-function saveContact(jid: string, name: string | null) {
+export async function saveGroup(jid: string, metadata: any) {
+  const groupData = {
+    groupJid: metadata.id,
+    groupName: metadata.subject,
+    ownerJid: metadata.owner || '',
+    participants: JSON.stringify(metadata.participants || ''),
+    profilePicture: await getProfilePicture(jid) || null,
+    subjectUpdatedBy: metadata.subjectOwner || '',
+    subjectUpdatedAt: metadata.subjectTime ? DateTime.fromMillis(Number(metadata.subjectTime)) : DateTime.now(),
+  }
+
+  const existingGroup = await Group.findBy('group_jid', metadata.id)
+
+  if (!existingGroup) {
+    await Group.create(groupData)
+    console.log(metadata.subjectTime)
+    console.log(`[+] Grup Baru Disimpan: ${metadata.subject}`)
+  } else {
+    console.log(`[!] Grup Sudah Ada: ${metadata.subject}`)
+  }
+}
+
+async function saveContact(jid: string, name: string | null) {
   const contacts = loadContacts()
   const number = jid.split('@')[0]
 
-  // Cek apakah nomor sudah tersimpan
-  const existingContact = contacts.find((contact) => contact.number === number)
+  // Cek apakah nomor sudah tersimpan di database
+  const existingContact = await Contact.findBy('wa_id', jid)
 
   if (!existingContact) {
+    const isRegistered = await isRegisteredWhatsapp(number)
+    let pp = null
+
+    if (isRegistered) {
+      try {
+        pp = await getProfilePicture(jid)
+      } catch (error) {
+        console.log('Gagal ambil foto profil:', error)
+      }
+
+      // Simpan kontak ke database
+      await Contact.create({
+        waId: jid,
+        username: name || 'Unknown',
+        name: name || '',
+        profilePicture: pp || null
+      })
+    }
+
+    // Simpan juga ke file contacts.json untuk debugging only
     const newContact = {
       number: number,
       username: name || 'Unknown'
     }
+
     contacts.push(newContact)
     fs.writeFileSync('./contacts.json', JSON.stringify(contacts, null, 2))
   }
 }
+
 
 export async function contacts() {
   try {
@@ -159,9 +207,23 @@ export async function connectToWhatsApp() {
       const senderJid = m.key.remoteJid!
       const username = m.pushName || 'Unknown'
 
-      // Simpan nomor pengirim + nama user
-      saveContact(senderJid, username)
-      saveMessages(m)
+      // Cek apakah pesan berasal dari grup atau private
+      const isGroup = senderJid.endsWith('@g.us')
+
+      if (isGroup) {
+        const metadata = await socket.groupMetadata(senderJid)
+        await saveGroup(senderJid, metadata)
+        await saveContact(m.key.participant, username)
+      } else {
+        await saveContact(senderJid, username)
+      }
+
+      const checkContact = await Contact.findBy('wa_id', senderJid)
+
+      if (checkContact) {
+        await saveMessages(m)
+      }
+
     })
 
     // Event untuk menangkap pesan yang kita kirim
@@ -169,9 +231,30 @@ export async function connectToWhatsApp() {
       const m = message[0]
       const receiverJid = m.key.remoteJid!
 
-      const username = 'Saya (Owner)' // Nama untuk nomor kita sendiri
-      saveContact(receiverJid, username)
+      // Cek apakah pesan dikirim ke grup atau private
+      const isGroup = receiverJid.endsWith('@g.us')
+
+      if (isGroup) {
+        const metadata = await socket.groupMetadata(receiverJid)
+        await saveGroup(receiverJid, metadata)
+      }
+
+      // Simpan kontak penerima (jika chat private)
+      const username = 'Saya (Owner)'
+      await saveContact(receiverJid, username)
+
+      const messages = loadMessages()
+
+      const checkContact = await Contact.findBy('wa_id', receiverJid)
+
+      if (checkContact) {
+        await saveMessages(m)
+      }
+
+      messages.push(message)
+      fs.writeFileSync('./messages.json', JSON.stringify(messages, null, 2))
     })
+
 
   } catch (error) {
     console.error('Failed to connect to WhatsApp:', error)
@@ -220,7 +303,7 @@ export async function getStatus() {
   })
 }
 
-export async function isRegisteredWhatsapp(number: string): Promise<boolean> {
+export async function isRegisteredWhatsapp(number: string): Promise<{ isRegistered: boolean, username: string | null }> {
   const NumberFormatted = NumberHelper(number)
   const jid = `${NumberFormatted}@s.whatsapp.net`
 
@@ -229,10 +312,21 @@ export async function isRegisteredWhatsapp(number: string): Promise<boolean> {
   }
 
   const result = await socket.onWhatsApp(jid)
-  return result?.length > 0
+  return {
+    isRegistered: result?.length > 0,
+    username: result?.[0]?.verifiedName || null
+  }
 }
 
-export async function sendFile(jid: string, file: any, caption: string) {
+export async function getProfilePicture(jid: string) {
+  try {
+    return await socket.profilePictureUrl(jid, 'image') || 'https://placehold.co/150/orange/white' // Foto default jika tidak ada
+  } catch {
+    return 'https://placehold.co/150/orange/white' // Foto default jika error
+  }
+}
+
+export async function sendFile(jid: string, file: any, caption: string, name: string) {
   const NumberFormatted = NumberHelper(jid)
   const no = `${NumberFormatted}@s.whatsapp.net`
 
@@ -244,9 +338,22 @@ export async function sendFile(jid: string, file: any, caption: string) {
   if (!isRegistered) {
     throw new Error('Nomor tidak terdaftar di WhatsApp')
   }
-
   if (!file) {
     throw new Error('No file uploaded')
+  }
+
+  const existingContact = Contact.findBy('wa_id', no)
+
+  if (!existingContact) {
+    const pp = await getProfilePicture(no)
+
+    const saveContact = await Contact.create({
+      waId: no,
+      username: isRegistered['username'] ?? '',
+      name,
+      profilePicture: pp
+    })
+    console.log(saveContact)
   }
 
   // **Path untuk menyimpan file**
@@ -294,7 +401,6 @@ export async function upsert() {
     }
   })
 }
-
 
 export async function sendMsg(number: string, message: string) {
   const NumberFormatted = NumberHelper(number)
