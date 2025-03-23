@@ -1,5 +1,12 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, hasMany, beforeCreate } from '@adonisjs/lucid/orm'
+import {
+  BaseModel,
+  column,
+  belongsTo,
+  hasMany,
+  beforeCreate,
+  beforeDelete,
+} from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Pasien from '#models/pasien'
 import ObatPasien from '#models/obat_pasien'
@@ -39,5 +46,13 @@ export default class Kunjungan extends BaseModel {
   @beforeCreate()
   public static assignUuid(kunjungan: Kunjungan) {
     kunjungan.uuid = uuidv4()
+  }
+
+  @beforeDelete()
+  public static async hapusRelasi(kunjungan: Kunjungan) {
+    // Add logging to debug
+    console.log(`Deleting ObatPasien records for kunjungan ID: ${kunjungan.id}`)
+    await ObatPasien.query().where('kunjunganId', kunjungan.id).delete()
+    console.log('ObatPasien records deleted successfully')
   }
 }

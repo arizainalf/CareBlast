@@ -60,6 +60,8 @@ router
         router.get('/data-kunjungan', [KunjungansController, 'index'])
         router.get('/kunjungan/search', [KunjungansController, 'search'])
         router.get('/kunjungan/:uuid', [KunjungansController, 'show'])
+        router.post('/kunjungan/:uuid', [KunjungansController, 'update'])
+        router.post('/kunjungans/:uuid', [KunjungansController, 'destroy'])
 
         router.get('/get-contacts', [WhatsappsController, 'getContacts']).as('get.contact')
         router.get('/get-chat/:number', [WhatsappsController, 'getChat']).as('get.chat')

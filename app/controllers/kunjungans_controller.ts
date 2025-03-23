@@ -167,4 +167,44 @@ export default class KunjungansController {
       success: true,
     })
   }
+
+  async update({ request, response, params }: HttpContext) {
+    try {
+      const { uuid } = params
+      const tema = request.input('tema')
+      const keterangan = request.input('keterangan')
+      const tanggalKunjungan = request.input('tanggalKunjungan')
+      const kunjungan = await Kunjungan.findByOrFail('uuid', uuid)
+
+      kunjungan.tema = tema
+      kunjungan.keterangan = keterangan
+      kunjungan.tanggalKunjungan = tanggalKunjungan as any
+
+      await kunjungan.save()
+
+      return response.redirect().toPath(`/kunjungan/${uuid}`)
+    } catch (error) {
+      console.error('Error updating kunjungan:', error)
+      return response
+        .status(500)
+        .json({ success: false, message: 'Error updating kunjungan', error: error.message })
+    }
+  }
+
+  async destroy({ params, response }: HttpContext) {
+    try {
+      const { uuid } = params
+      const kunjungan = await Kunjungan.findByOrFail('uuid', uuid)
+      const pasien = await Pasien.findOrFail(kunjungan.pasienId)
+
+      await kunjungan.delete()
+
+      return response.redirect().toPath(`/pasien/${pasien.uuid}`)
+    } catch (error) {
+      console.error('Error deleting kunjungan:', error)
+      return response
+        .status(500)
+        .json({ success: false, message: 'Error deleting kunjungan', error: error.message })
+    }
+  }
 }
