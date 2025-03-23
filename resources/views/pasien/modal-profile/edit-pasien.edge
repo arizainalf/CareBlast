@@ -1,0 +1,84 @@
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Edit Data Pasien</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <form action="{{ route('pasien.update', { uuid: pasien.uuid }) }}?_method=PUT" method="POST">
+      {{ csrfField() }}
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nama Depan</label>
+            <input type="text" class="form-control" name="first_name" required value="{{ pasien.name.split(' ')[0] }}">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nama Belakang</label>
+            <input type="text" class="form-control" name="last_name"
+              value="{{ pasien.name.split(' ').slice(1).join(' ') }}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">NIK</label>
+            <input type="text" class="form-control" name="nik" required value="{{ pasien.nik }}">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Jenis Penyakit</label>
+            <select class="form-select" name="jenisPenyakitId" required>
+              @each(jenisPenyakit in jenisPenyakits)
+              <option value="{{ jenisPenyakit.id }}" {{ pasien.jenisPenyakitId===jenisPenyakit.id ? 'selected' : '' }}>
+                {{ jenisPenyakit.nama }}
+              </option>
+              @end
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Tempat Lahir</label>
+            <input type="text" class="form-control" name="tempat" required value="{{ pasien.tempat }}">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Tanggal Lahir</label>
+            <input type="date" class="form-control" name="tanggal_lahir" required
+              value="{{ pasien.tanggal_lahir ? pasien.tanggal_lahir.toFormat('yyyy-MM-dd') : '' }}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Jenis Kelamin</label>
+            <select class="form-select" name="jenis_kelamin" required>
+              <option value="Laki-laki" {{ pasien.jenis_kelamin==='Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+              <option value="Perempuan" {{ pasien.jenis_kelamin==='Perempuan' ? 'selected' : '' }}>Perempuan</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Golongan Darah</label>
+            <select class="form-select" name="golongan_darah">
+              <option value="" {{ !pasien.golongan_darah ? 'selected' : '' }}>Pilih Golongan Darah</option>
+              @each(golDarah in ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-'])
+              <option value="{{ golDarah }}" {{ pasien.golongan_darah===golDarah ? 'selected' : '' }}>{{ golDarah }}
+              </option>
+              @end
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">No. HP</label>
+            <input type="text" class="form-control" name="no_hp" required value="{{ pasien.no_hp }}">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Alamat</label>
+          <textarea class="form-control" name="alamat" rows="3" required>{{ pasien.alamat }}</textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+</div>

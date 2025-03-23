@@ -68,20 +68,26 @@ export default class PasiensController {
     })
   }
 
-  async store({ request, response }: HttpContext) {
+  async store({ request, response, session }: HttpContext) {
     try {
-      await Pasien.transaction(async (trx) => {
-        const data = request.only([
-          'nik',
-          'jenisPenyakitId',
-          'tempat',
-          'tanggal_lahir',
-          'no_hp',
-          'alamat',
-          'jenis_kelamin',
-          'golongan_darah',
-        ]) as Record<string, any>
+      const data = request.only([
+        'nik',
+        'jenisPenyakitId',
+        'tempat',
+        'tanggal_lahir',
+        'no_hp',
+        'alamat',
+        'jenis_kelamin',
+        'golongan_darah',
+      ]) as Record<string, any>
 
+      const existingPatient = await Pasien.query().where('nik', data.nik).first()
+      if (existingPatient) {
+        session.flash({ error: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.' })
+        return response.redirect().back()
+      }
+
+      await Pasien.transaction(async (trx) => {
         const firstName = request.input('first_name', '')
         const lastName = request.input('last_name', '')
         data.name = `${firstName} ${lastName}`.trim()
@@ -100,14 +106,12 @@ export default class PasiensController {
         await Pasien.create(data, { client: trx })
       })
 
-      return response
-        .redirect()
-        .toRoute('pasien.index', { success: 'Data pasien berhasil ditambahkan' })
+      session.flash({ success: 'Data pasien berhasil ditambahkan' })
+      return response.redirect().toRoute('pasien.index')
     } catch (error) {
       console.error('Error storing patient:', error)
-      return response.redirect().toRoute('pasien.index', {
-        error: 'Gagal menambahkan data pasien. Silakan coba lagi.',
-      })
+      session.flash({ error: 'Gagal menambahkan data pasien. Silakan coba lagi.' })
+      return response.redirect().back()
     }
   }
 
@@ -176,7 +180,7 @@ export default class PasiensController {
           query.orderBy('tanggalKunjungan', 'desc')
         })
         .firstOrFail()
-
+      const jenisPenyakits = await JenisPenyakit.query().select('id', 'nama').orderBy('nama', 'asc')
       const kunjunganTerbaru = pasien.kunjungans.length > 0 ? pasien.kunjungans[0] : null
       const obatPasiens = kunjunganTerbaru ? kunjunganTerbaru.obatPasiens : []
       const obatSebelumMakan = obatPasiens.filter(
@@ -228,6 +232,7 @@ export default class PasiensController {
         obats,
         kunjunganTerbaru,
         kunjungans,
+        jenisPenyakits,
         keluhan,
         ...helpers,
       })
@@ -236,6 +241,86 @@ export default class PasiensController {
       return view.render('pages/errors/404')
     }
   }
+
+  async update({ params, request, response, session }: HttpContext) {
+    try {
+      const pasien = await Pasien.findByOrFail('uuid', params.uuid)
+      console.log('Found patient:', pasien.uuid)
+
+      const data = request.only([
+        'nik',
+        'jenisPenyakitId',
+        'tempat',
+        'tanggal_lahir',
+        'no_hp',
+        'alamat',
+        'jenis_kelamin',
+        'golongan_darah',
+      ]) as Record<string, any>
+
+      console.log('Update data received:', data)
+
+      if (data.nik !== pasien.nik) {
+        const existingPatient = await Pasien.query()
+          .where('nik', data.nik)
+          .whereNot('id', pasien.id)
+          .first()
+        if (existingPatient) {
+          session.flash({
+            error: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.',
+          })
+          return response.redirect().back()
+        }
+      }
+
+      const firstName = request.input('first_name', '')
+      const lastName = request.input('last_name', '')
+      data.name = `${firstName} ${lastName}`.trim()
+      console.log('Name constructed:', data.name)
+
+      const jenisPenyakit = await JenisPenyakit.find(data.jenisPenyakitId)
+      if (!jenisPenyakit) {
+        console.error('Invalid jenis penyakit selected:', data.jenisPenyakitId)
+        session.flash({ error: 'Jenis penyakit tidak valid' })
+        return response.redirect().back()
+      }
+
+      const validGolonganDarah = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-']
+      if (data.golongan_darah && !validGolonganDarah.includes(data.golongan_darah)) {
+        console.error('Invalid golongan darah:', data.golongan_darah)
+        session.flash({ error: 'Golongan darah tidak valid' })
+        return response.redirect().back()
+      }
+
+      try {
+        await pasien.merge(data).save()
+        console.log('Patient updated successfully')
+        session.flash({ success: 'Data pasien berhasil diperbarui' })
+        return response.redirect().toRoute('profile.pasien', { uuid: pasien.uuid })
+      } catch (saveError) {
+        console.error('Error saving patient:', saveError)
+        if (saveError instanceof Error) {
+          console.error('Error message:', saveError.message)
+          console.error('Error stack:', saveError.stack)
+        }
+        session.flash({
+          error:
+            'Gagal menyimpan data pasien. Detail: ' +
+            (saveError instanceof Error ? saveError.message : 'Unknown error'),
+        })
+        return response.redirect().back()
+      }
+    } catch (error) {
+      console.error('Error in update function:', error)
+      if (error instanceof Error) {
+        console.error('Error message:', error.message)
+        console.error('Error stack:', error.stack)
+      }
+      session.flash({ error: 'Gagal memperbarui data pasien. Silakan coba lagi.' })
+      return response.redirect().back()
+    }
+  }
+
   async destroy({ params, response, session }: HttpContext) {
     const pasien = await Pasien.findByOrFail('uuid', params.uuid)
     await Pasien.transaction(async (trx) => {

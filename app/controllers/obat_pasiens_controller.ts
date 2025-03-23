@@ -110,17 +110,20 @@ export default class ObatPasiensController {
   }
 
   async destroy(ctx: HttpContext) {
-    const { params, response } = ctx
+    const { params, response, request } = ctx
 
     try {
-      const obatPasienUuid = params.uuid
-      const deleted = await ObatPasien.query().where('uuid', obatPasienUuid).delete()
+      const obatPasien = await ObatPasien.findBy('uuid', params.uuid)
 
-      if (!deleted) {
+      if (!obatPasien) {
         return response.status(404).json({ success: false, message: 'Obat tidak ditemukan' })
       }
 
-      return response.json({ success: true, message: 'Obat berhasil dihapus' })
+      await obatPasien.delete()
+
+      return request.accepts(['html', 'json']) === 'json'
+        ? response.json({ success: true, message: 'Obat berhasil dihapus' })
+        : response.redirect().back()
     } catch (error) {
       console.error('Error deleting medication:', error)
       return response
