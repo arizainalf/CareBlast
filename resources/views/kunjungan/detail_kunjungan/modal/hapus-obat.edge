@@ -1,14 +1,20 @@
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-dialog-centered" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title">Hapus Data Obat</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal">
-      </button>
+      <h5 class="modal-title">Konfirmasi Hapus</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
-    <div class="modal-body">Data obat <b>bodrexin</b> akan dihapus?</div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
-      <button type="button" class="btn btn-danger light">Hapus</button>
-    </div>
+    <form action="/obat-pasien/{{ obatPasien.uuid }}" method="POST">
+      {{ csrfField() }}
+      <input type="hidden" name="_method" value="DELETE">
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin menghapus obat "{{ obatPasien.obat ? obatPasien.obat.nama : 'Tidak ada obat' }}"?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary light" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-danger">Hapus</button>
+      </div>
+    </form>
   </div>
 </div>

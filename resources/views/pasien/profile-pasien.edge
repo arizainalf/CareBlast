@@ -44,6 +44,12 @@
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded">
                       <li>
                         <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                          data-bs-target="#EditPasienModal">
+                          <i class="fas fa-pen text-warning me-2"></i> Edit Pasien
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
                           data-bs-target="#tambahObatModal">
                           <i class="fas fa-capsules text-success me-2"></i> Tambah Obat
                         </button>
@@ -227,6 +233,10 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal fade" id="EditPasienModal" tabindex="-1" aria-labelledby="EditPasienModalLabel" aria-hidden="true">
+  @include('pasien/modal-profile/edit-pasien')
 </div>
 
 @include('pasien/modal-profile/script/hapus-pasien')
