@@ -37,7 +37,7 @@ export async function connectToWhatsApp() {
 
   socket.ev.on('messages.upsert', async (message: { messages: any[] }) => {
     const m = message.messages[0]
-    await saveMessages(socket, m)
+    await saveMessages(m)
     saveFile('./messages.json', m, 'messages')
   })
 
@@ -58,7 +58,7 @@ export async function connectToWhatsApp() {
       return;
     }
 
-    saveMessages(socket, m)
+    saveMessages(m)
     saveFile('./messages.json', m, 'messages')
   });
 
@@ -231,10 +231,13 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
       caption: caption
     })
 
+    const contact = await Contact.findBy('wa_id', no)
+    const contactId = contact?.id
+    const groupId = null
     // Manually create the message record since we're skipping messages.update
     await Message.create({
-      from: 'Saya',
-      to: no,
+      contactId: contactId,
+      groupId: groupId,
       messageId: sentMsg.key.id,
       messageType: 'documentMessage',
       content: caption,
