@@ -61,8 +61,8 @@ router
         router.get('/kunjungan/search', [KunjungansController, 'search'])
         router.get('/kunjungan/:uuid', [KunjungansController, 'show'])
 
-        router.get('/get-contacts', [WhatsappsController, 'getContacts']).as('get.contact')
-        router.get('/get-chat/:number', [WhatsappsController, 'getChat']).as('get.chat')
+        // router.get('/get-contacts', [WhatsappsController, 'getContacts']).as('get.contact')
+        // router.get('/get-chat/:number', [WhatsappsController, 'getChat']).as('get.chat')
         router.get('/send-file', [WhatsappsController, 'sendFile']).as('send-file')
         router.post('/send-file', [WhatsappsController, 'sendFile']).as('send-file.post')
         router.get('/whatsapps', async ({ view }) => {

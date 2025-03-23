@@ -54,11 +54,11 @@
                 <div class="col-md-6">
                   <div class="mb-4">
                     <label class="text-muted small mb-1">Penerima</label>
-                    <p class="fw-bold mb-0">Jajang Saepul</p>
+                    <p class="fw-bold mb-0" id="name">Jajang Saepul</p>
                   </div>
                   <div class="mb-4">
                     <label class="text-muted small mb-1">Isi Pesan</label>
-                    <p class="fw-bold mb-0 text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo
+                    <p class="fw-bold mb-0 text-justify" id="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo
                       esse
                       itaque in vero sit placeat, eius recusandae aliquid, exercitationem, neque rem similique!</p>
                   </div>
@@ -66,11 +66,11 @@
                 <div class="col-md-6">
                   <div class="mb-4">
                     <label class="text-muted small mb-1">Tanggal Kirim</label>
-                    <p class="fw-bold mb-0">2025-01-01</p>
+                    <p class="fw-bold mb-0" id="sent">2025-01-01</p>
                   </div>
                   <div class="mb-2">
                     <label class="text-muted small mb-1">Nomer Telpon</label>
-                    <p class="fw-bold mb-0">085861387453</p>
+                    <p class="fw-bold mb-0" id="no_wa">085861387453</p>
                   </div>
                 </div>
               </div>
@@ -97,44 +97,45 @@
 @slot('scripts')
 <script>
 
-  async function getChat(number) {
-    const response = await axios.get('/get-chat/' + number);
+  async function getHasilLab(uuid){
+    const response = await axios.get('/get-hasil-lab/'+ uuid);
     if (response.data.status === 'success') {
-      console.log(response.data.messages)
+      console.log(response.data.message)
+      return response.data.message
     }
   }
 
-  async function loadContact() {
+  async function loadHasilLab(){
     try {
-      const response = await axios.get('/get-contacts');
+      const response = await axios.get('/get-all-hasil-lab');
       if (response.data.status === 'success') {
-        if (response.data.contact) {
-          console.log(response.data.contact)
+        if (response.data.hasil) {
+          console.log(response.data.hasil)
         } else {
-          console.log('data tidak ada')
+          console.log('data tidak ada hasil labna ge')
         }
       } else {
-        console.log('eweh')
+        console.log('eweh hasil labna ge')
       }
     } catch (error) {
-      console.error('Error loading QR code:', error);
-      showDisconnected('Failed to load QR code. Please try again.');
+      console.error('Error all hasil lab', error);
     }
   }
 
-  $.get('/get-contacts', function (data) {
-    console.log(data)
-    const contacts = data.contact
-    console.log(contacts)
+
+  $.get('/get-all-hasil-lab', function (data) {
+    // console.log(data)
+    const hasilLab = data.hasil
+    console.log(hasilLab)
 
     $('#contactList').html('')
-    contacts.forEach(contact => {
+    hasilLab.forEach(hasil => {
       $('#contact-list').append(`
-        <a href="javascript:void(0)" data-number='${contact.number}' class="list-group-item list-group-item-action border-0 mb-2 rounded hover-shadow hasilLab">
+        <a href="javascript:void(0)" data-uuid='${hasil.id}' class="list-group-item list-group-item-action border-0 mb-2 rounded hover-shadow hasilLab">
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <h6 class="mb-1">${contact.number}</h6>
-              <p class="mb-1 text-muted small">${contact.username || 'Tidak ada pesan'}</p>
+              <h6 class="mb-1">${hasil.to}</h6>
+              <p class="mb-1 text-muted small">${hasil.content || 'Tidak ada pesan'}</p>
             </div>
             <div class="text-end">
               
@@ -150,9 +151,17 @@
     $(document).on('click', '.hasilLab', function (e) {
       e.preventDefault();
   
-      const number = $(this).data('number');
-      console.log(number);
-      getChat(number);
+      const uuid = $(this).data('uuid');
+
+      $.get('/get-hasil-lab/'+ uuid, function (data) {
+        console.log(data.message);
+
+        $('#no_wa').text(data.message.to);
+        $('#content').text(data.message.content);
+        $('#sent').text(data.message.timestamp);
+
+      });
+
     });
 
   })
@@ -164,9 +173,9 @@
     $('#hasilLab').on('click', function (e) {
       e.preventDefault();
 
-      const number = $(this).attr('data-number');
+      const number = $(this).attr('data-uuid');
       console.log(number)
-      getChat(number)
+      getHasilLab(number)
 
     })
 
@@ -188,7 +197,8 @@
       });
     });
 
-    loadContact();
+    // loadContact();
+    // loadHasilLab();
 
   });
 </script>

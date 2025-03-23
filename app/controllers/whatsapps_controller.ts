@@ -1,8 +1,10 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 
-import { getQrCode, getAllMessagesByNumber, contacts , logoutWhatsapp, getStatus, sendMsg, sendFile } from '#services/whatsapp_service'
+import { getQrCode, logoutWhatsapp, getStatus, sendMsg, sendFile } from '#services/whatsapp_service'
 import { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
+import Message from '#models/message'
+import Contact from '#models/contact'
 
 @inject()
 export default class WhatsappsController {
@@ -34,23 +36,28 @@ export default class WhatsappsController {
     })
   }
 
-  public async getChat({response, params}: HttpContext){
-    const messages = await getAllMessagesByNumber(params.number);
-    return response.json({
-      status: 'success',
-      messages
-    })
-  }
-
   public async createMsg({ view }: HttpContext) {
     return view.render('messages/create')
   }
 
-  public async getContacts({response}: HttpContext){
-    const contact = await contacts()
+  public async getAllHasilLab({response}: HttpContext){
+    const hasil = await Message.findManyBy('is_hasil_lab', true)
+    const contact = await Contact.all()
+    console.log('cek', hasil)
     return response.json({
       status: 'success',
-      contact
+      hasil,
+    })
+  }
+
+  public async getHasilLab({response, params}:HttpContext){
+
+    console.log(params)
+
+    const message = await Message.findBy('id', params.uuid)
+    return response.json({
+      status: 'success',
+      message
     })
   }
 

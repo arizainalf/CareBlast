@@ -12,6 +12,9 @@ export default class HasilLab extends BaseModel {
   declare name: string
 
   @column()
+  declare messageId: string
+
+  @column()
   declare fileName: string
 
   @column()
