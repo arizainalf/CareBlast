@@ -46,7 +46,7 @@ export default class Message extends BaseModel {
   declare updatedAt: DateTime
 
   @belongsTo(() => Contact)
-  declare contact: BelongsTo<typeof Contact> | null
+  declare contact: BelongsTo<typeof Contact>
 
   @belongsTo(() => Group)
   declare group: BelongsTo<typeof Group>

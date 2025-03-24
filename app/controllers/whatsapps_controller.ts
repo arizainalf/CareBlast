@@ -4,7 +4,6 @@ import { getQrCode, logoutWhatsapp, getStatus, sendMsg, sendFile } from '#servic
 import { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import Message from '#models/message'
-import Contact from '#models/contact'
 
 @inject()
 export default class WhatsappsController {
@@ -41,9 +40,8 @@ export default class WhatsappsController {
   }
 
   public async getAllHasilLab({response}: HttpContext){
-    const hasil = await Message.findManyBy('is_hasil_lab', true)
-    const contact = await Contact.all()
-    console.log('cek', hasil)
+    const hasil = await Message.query().where('is_hasil_lab', true).preload('contact').preload('group').orderBy('created_at', 'desc')
+    // console.log('cek', hasil)
     return response.json({
       status: 'success',
       hasil,
@@ -51,10 +49,8 @@ export default class WhatsappsController {
   }
 
   public async getHasilLab({response, params}:HttpContext){
-
-    console.log(params)
-
-    const message = await Message.findBy('id', params.uuid)
+    // console.log(params)
+    const message = await Message.query().where('id', params.uuid).preload('contact').preload('group')
     return response.json({
       status: 'success',
       message
@@ -76,12 +72,11 @@ export default class WhatsappsController {
     }
 
     try {
-
       const responseMsg = await sendFile(jid, file, caption, name)
-
       return response.json({ success: true, message: 'Hasil Lab Telah Terkirim!' , data: responseMsg })
     } catch (error) {
       console.log('error di controller')
+      console.log(error)
       return response.badRequest({ success: false, message: 'Error controller Gagal mengirim file ' + error })
     }
   }

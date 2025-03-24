@@ -3,8 +3,8 @@
 <div class="container-fluid">
   <div class="row page-titles" style="margin-bottom: -4px;">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active"><a href="javascript:void(0)">Pasien</a></li>
-      <li class="breadcrumb-item"><a href="javascript:void(0)">Akmal Sidik</a></li>
+      <li class="breadcrumb-item active"><a href="javascript:void(0)">Hasil Lab</a></li>
+      <li class="breadcrumb-item"><a href="javascript:void(0)" id="nama_pasien"></a></li>
     </ol>
   </div>
   <div class="content-wrapper">
@@ -12,7 +12,7 @@
       <div class="row g-4">
         <!-- List Riwayat Pengiriman Hasil Laboratorium -->
         <div class="col-lg-4">
-          <div class="card border-0 shadow-sm">
+          <div class="card border-0 shadow-sm transition-all">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="card-title text-primary mb-0">
@@ -54,30 +54,28 @@
                 <div class="col-md-6">
                   <div class="mb-4">
                     <label class="text-muted small mb-1">Penerima</label>
-                    <p class="fw-bold mb-0" id="name">Jajang Saepul</p>
+                    <p class="fw-bold mb-0" id="name"></p>
                   </div>
                   <div class="mb-4">
                     <label class="text-muted small mb-1">Isi Pesan</label>
-                    <p class="fw-bold mb-0 text-justify" id="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo
-                      esse
-                      itaque in vero sit placeat, eius recusandae aliquid, exercitationem, neque rem similique!</p>
+                    <p class="fw-bold mb-0 text-justify" id="content"></p>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="mb-4">
                     <label class="text-muted small mb-1">Tanggal Kirim</label>
-                    <p class="fw-bold mb-0" id="sent">2025-01-01</p>
+                    <p class="fw-bold mb-0" id="sent"></p>
                   </div>
                   <div class="mb-2">
                     <label class="text-muted small mb-1">Nomer Telpon</label>
-                    <p class="fw-bold mb-0" id="no_wa">085861387453</p>
+                    <p class="fw-bold mb-0" id="no_wa"></p>
                   </div>
                 </div>
               </div>
 
               <div class="mt-2">
                 <label class="text-muted small mb-2">Dokumen Hasil Lab</label>
-                <div class="position-relative rounded-3 overflow-hidden">
+                <div class="position-relative rounded-3 overflow-hidden" id="previewFile">
                   <img src="{{ asset('images/big/img6.jpg') }}" alt="Hasil Lab" class="img-fluid w-100"
                     style="max-height: 400px; object-fit: cover;">
                 </div>
@@ -97,15 +95,15 @@
 @slot('scripts')
 <script>
 
-  async function getHasilLab(uuid){
-    const response = await axios.get('/get-hasil-lab/'+ uuid);
+  async function getHasilLab(uuid) {
+    const response = await axios.get('/get-hasil-lab/' + uuid);
     if (response.data.status === 'success') {
       console.log(response.data.message)
       return response.data.message
     }
   }
 
-  async function loadHasilLab(){
+  async function loadHasilLab() {
     try {
       const response = await axios.get('/get-all-hasil-lab');
       if (response.data.status === 'success') {
@@ -122,9 +120,24 @@
     }
   }
 
+  function formatPhoneNumber(phone) {
+    return phone.replace(/@.+$/, '').replace(/^62/, "0").replace(/(\d{4})(\d{4})(\d{4})/, "$1 $2 $3");
+  }
 
-  $.get('/get-all-hasil-lab', function (data) {
-    // console.log(data)
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+
+    return new Intl.DateTimeFormat('id-ID', {
+      weekday: 'long', // Nama hari (Minggu, Senin, ...)
+      day: '2-digit',  // Tanggal (01, 02, ...)
+      month: 'long',   // Nama bulan (Januari, Februari, ...)
+      year: 'numeric', // Tahun (2025, 2026, ...)
+      timeZone: 'Asia/Jakarta' // Pastikan zona waktu Indonesia
+    }).format(date);
+  }
+
+  $.get('/hasil-lab/all', function (data) {
+    console.log(data)
     const hasilLab = data.hasil
     console.log(hasilLab)
 
@@ -134,13 +147,13 @@
         <a href="javascript:void(0)" data-uuid='${hasil.id}' class="list-group-item list-group-item-action border-0 mb-2 rounded hover-shadow hasilLab">
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <h6 class="mb-1">${hasil.to}</h6>
+              <h6 class="mb-1">${hasil.contact.name}</h6>
               <p class="mb-1 text-muted small">${hasil.content || 'Tidak ada pesan'}</p>
             </div>
             <div class="text-end">
               
               <span class="badge bg-success rounded-pill mt-1">
-                <i class="ri-attachment-2 me-1"></i>Terkirim
+                <i class="ri-attachment-2 me-1"></i>${formatTimestamp(hasil.timestamp)}
               </span>
             </div>
           </div>
@@ -150,16 +163,41 @@
 
     $(document).on('click', '.hasilLab', function (e) {
       e.preventDefault();
-  
+
       const uuid = $(this).data('uuid');
 
-      $.get('/get-hasil-lab/'+ uuid, function (data) {
+      $.get('/hasil-lab/' + uuid, function (data) {
         console.log(data.message);
+        console.log(data.message[0].contact.waId);
 
-        $('#no_wa').text(data.message.to);
-        $('#content').text(data.message.content);
-        $('#sent').text(data.message.timestamp);
 
+        $('#nama_pasien').text(data.message[0].contact.name);
+        $('#no_wa').text(formatPhoneNumber(data.message[0].contact.waId));
+        $('#name').text(data.message[0].contact.name);
+        $('#content').text(data.message[0].content);
+        $('#sent').text(formatTimestamp(data.message[0].timestamp));
+
+        const previewContainer = document.getElementById('previewFile');
+        previewContainer.innerHTML = '';
+        const filePath ='http://localhost:3333/storage/uploads/'
+        const fileUrl = filePath + data.message[0].fileName;
+        if (data.message[0].fileName.endsWith('.pdf')) {
+          // Jika file adalah PDF, gunakan iframe
+          const iframeElement = document.createElement('iframe');
+          iframeElement.src = fileUrl;
+          iframeElement.width = '100%';
+          iframeElement.height = '400px';
+          previewContainer.appendChild(iframeElement);
+        } else {
+          // Jika file adalah gambar, gunakan img
+          const imgElement = document.createElement('img');
+          imgElement.src = fileUrl;
+          imgElement.alt = 'Hasil Lab';
+          imgElement.className = 'img-fluid w-100';
+          imgElement.style.maxHeight = '400px';
+          imgElement.style.objectFit = 'cover';
+          previewContainer.appendChild(imgElement);
+        }
       });
 
     });
@@ -196,9 +234,6 @@
         location.reload();
       });
     });
-
-    // loadContact();
-    // loadHasilLab();
 
   });
 </script>

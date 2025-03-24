@@ -61,8 +61,6 @@ router
         router.get('/kunjungan/search', [KunjungansController, 'search'])
         router.get('/kunjungan/:uuid', [KunjungansController, 'show'])
 
-        // router.get('/get-contacts', [WhatsappsController, 'getContacts']).as('get.contact')
-        // router.get('/get-chat/:number', [WhatsappsController, 'getChat']).as('get.chat')
         router.get('/send-file', [WhatsappsController, 'sendFile']).as('send-file')
         router.post('/send-file', [WhatsappsController, 'sendFile']).as('send-file.post')
         router.get('/whatsapps', async ({ view }) => {
@@ -103,6 +101,8 @@ router
         router.get('/hasil-lab', async ({ view }) => {
           return view.render('hasil-lab/index')
         })
+        router.get('/hasil-lab/all', [WhatsappsController, 'getAllHasilLab']).as('get-all-hasil-lab')
+        router.get('/hasil-lab/:uuid', [WhatsappsController, 'getHasilLab']).as('get-hasil-lab')
 
         // Error pages
         router.get('/bad-request', async ({ view }) => {
