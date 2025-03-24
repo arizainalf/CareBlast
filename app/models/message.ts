@@ -1,13 +1,19 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, beforeCreate } from '@adonisjs/lucid/orm'
+import { BaseModel, column, beforeCreate, belongsTo } from '@adonisjs/lucid/orm'
 import { v4 as uuidv4 } from 'uuid'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import Contact from '#models/contact'
+import Group from '#models/group'
 
 export default class Message extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
   @column()
-  declare from: string
+  declare contactId: string
+
+  @column()
+  declare fromMe: boolean
 
   @column()
   declare messageId: string
@@ -18,17 +24,20 @@ export default class Message extends BaseModel {
   @column()
   declare content: any
 
-  @column()
-  declare isSent: boolean
-  
   @column.dateTime()
   declare timestamp: DateTime
 
   @column()
-  declare groupJid: string
+  declare groupId: string | null
 
   @column()
-  declare groupName: string
+  declare isHasilLab: boolean
+
+  @column()
+  declare fileName: string | null
+
+  @column()
+  declare filePath: string | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -36,8 +45,15 @@ export default class Message extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
+  @belongsTo(() => Contact)
+  declare contact: BelongsTo<typeof Contact>
+
+  @belongsTo(() => Group)
+  declare group: BelongsTo<typeof Group>
+
   @beforeCreate()
   public static async generateUuid(message: Message) {
     message.id = uuidv4()
   }
+
 }

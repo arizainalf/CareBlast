@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('wa_id')
       table.string('name')
+      table.string('message_id')
       table.string('file_name')
       table.string('file_path')
       table.string('caption').nullable()
