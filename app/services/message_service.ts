@@ -60,6 +60,7 @@ export async function saveMessages(message: any) {
       console.log(`Message saved: ${key.id}`)
     } catch (error) {
       console.error('Error saving message:', error)
+      console.log('message sudah ada')
     }
   }
 

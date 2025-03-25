@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import Obat from '#models/obat'
 import Kunjungan from '#models/kunjungan'
 import ObatPasien from '#models/obat_pasien'
+import { saveContact } from '#services/contact_service'
 
 export default class PasiensController {
   async index({ view, request }: HttpContext) {
@@ -102,6 +103,8 @@ export default class PasiensController {
         if (data.golongan_darah && !validGolonganDarah.includes(data.golongan_darah)) {
           throw new Error('Golongan darah tidak valid')
         }
+
+        saveContact( data.no_hp, data.name)
 
         await Pasien.create(data, { client: trx })
       })
