@@ -4,6 +4,7 @@ import { getQrCode, logoutWhatsapp, getStatus, sendMsg, sendFile } from '#servic
 import { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import Message from '#models/message'
+import Contact from '#models/contact'
 
 @inject()
 export default class WhatsappsController {
@@ -39,7 +40,7 @@ export default class WhatsappsController {
     return view.render('messages/create')
   }
 
-  public async getAllHasilLab({response}: HttpContext){
+  public async getAllHasilLab({ response }: HttpContext) {
     const hasil = await Message.query().where('is_hasil_lab', true).preload('contact').preload('group').orderBy('created_at', 'desc')
     // console.log('cek', hasil)
     return response.json({
@@ -48,7 +49,23 @@ export default class WhatsappsController {
     })
   }
 
-  public async getHasilLab({response, params}:HttpContext){
+  public async getChat({ response, params }: HttpContext) {
+    const message = await Message.query().where('contact_id', params.id).preload('contact').preload('group').orderBy('timestamp', 'asc')
+    return response.json({
+      status: 'success',
+      message,
+    })
+  }
+
+  public async getAllContact({ response }: HttpContext) {
+    const contact = await Contact.all()
+    return response.json({
+      status: 'success',
+      contact,
+    })
+  }
+
+  public async getHasilLab({ response, params }: HttpContext) {
     // console.log(params)
     const message = await Message.query().where('id', params.uuid).preload('contact').preload('group')
     return response.json({
@@ -73,7 +90,7 @@ export default class WhatsappsController {
 
     try {
       const responseMsg = await sendFile(jid, file, caption, name)
-      return response.json({ success: true, message: 'Hasil Lab Telah Terkirim!' , data: responseMsg })
+      return response.json({ success: true, message: 'Hasil Lab Telah Terkirim!', data: responseMsg })
     } catch (error) {
       console.log('error di controller')
       console.log(error)

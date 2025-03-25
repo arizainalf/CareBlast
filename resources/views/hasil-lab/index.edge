@@ -120,22 +120,6 @@
     }
   }
 
-  function formatPhoneNumber(phone) {
-    return phone.replace(/@.+$/, '').replace(/^62/, "0").replace(/(\d{4})(\d{4})(\d{4})/, "$1 $2 $3");
-  }
-
-  function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-
-    return new Intl.DateTimeFormat('id-ID', {
-      weekday: 'long', // Nama hari (Minggu, Senin, ...)
-      day: '2-digit',  // Tanggal (01, 02, ...)
-      month: 'long',   // Nama bulan (Januari, Februari, ...)
-      year: 'numeric', // Tahun (2025, 2026, ...)
-      timeZone: 'Asia/Jakarta' // Pastikan zona waktu Indonesia
-    }).format(date);
-  }
-
   $.get('/hasil-lab/all', function (data) {
     console.log(data)
     const hasilLab = data.hasil
@@ -169,7 +153,6 @@
       $.get('/hasil-lab/' + uuid, function (data) {
         console.log(data.message);
         console.log(data.message[0].contact.waId);
-
 
         $('#nama_pasien').text(data.message[0].contact.name);
         $('#no_wa').text(formatPhoneNumber(data.message[0].contact.waId));
