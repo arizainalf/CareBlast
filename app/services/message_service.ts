@@ -12,6 +12,10 @@ export async function saveMessages(message: any) {
   let contactId: string | undefined = undefined
   let groupId: string | null = null
 
+  if (key.remoteJid === 'status@broadcast') {
+    console.log('skipping status@broadcast')
+    return
+  }
 
   if (key.remoteJid.endsWith('@g.us')) {
     console.log('if')

@@ -99,3 +99,20 @@ const confirmDelete = (url, callback) => {
     });
   });
 };
+
+function formatPhoneNumber(phone) {
+  return phone.replace(/@.+$/, '').replace(/^62/, "0").replace(/(\d{4})(\d{4})(\d{4})/, "$1 $2 $3");
+}
+
+function formatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+
+  return new Intl.DateTimeFormat('id-ID', {
+    weekday: 'long', // Nama hari (Minggu, Senin, ...)
+    day: '2-digit',  // Tanggal (01, 02, ...)
+    month: 'long',   // Nama bulan (Januari, Februari, ...)
+    year: 'numeric', // Tahun (2025, 2026, ...)
+    timeZone: 'Asia/Jakarta' // Pastikan zona waktu Indonesia
+  }).format(date);
+}
+

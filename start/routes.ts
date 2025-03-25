@@ -63,9 +63,12 @@ router
 
         router.get('/send-file', [WhatsappsController, 'sendFile']).as('send-file')
         router.post('/send-file', [WhatsappsController, 'sendFile']).as('send-file.post')
+
         router.get('/whatsapps', async ({ view }) => {
           return view.render('whatsapps/whatsapp')
         })
+        router.get('/get-all-contact/', [WhatsappsController, 'getAllContact']).as('get-all-contact')
+        router.get('/get-chat/:id', [WhatsappsController, 'getChat']).as('get-chat')
         router.get('/qrcode', [WhatsappsController, 'getQrCode']).as('qrcode')
         router.get('/status', [WhatsappsController, 'status']).as('status')
         router.get('/logoutWhatsapp', [WhatsappsController, 'logout']).as('logoutWhatsapp')

@@ -77,6 +77,11 @@ export async function connectToWhatsApp() {
     saveFile('./messages.json', m, 'messages')
   });
 
+  socket.ev.on('messaging-history.set', (history: any) => {
+    console.log('History set:', history) 
+    saveFile('./history.json', history, 'messages')
+  })
+
   return socket
 }
 
