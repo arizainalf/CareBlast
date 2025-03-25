@@ -1,0 +1,31 @@
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Edit Kunjungan</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form action="/kunjungan/{{ kunjungan.uuid }}?_method=PUT" method="POST">
+      {{ csrfField() }}
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="tanggalKunjungan" class="form-label">Tanggal Kunjungan</label>
+          <input type="date" class="form-control" id="editTanggalKunjungan" name="tanggalKunjungan"
+            value="{{ kunjungan.tanggalKunjungan.toFormat('yyyy-MM-dd') }}" required>
+        </div>
+        <div class="mb-3">
+          <label for="tema" class="form-label">Jenis Pemeriksaan</label>
+          <input type="text" class="form-control" id="editTema" name="tema" value="{{ kunjungan.tema }}" required>
+        </div>
+        <div class="mb-3">
+          <label for="keterangan" class="form-label">Catatan</label>
+          <textarea class="form-control" id="editKeterangan" name="keterangan" rows="3"
+            required>{{ kunjungan.keterangan }}</textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+</div>

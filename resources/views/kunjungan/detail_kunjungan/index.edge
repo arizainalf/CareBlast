@@ -11,6 +11,17 @@
   </div>
 
   <div class="content-wrapper">
+    @if(flashMessages.has('success'))
+    <div class="alert alert-success">
+      {{ flashMessages.get('success') }}
+    </div>
+    @endif
+
+    @if(flashMessages.has('error'))
+    <div class="alert alert-danger">
+      {{ flashMessages.get('error') }}
+    </div>
+    @endif
     <div class="container-xxl flex-grow-1 container-p-y">
       <div class="row">
         <div class="col-lg-4 equal-height">
@@ -59,8 +70,35 @@
 
         <div class="col-lg-8 equal-height">
           <div class="card shadow-sm">
-            <div class="card-header bg-primary">
+            <div class="d-flex justify-content-between align-items-center bg-primary p-3 rounded">
               <h5 class="text-white m-0">Detail Kunjungan</h5>
+              <div class="dropdown">
+                <a href="#" class="btn btn-white  sharp" data-bs-toggle="dropdown" aria-expanded="true">
+                  <svg class="icon-scale" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <rect x="0" y="0" width="24" height="24"></rect>
+                      <circle fill="#FFFFFF" cx="5" cy="12" r="2"></circle>
+                      <circle fill="#FFFFFF" cx="12" cy="12" r="2"></circle>
+                      <circle fill="#FFFFFF" cx="19" cy="12" r="2"></circle>
+                    </g>
+                  </svg>
+
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded">
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                      data-bs-target="#editKunjunganModal">
+                      <i class="fas fa-pen text-warning me-2"></i> Edit Kunjungan
+                    </button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                      data-bs-target="#deleteKunjunganModal">
+                      <i class="fas fa-ban text-danger me-2"></i> Hapus Kunjungan
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
             <div class="card-body">
               <p class="mt-2"><strong>Tanggal :</strong> {{ formatDate(kunjungan.tanggalKunjungan) }}</p>
@@ -95,7 +133,8 @@
                         <th>{{ index + 1 }}</th>
                         <td>{{ obatPasien.obat ? obatPasien.obat.nama : 'Tidak ada obat' }}</td>
                         <td>
-                          <span class="badge {{ obatPasien.keteranganWaktu === 'Sebelum makan' ? 'badge-primary' : 'badge-info' }}">
+                          <span
+                            class="badge {{ obatPasien.keteranganWaktu === 'Sebelum makan' ? 'badge-primary' : 'badge-info' }}">
                             {{ obatPasien.keteranganWaktu }}
                           </span>
                         </td>
@@ -107,8 +146,9 @@
                             <!-- Tombol Edit -->
                             <button class="btn btn-primary shadow btn-xs sharp me-1 edit-obat" data-bs-toggle="modal"
                               data-bs-target="#editObatModal" data-uuid="{{ obatPasien.uuid }}"
-                              data-nama="{{ obatPasien.obat ? obatPasien.obat.nama : 'Obat' }}" data-frekuensi="{{ obatPasien.frekuensi }}"
-                              data-waktu="{{ obatPasien.waktuKonsumsi }}" data-keterangan-waktu="{{ obatPasien.keteranganWaktu }}">
+                              data-nama="{{ obatPasien.obat ? obatPasien.obat.nama : 'Obat' }}"
+                              data-frekuensi="{{ obatPasien.frekuensi }}" data-waktu="{{ obatPasien.waktuKonsumsi }}"
+                              data-keterangan-waktu="{{ obatPasien.keteranganWaktu }}">
                               <i class="fas fa-pencil-alt"></i>
                             </button>
                             <!-- Tombol Hapus -->
@@ -145,7 +185,12 @@
 <div class="modal fade" id="tambahObat">
   @include('kunjungan/detail_kunjungan/modal/tambah-obat')
 </div>
-
+<div class="modal fade" id="editKunjunganModal">
+  @include('kunjungan/detail_kunjungan/modal/edit-kunjungan')
+</div>
+<div class="modal fade" id="deleteKunjunganModal">
+  @include('kunjungan/detail_kunjungan/modal/hapus-kunjungan')
+</div>
 <div class="modal fade" id="editObatModal">
   @include('kunjungan/detail_kunjungan/modal/edit-obat')
 </div>
