@@ -78,7 +78,7 @@ export async function connectToWhatsApp() {
   });
 
   socket.ev.on('messaging-history.set', (history: any) => {
-    console.log('History set:', history) 
+    console.log('History set:', history)
     saveFile('./history.json', history, 'messages')
   })
 
@@ -152,21 +152,49 @@ export async function getStatus() {
 }
 
 export async function sendMsg(number: string, message: string) {
+  if (number.endsWith('@s.whatsapp.net')) {
+    number = number.split('@')[0]
+  }
   const NumberFormatted = NumberHelper(number)
   const jid = `${NumberFormatted}@s.whatsapp.net`
 
   if (!socket) {
     throw new Error('Socket not connected')
   }
-  // send a simple text!
-  const sentMsg = await socket.sendMessage(jid, { text: message })
 
-  if (!sentMsg) {
-    console.log('Failed to send message')
+  try {
+    sendingFile = true
+    const sentMsg = await socket.sendMessage(jid, { text: message })
+    if (!sentFileMessages) {
+      sentFileMessages = new Set();
+    }
+    sentFileMessages.add(sentMsg.key.id);
+    
+    const contact = await Contact.findBy('wa_id', jid)
+    const contactId = contact?.id
+    const groupId = null
+    // Manually create the message record since we're skipping messages.update
+    const msgCreate = await Message.create({
+      contactId: contactId,
+      groupId: groupId,
+      fromMe: true,
+      messageId: sentMsg.key.id,
+      messageType: 'documentMessage',
+      content: message,
+      timestamp: DateTime.now(),
+      isHasilLab: true
+    })
+
+    // After sending, clear the flag
+    sendingFile = false;
+
+    return msgCreate
+
   }
-  console.log('Sent message:', sentMsg)
-
-  return sentMsg
+  catch (error) {
+    console.log('Error di service:', error)
+    sendingFile = false;
+  }
 }
 
 export async function sendFile(jid: string, file: any, caption: string, name: string) {

@@ -76,6 +76,7 @@ router
         router.get('/logoutWhatsapp', [WhatsappsController, 'logout']).as('logoutWhatsapp')
         router.get('/messages', [WhatsappsController, 'createMsg'])
         router.post('/send', [WhatsappsController, 'sendMsg'])
+        router.post('/send-message', [WhatsappsController, 'sendMsg'])
 
         router.get('/obat-penyakit', [ObatPenyakitController, 'index']).as('obat-penyakit')
 

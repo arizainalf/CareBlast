@@ -90,7 +90,7 @@ export default class WhatsappsController {
 
     try {
       const responseMsg = await sendFile(jid, file, caption, name)
-      return response.json({ success: true, message: 'Hasil Lab Telah Terkirim!', data: responseMsg })
+      return response.json({ status: 'success', message: 'Hasil Lab Telah Terkirim!', data: responseMsg })
     } catch (error) {
       console.log('error di controller')
       console.log(error)
@@ -102,7 +102,29 @@ export default class WhatsappsController {
   public async sendMsg({ request, response }: HttpContext) {
     const number = request.input('number')
     const message = request.input('message')
+    const file = request.file('file')
+    const nama = request.input('nama')
+
+    console.log('Nomor:', number)
+    console.log('Message:', message)
+    console.log('File:', file)
+    console.log('Nama:', nama)
+
+    if (file && nama) {
+      const responseMsg = await sendFile(number, file, message, nama)
+      return response.json({
+        status: 'success',
+        message: 'Hasil Lab Telah Terkirim!',
+        data: responseMsg
+      })
+    }
+    const contact = await Contact.findBy('waId', number)
     const responseMsg = await sendMsg(number, message)
-    return response.json(responseMsg)
+    return response.json({
+      status: 'success',
+      nama,
+      contact,
+      responseMsg
+    })
   }
 }

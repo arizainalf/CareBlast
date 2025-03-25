@@ -9,7 +9,7 @@ export async function saveContact(jid: string, name: string | null) {
   const existingContact = await Contact.findBy('wa_id', jid)
 
   if (existingContact) {
-    console.log('Contact already exists:', existingContact)
+    console.log('Contact already exists')
     return existingContact.id
   }
 
