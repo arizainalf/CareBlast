@@ -55,18 +55,6 @@
               <h5 class="mb-0" id="chat-head">Broadcast Message</h5>
             </div>
           </div>
-          {{-- <div class="d-flex gap-2">
-            <button class="btn btn-rounded btn-outline-secondary flex-grow-1"><span
-                class="btn-icon-start text-secondary">
-                <i class="fas fa-calendar"></i></span> Schedule
-            </button>
-            <button class="btn btn-primary flex-grow-1">
-              <i class="fas fa-paper-plane me-1"></i> Send Now
-            </button>
-            <button type="button" class="btn btn-rounded btn-primary flex-grow-1"><span
-                class="btn-icon-start text-primary"><i class="fas fa-paper-plane"></i>
-              </span>Send Now</button>
-          </div> --}}
         </div>
 
         <!-- Chat Area -->
@@ -87,8 +75,8 @@
                   <i class="fas fa-paperclip"></i>
                 </button>
 
-                <input type="text" class="form-control" rows="3" name="message" style="resize: none; border: 1px solid grey;"
-                  placeholder="Ketik pesan...">
+                <input type="text" class="form-control" rows="3" name="message"
+                  style="resize: none; border: 1px solid grey;" placeholder="Ketik pesan...">
                 <button class="btn btn-primary px-4">
                   <i class="fas fa-paper-plane me-1 send-message"></i> Send
                 </button>
@@ -157,12 +145,15 @@
   function getChat(id, nama) {
     $.get('/get-chat/' + id, function (data) {
       console.log('chat +', data)
+      $('#contactName').val(nama);
+      $('#WaId').val(data.message[0].contact.waId);
       const messages = data.message
       const pp = data.message[0].contact.profilePicture;
       console.log(pp)
 
-      $('#send-message').attr('data-id', id);
       $('#chat-body').html('');
+
+      $('#send-messages').attr('data-id', id);
 
       $('#chat-head').text(nama);
       $('#pp').attr('src', pp).css('width', '50px').css('border-radius', '50%');
@@ -185,6 +176,7 @@
             </div>
         </div>
     `);
+        $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
       });
 
     });
@@ -208,7 +200,6 @@
           console.log(response.responseMsg);
           console.log(response.data);
           console.log(response.status);
-          console.log(response.contact.id);
           // Reset form after sending
           $('#send-messages')[0].reset();
           $('#fileNameDisplay').addClass('d-none');

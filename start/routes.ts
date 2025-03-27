@@ -71,6 +71,7 @@ router
         })
         router.get('/get-all-contact/', [WhatsappsController, 'getAllContact']).as('get-all-contact')
         router.get('/get-chat/:id', [WhatsappsController, 'getChat']).as('get-chat')
+        router.get('/chat/:id/new-messages', [WhatsappsController, 'getNewMessages'])
         router.get('/qrcode', [WhatsappsController, 'getQrCode']).as('qrcode')
         router.get('/status', [WhatsappsController, 'status']).as('status')
         router.get('/logoutWhatsapp', [WhatsappsController, 'logout']).as('logoutWhatsapp')

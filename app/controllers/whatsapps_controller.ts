@@ -56,6 +56,19 @@ export default class WhatsappsController {
       message,
     })
   }
+  
+  async getNewMessages({ params, request, response }: HttpContext) {
+    const chatId = params.id
+    const lastId = request.input('last_id', 0) // Default 0 jika tidak ada last_id
+
+    // Ambil pesan yang ID-nya lebih besar dari lastId
+    const newMessages = await Message.query()
+      .where('chat_id', chatId)
+      .where('id', '>', lastId)
+      .orderBy('id', 'asc')
+
+    return response.json({ new_messages: newMessages })
+  }
 
   public async getAllContact({ response }: HttpContext) {
     const contact = await Contact.all()

@@ -1,294 +1,151 @@
 <script>
-  let statusCheckInterval = null;
+    let statusCheckInterval = null;
 
-  async function loadQRCode() {
-    try {
-      const response = await axios.get('/qrcode');
-      if (response.data.status === 'success') {
-        if (response.data.qrCode === 'You are already logged in') {
-          handleConnected();
-        } else {
-          document.getElementById('qrCode').src = `data:image/png;base64,${response.data.qrCode}`;
-          document.getElementById('qrCode').style.display = 'block';
-          document.getElementById('logoutBtn').style.display = 'none';
-          startStatusCheck();
+    async function loadQRCode() {
+        try {
+            const response = await axios.get('/qrcode');
+            if (response.data.status === 'success') {
+                if (response.data.qrCode === 'You are already logged in') {
+                    handleConnected();
+                } else {
+                    document.getElementById('qrCode').src = `data:image/png;base64,${response.data.qrCode}`;
+                    document.getElementById('qrCode').style.display = 'block';
+                    document.getElementById('logoutBtn').style.display = 'none';
+                    startStatusCheck();
+                }
+            }
+        } catch (error) {
+            console.error('Error loading QR code:', error);
+            showDisconnected('Failed to load QR code. Please try again.');
         }
-      }
-    } catch (error) {
-      console.error('Error loading QR code:', error);
-      showDisconnected('Failed to load QR code. Please try again.');
     }
-  }
 
-  async function checkStatus() {
-    try {
-      const response = await axios.get('/status');
-      if (response.data.status === 'success') {
-        if (response.data.connected === 'open') {
-          handleConnected();
-          stopStatusCheck();
-        } else {
-          showDisconnected('Waiting for connection...');
+    async function checkStatus() {
+        try {
+            const response = await axios.get('/status');
+            if (response.data.status === 'success') {
+                if (response.data.connected === 'open') {
+                    handleConnected();
+                    stopStatusCheck();
+                } else {
+                    showDisconnected('Waiting for connection...');
+                }
+            }
+        } catch (error) {
+            console.error('Error checking status:', error);
         }
-      }
-    } catch (error) {
-      console.error('Error checking status:', error);
     }
-  }
 
-  function handleConnected() {
-    document.getElementById('qrCode').style.display = 'none';
-    document.getElementById('status').className = 'alert alert-success text-center fs-15 mb-4';
-    document.getElementById('status').textContent = 'Connected to WhatsApp!';
-    document.getElementById('logoutBtn').style.display = 'block';
-  }
-
-  function showDisconnected(message) {
-    document.getElementById('status').className = 'alert alert-info text-center fs-15 mb-4';
-    document.getElementById('status').textContent = message;
-    document.getElementById('qrCode').style.display = 'block';
-    document.getElementById('logoutBtn').style.display = 'none';
-  }
-
-  function startStatusCheck() {
-    if (!statusCheckInterval) {
-      statusCheckInterval = setInterval(checkStatus, 5000);
+    function handleConnected() {
+        document.getElementById('qrCode').style.display = 'none';
+        document.getElementById('status').className = 'alert alert-success text-center fs-15 mb-4';
+        document.getElementById('status').textContent = 'Connected to WhatsApp!';
+        document.getElementById('logoutBtn').style.display = 'block';
     }
-  }
 
-  function stopStatusCheck() {
-    if (statusCheckInterval) {
-      clearInterval(statusCheckInterval);
-      statusCheckInterval = null;
+    function showDisconnected(message) {
+        document.getElementById('status').className = 'alert alert-info text-center fs-15 mb-4';
+        document.getElementById('status').textContent = message;
+        document.getElementById('qrCode').style.display = 'block';
+        document.getElementById('logoutBtn').style.display = 'none';
     }
-  }
 
-  async function refreshQR() {
-    loadQRCode();
-  }
-  async function logout() {
-    const logoutBtn = document.getElementById('logoutBtn');
-    const originalText = logoutBtn.innerHTML;
-
-    try {
-      logoutBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Logging out...';
-      logoutBtn.disabled = true;
-
-      const response = await axios.get('logoutWhatsapp');
-
-      if (response.data.status === 'success') {
-        showDisconnected('Logged out successfully');
-        setTimeout(() => {
-          loadQRCode();
-        }, 1000);
-      } else {
-        throw new Error(response.data.message || 'Logout failed');
-      }
-    } catch (error) {
-      console.error('Error during logout:', error);
-      showDisconnected(error.response?.data?.message || 'Logout failed. Please try again.');
-    } finally {
-      logoutBtn.innerHTML = originalText;
-      logoutBtn.disabled = false;
-    }
-  }
-
-  const jenisPenyakitData = {{{ JSON.stringify(jenisPenyakitData) }}};
-  const monthlyData = {{{ JSON.stringify(monthlyData) }}};
-  const colors = ['#886CC0', '#FFCF6D', '#FFA7D7', '#6CBCB7', '#FF7778', '#5FAAE3', '#50C45E', '#DFA73A'];
-
-  function initCharts() {
-    if (document.getElementById('penyakitChart')) {
-      const months = monthlyData.map(item => item.month);
-      const series = jenisPenyakitData.map((penyakit, index) => {
-        return {
-          name: penyakit.nama,
-          data: monthlyData.map(month => {
-            const penyakitData = month.data.find(p => p.penyakit_id === penyakit.id);
-            return penyakitData ? penyakitData.count : 0;
-          }),
-          color: colors[index % colors.length]
-        };
-      });
-
-      const options = {
-        series: series,
-        chart: {
-          type: 'bar',
-          height: 300,
-          stacked: true,
-          toolbar: {
-            show: false
-          },
-          zoom: {
-            enabled: false
-          }
-        },
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: 'bottom',
-              offsetX: -10,
-              offsetY: 0
-            }
-          }
-        }],
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            borderRadius: 5,
-            columnWidth: '60%',
-          },
-        },
-        xaxis: {
-          categories: months,
-          labels: {
-            style: {
-              fontSize: '12px',
-              fontFamily: 'Poppins, sans-serif',
-            },
-          },
-        },
-        yaxis: {
-          labels: {
-            style: {
-              fontSize: '12px',
-              fontFamily: 'Poppins, sans-serif',
-            },
-          },
-        },
-        legend: {
-          position: 'bottom',
-          offsetY: 0,
-          fontSize: '12px',
-          fontFamily: 'Poppins, sans-serif',
-          markers: {
-            fillColors: colors,
-            width: 15,
-            height: 15,
-            strokeWidth: 0,
-            radius: 12,
-          },
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return val + " pasien";
-            }
-          }
+    function startStatusCheck() {
+        if (!statusCheckInterval) {
+            statusCheckInterval = setInterval(checkStatus, 5000);
         }
-      };
-
-      const chart = new ApexCharts(document.getElementById('penyakitChart'), options);
-      chart.render();
     }
 
-    if (document.getElementById('penyakitPieChart')) {
-      const labels = jenisPenyakitData.map(item => item.nama);
-      const series = jenisPenyakitData.map(item => item.pasien_count);
+    function stopStatusCheck() {
+        if (statusCheckInterval) {
+            clearInterval(statusCheckInterval);
+            statusCheckInterval = null;
+        }
+    }
 
-      const options = {
-        series: series,
-        chart: {
-          width: '100%',
-          height: 300,
-          type: 'pie',
-        },
-        labels: labels,
-        colors: colors.slice(0, jenisPenyakitData.length),
-        legend: {
-          position: 'bottom',
-          fontSize: '12px',
-          fontFamily: 'Poppins, sans-serif',
-          markers: {
-            width: 15,
-            height: 15,
-            strokeWidth: 0,
-            radius: 12,
-          },
-        },
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 300
-            },
-            legend: {
-              position: 'bottom'
+    async function refreshQR() {
+        loadQRCode();
+    }
+    async function logout() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        const originalText = logoutBtn.innerHTML;
+
+        try {
+            logoutBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Logging out...';
+            logoutBtn.disabled = true;
+
+            const response = await axios.get('logoutWhatsapp');
+
+            if (response.data.status === 'success') {
+                showDisconnected('Logged out successfully');
+                setTimeout(() => {
+                    loadQRCode();
+                }, 1000);
+            } else {
+                throw new Error(response.data.message || 'Logout failed');
             }
-          }
-        }],
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return val + " pasien";
+        } catch (error) {
+            console.error('Error during logout:', error);
+            showDisconnected(error.response?.data?.message || 'Logout failed. Please try again.');
+        } finally {
+            logoutBtn.innerHTML = originalText;
+            logoutBtn.disabled = false;
+        }
+    }
+
+    function animateCounter(elementId, endValue, duration = 2000) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        const startValue = 0;
+        const frameDuration = 1000 / 60;
+        const totalFrames = Math.round(duration / frameDuration);
+        const valueIncrement = endValue / totalFrames;
+
+        let currentValue = startValue;
+        let frame = 0;
+
+        function easeOutQuad(t) {
+            return t * (2 - t);
+        }
+
+        const counter = setInterval(() => {
+            frame++;
+            const progress = easeOutQuad(frame / totalFrames);
+            currentValue = startValue + (endValue * progress);
+
+            if (frame === totalFrames) {
+                clearInterval(counter);
+                element.textContent = endValue.toLocaleString('id-ID');
+                element.classList.add('counter-finished');
+
+                setTimeout(() => {
+                    element.classList.remove('counter-finished');
+                }, 500);
+            } else {
+                element.textContent = Math.floor(currentValue).toLocaleString('id-ID');
             }
-          }
-        },
-      };
-
-      const chart = new ApexCharts(document.getElementById('penyakitPieChart'), options);
-      chart.render();
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    loadQRCode();
-    initCharts();
-    initCounters();
-  });
-
-  function animateCounter(elementId, endValue, duration = 2000) {
-    const element = document.getElementById(elementId);
-    if (!element) return;
-
-    const startValue = 0;
-    const frameDuration = 1000 / 60;
-    const totalFrames = Math.round(duration / frameDuration);
-    const valueIncrement = endValue / totalFrames;
-
-    let currentValue = startValue;
-    let frame = 0;
-
-    function easeOutQuad(t) {
-      return t * (2 - t);
+        }, frameDuration);
     }
 
-    const counter = setInterval(() => {
-      frame++;
-      const progress = easeOutQuad(frame / totalFrames);
-      currentValue = startValue + (endValue * progress);
-
-      if (frame === totalFrames) {
-        clearInterval(counter);
-        element.textContent = endValue.toLocaleString('id-ID');
-        element.classList.add('counter-finished');
-
-        setTimeout(() => {
-          element.classList.remove('counter-finished');
-        }, 500);
-      } else {
-        element.textContent = Math.floor(currentValue).toLocaleString('id-ID');
-      }
-    }, frameDuration);
-  }
-
-  function initCounters() {
-    const counters = [
-      { id: 'pasienBaruCounter', value: {{ pasienBaruCount }}, duration: 1500 },
-      { id: 'totalPasienCounter', value: {{ totalPasien }}, duration: 2000 },
-      { id: 'totalObatCounter', value: {{ totalObat }}, duration: 1700 },
-      { id: 'penyakitCounter', value: {{ penyakitTerbanyak.pasien_count || 0 }}, duration: 1600 }
+    function initCounters() {
+        const counters = [
+            { id: 'pasienBaruCounter', value: {{ pasienBaruCount }}, duration: 1500 },
+    { id: 'totalPasienCounter', value: { { totalPasien } }, duration: 2000 },
+    { id: 'totalObatCounter', value: { { totalObat } }, duration: 1700 },
+    { id: 'penyakitCounter', value: { { penyakitTerbanyak.pasien_count || 0 } }, duration: 1600 }
     ];
 
-  counters.forEach((counter, index) => {
-    setTimeout(() => {
-      animateCounter(counter.id, counter.value, counter.duration);
-    }, index * 100); // Delay 100ms antar counter
-  });
+    counters.forEach((counter, index) => {
+        setTimeout(() => {
+            animateCounter(counter.id, counter.value, counter.duration);
+        }, index * 100); // Delay 100ms antar counter
+    });
   }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadQRCode();
+        initCharts();
+        initCounters();
+    });
 </script>
