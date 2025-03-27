@@ -8685,5 +8685,149 @@
       }
     },
     "verifiedBizName": ""
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:54@s.whatsapp.net",
+      "id": "3EB00003DF8606F9D7C4BB",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:54@s.whatsapp.net",
+      "id": "3EB00003DF8606F9D7C4BB",
+      "fromMe": true
+    },
+    "contactId": "63e16b5e-4747-4931-9bac-f9dfd6bf0d40",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB00003DF8606F9D7C4BB",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB00003DF8606F9D7C4BB",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB00003DF8606F9D7C4BB",
+      "fromMe": true
+    },
+    "contactId": "f62a5fc5-a548-4462-b501-a4fb952bb6ac",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB00003DF8606F9D7C4BB",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:56@s.whatsapp.net",
+      "id": "3EB00003DF8606F9D7C4BB",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:56@s.whatsapp.net",
+      "id": "3EB00003DF8606F9D7C4BB",
+      "fromMe": true
+    },
+    "contactId": "ad4861ea-f7a4-4380-b89f-1a96cdeb3bef",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB00003DF8606F9D7C4BB",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:54@s.whatsapp.net",
+      "id": "3EB00003DF8606F9D7C4BB",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:54@s.whatsapp.net",
+      "id": "3EB00003DF8606F9D7C4BB",
+      "fromMe": true
+    },
+    "contactId": "63e16b5e-4747-4931-9bac-f9dfd6bf0d40",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB00003DF8606F9D7C4BB",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:54@s.whatsapp.net",
+      "id": "3EB090BCED34E98C157C25",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:54@s.whatsapp.net",
+      "id": "3EB090BCED34E98C157C25",
+      "fromMe": true
+    },
+    "contactId": "63e16b5e-4747-4931-9bac-f9dfd6bf0d40",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB090BCED34E98C157C25",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB090BCED34E98C157C25",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB090BCED34E98C157C25",
+      "fromMe": true
+    },
+    "contactId": "f62a5fc5-a548-4462-b501-a4fb952bb6ac",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB090BCED34E98C157C25",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
   }
 ]

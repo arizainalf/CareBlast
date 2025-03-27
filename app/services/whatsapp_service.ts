@@ -15,7 +15,7 @@ import { cuid } from '@adonisjs/core/helpers'
 
 
 let socket: any
-let sendingFile = false;
+let sendingFile = false;  
 let sentFileMessages = new Set<string>();
 
 const __filename = fileURLToPath(import.meta.url)
