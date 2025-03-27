@@ -17,6 +17,9 @@
 
   <!-- PAGE TITLE HERE -->
   <title>{{ title }} | BlastCare</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+
   <!-- Form step -->
   <link href="{{ asset('vendor/jquery-smartwizard/dist/css/smart_wizard.min.css') }}" rel="stylesheet">
   <!-- FAVICONS ICON -->
@@ -48,7 +51,6 @@
   <!-- Style css -->
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
   {{-- qr code configuration --}}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <!-- Toastr -->
@@ -249,8 +251,9 @@
   @endif
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const logoutButton = document.getElementById('logoutButton')
+
+    function logoutBtn(buttonId) {
+      const logoutButton = document.getElementById(buttonId)
       logoutButton.addEventListener('click', function (event) {
         event.preventDefault()
 
@@ -291,6 +294,12 @@
           }
         })
       })
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Inisialisasi tombol logout
+      logoutBtn('logoutButton')
+      logoutBtn('logoutButton2')
     })
   </script>
 

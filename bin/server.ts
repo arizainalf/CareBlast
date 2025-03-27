@@ -12,6 +12,8 @@
 import 'reflect-metadata'
 import { Ignitor, prettyPrintError } from '@adonisjs/core'
 import { connectToWhatsApp } from '#services/whatsapp_service'
+import '#start/scheduler'
+
 
 /**
  * URL to the application root. AdonisJS need it to resolve

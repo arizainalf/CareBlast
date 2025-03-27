@@ -51,6 +51,7 @@ export async function connectToWhatsApp() {
       return;
     }
 
+    console.log('message upsert')
     await saveMessages(m)
     saveFile('./messages.json', m, 'messages')
   })
@@ -73,6 +74,8 @@ export async function connectToWhatsApp() {
       return;
     }
 
+    console.log('message update')
+
     saveMessages(m)
     saveFile('./messages.json', m, 'messages')
   });
@@ -87,13 +90,26 @@ export async function connectToWhatsApp() {
 
 export async function getQrCode(): Promise<string> {
   return new Promise((resolve, reject) => {
-    if (!socket) return reject('Socket not connected')
+    const cacheDir = './whatsappAuth'
+    const sessionExists = fs.existsSync(cacheDir) && fs.readdirSync(cacheDir).length > 0
+
+    if (sessionExists) {
+      return resolve('You are already logged in')
+    }
+
+    if (!socket) {
+      return reject('Socket not connected')
+    }
 
     socket.ev.on('connection.update', (update: any) => {
+      console.log('Connection update:', update)
       const { qr } = update
       if (qr) {
+        console.log('QR Code updated')
         const imageBuffer = qrImage.imageSync(qr, { type: 'png' })
-        return resolve(imageBuffer.toString('base64'))
+        const base64Image = imageBuffer.toString('base64')
+
+        return resolve(base64Image)
       }
     })
   })
@@ -149,13 +165,16 @@ export async function getStatus() {
       return 'Closed'
     }
   })
-}
+  return socket?.isConnected
+ }
 
 export async function sendMsg(number: string, message: string) {
+  let waId;
   if (number.endsWith('@s.whatsapp.net')) {
-    number = number.split('@')[0]
+    waId = number.split('@')[0]
+    console.log(waId, number)
   }
-  const NumberFormatted = NumberHelper(number)
+  const NumberFormatted = NumberHelper(waId ? waId : number )
   const jid = `${NumberFormatted}@s.whatsapp.net`
 
   if (!socket) {
@@ -169,7 +188,7 @@ export async function sendMsg(number: string, message: string) {
       sentFileMessages = new Set();
     }
     sentFileMessages.add(sentMsg.key.id);
-    
+
     const contact = await Contact.findBy('wa_id', jid)
     const contactId = contact?.id
     const groupId = null
@@ -182,7 +201,7 @@ export async function sendMsg(number: string, message: string) {
       messageType: 'documentMessage',
       content: message,
       timestamp: DateTime.now(),
-      isHasilLab: true
+      isHasilLab: false
     })
 
     // After sending, clear the flag

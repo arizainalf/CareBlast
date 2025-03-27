@@ -179,9 +179,6 @@
 @include('dashboard/partials/script')
 
 <script>
-  // Inisialisasi saat halaman dimuat
-  loadQRCode();
-
   const jenisPenyakitData = {{{ JSON.stringify(jenisPenyakitData) }}};
   const monthlyData = {{{ JSON.stringify(monthlyData) }}};
   const colors = ['#886CC0', '#FFCF6D', '#FFA7D7', '#6CBCB7', '#FF7778', '#5FAAE3', '#50C45E', '#DFA73A'];
@@ -324,11 +321,6 @@
       chart.render();
     }
   }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    loadQRCode();
-    initCharts();
-  });
 </script>
 @end
 
