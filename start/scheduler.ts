@@ -2,7 +2,7 @@ import cron from 'node-cron'
 import ObatPasien from '#models/obat_pasien'
 import { sendMsg } from '#services/whatsapp_service'
 
-cron.schedule('*/1 * * * *', async () => {
+cron.schedule('*/30 * * * *', async () => {
     console.log('Cron job started')
     try {
         console.log('try')
