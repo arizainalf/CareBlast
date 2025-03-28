@@ -8,29 +8,32 @@
       <form id="edit-medicine-form">
         {{ csrfField() }}
         <input type="hidden" id="edit-obat-uuid" name="uuid" value="">
-        <div class="mb-2">
-          <label class="form-label">Keterangan Waktu</label>
-          <select id="edit-keterangan-waktu" class="form-select" name="keteranganWaktu">
-            <option value="Sesudah makan">Sesudah makan</option>
-            <option value="Sebelum makan">Sebelum makan</option>
-          </select>
-        </div>
-        <div class="mb-2">
-          <label class="form-label">Berapa kali sehari</label>
-          <select id="frequency-select" class="form-select" name="frekuensi">
-            <option value="1">sehari 1x</option>
-            <option value="2">sehari 2x</option>
-            <option value="3">sehari 3x</option>
-            <option value="4">sehari 4x</option>
-          </select>
-        </div>
-        <div id="time-inputs">
-          <label class="form-label">Pada jam berapa?</label>
-          <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
-            <input type="text" class="form-control clockpicker-input" value="08:00">
-            <span class="input-group-text"><i class="far fa-clock"></i></span>
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <label class="form-label">Keterangan Waktu</label>
+            <select id="edit-keterangan-waktu" class="form-select" name="keteranganWaktu">
+              <option value="Sesudah makan">Sesudah makan</option>
+              <option value="Sebelum makan">Sebelum makan</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="form-label">Berapa kali sehari</label>
+            <select id="frequency-select" class="form-select" name="frekuensi">
+              <option value="1">sehari 1x</option>
+              <option value="2">sehari 2x</option>
+              <option value="3">sehari 3x</option>
+              <option value="4">sehari 4x</option>
+            </select>
           </div>
         </div>
+        <div class="mb-2">
+          <label class="form-label">Waktu Konsumsi</label>
+          <div id="time-inputs" class="time-inputs-grid">
+            <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
+              <input type="text" class="form-control clockpicker-input" value="08:00">
+              <span class="input-group-text"><i class="far fa-clock"></i></span>
+            </div>
+          </div>
       </form>
     </div>
     <div class="modal-footer">

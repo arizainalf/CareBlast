@@ -1,3 +1,26 @@
+<style>
+  .time-inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .time-inputs-grid .input-group {
+    margin-bottom: 0.5rem;
+  }
+
+  .time-inputs-grid .form-label {
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+  }
+
+  @media (max-width: 576px) {
+    .time-inputs-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const frequencySelect = document.getElementById("frequency-select");
@@ -18,20 +41,29 @@
     function updateTimeInputs(frequency, times = []) {
       timeInputsContainer.innerHTML = "";
 
+      const normalizedTimes = Array.isArray(times) ? times : [times];
+
       for (let i = 0; i < frequency; i++) {
-        const defaultTime = times[i] || "";
+        const defaultTime = normalizedTimes[i] || "";
 
         const inputGroup = document.createElement("div");
-        inputGroup.classList.add("input-group", "mb-2");
+        inputGroup.classList.add("input-group");
 
         inputGroup.innerHTML = `
-            <label class="form-label">Pada jam ke-${i + 1}?</label>
-            <div class="input-group clockpicker" data-autoclose="true">
-                <input type="text" class="form-control clockpicker-input" value="${defaultTime}" name="waktu[]" placeholder="Pilih waktu" required>
-                <span class="input-group-text"><i class="far fa-clock"></i></span>
-            </div>
-            <div class="invalid-feedback">Waktu tidak boleh kosong</div>
-        `;
+        <div class="w-100">
+          <label class="form-label">Jam ke-${i + 1}</label>
+          <div class="input-group clockpicker" data-autoclose="true">
+            <input type="text" class="form-control clockpicker-input"
+                   value="${defaultTime}"
+                   name="waktu[]"
+                   placeholder="Pilih waktu"
+                   required>
+            <span class="input-group-text"><i class="far fa-clock"></i></span>
+          </div>
+          <div class="invalid-feedback">Waktu tidak boleh kosong</div>
+        </div>
+      `;
+
         timeInputsContainer.appendChild(inputGroup);
       }
 
@@ -51,29 +83,46 @@
         const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
 
         let waktuArray = [];
-        try {
-          waktuArray = JSON.parse(waktuStr);
-        } catch (e) {
-          console.error("Error parsing waktu:", e);
-          waktuArray = [];
+        if (typeof waktuStr === 'string') {
+          try {
+            waktuArray = JSON.parse(waktuStr);
+          } catch (e) {
+            waktuArray = waktuStr.includes(',')
+              ? waktuStr.split(',').map(time => time.trim())
+              : [waktuStr.trim()];
+          }
         }
 
-        if (modalTitle) modalTitle.textContent = `Edit Obat ${obatNama}`;
-        if (editObatUuidInput) editObatUuidInput.value = obatUuid;
-        if (editKeteranganWaktu) editKeteranganWaktu.value = keteranganWaktu;
+        waktuArray = waktuArray.filter(time => time && typeof time === 'string');
 
-        currentObatUuid = obatUuid;
+        if (modalTitle) {
+          modalTitle.textContent = `Edit Obat ${obatNama}`;
+        }
+
+        if (editObatUuidInput) {
+          editObatUuidInput.value = obatUuid;
+        }
+
+        if (editKeteranganWaktu) {
+          editKeteranganWaktu.value = keteranganWaktu;
+        }
 
         if (frequencySelect) {
           frequencySelect.value = frekuensi;
+        }
+
+        if (frequencySelect) {
           updateTimeInputs(frekuensi, waktuArray);
         }
+        currentObatUuid = obatUuid;
       });
     });
 
     if (saveButton) {
       saveButton.addEventListener("click", function () {
-        const obatUuid = editObatUuidInput ? editObatUuidInput.value : currentObatUuid;
+        const obatUuid = editObatUuidInput
+          ? editObatUuidInput.value
+          : currentObatUuid;
 
         if (!obatUuid) {
           alert('Error: ID obat tidak ditemukan');
@@ -84,9 +133,8 @@
         const keteranganWaktu = editKeteranganWaktu.value;
         const timeInputs = document.querySelectorAll("input[name='waktu[]']");
 
-        // Validasi input waktu
         let isValid = true;
-        timeInputs.forEach((input, index) => {
+        timeInputs.forEach(input => {
           if (!input.value.trim()) {
             input.classList.add('is-invalid');
             isValid = false;
@@ -95,14 +143,12 @@
           }
         });
 
-        // Jika tidak valid, hentikan proses
         if (!isValid) {
           alert('Harap isi semua waktu konsumsi');
           return;
         }
 
         const waktuArray = Array.from(timeInputs).map(input => input.value);
-
         const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
         fetch(`/obat-pasien/${obatUuid}`, {

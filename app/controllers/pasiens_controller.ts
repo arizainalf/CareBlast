@@ -104,7 +104,7 @@ export default class PasiensController {
           throw new Error('Golongan darah tidak valid')
         }
 
-        saveContact( data.no_hp, data.name)
+        saveContact(data.no_hp, data.name)
 
         await Pasien.create(data, { client: trx })
       })

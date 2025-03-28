@@ -69,7 +69,9 @@ router
         router.get('/whatsapps', async ({ view }) => {
           return view.render('whatsapps/whatsapp')
         })
-        router.get('/get-all-contact/', [WhatsappsController, 'getAllContact']).as('get-all-contact')
+        router
+          .get('/get-all-contact/', [WhatsappsController, 'getAllContact'])
+          .as('get-all-contact')
         router.get('/get-chat/:id', [WhatsappsController, 'getChat']).as('get-chat')
         router.get('/chat/:id/new-messages', [WhatsappsController, 'getNewMessages'])
         router.get('/qrcode', [WhatsappsController, 'getQrCode']).as('qrcode')
@@ -108,7 +110,9 @@ router
         router.get('/hasil-lab', async ({ view }) => {
           return view.render('hasil-lab/index')
         })
-        router.get('/hasil-lab/all', [WhatsappsController, 'getAllHasilLab']).as('get-all-hasil-lab')
+        router
+          .get('/hasil-lab/all', [WhatsappsController, 'getAllHasilLab'])
+          .as('get-all-hasil-lab')
         router.get('/hasil-lab/:uuid', [WhatsappsController, 'getHasilLab']).as('get-hasil-lab')
 
         // Error pages
