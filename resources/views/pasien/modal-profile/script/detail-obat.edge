@@ -2,80 +2,152 @@
   document.addEventListener('DOMContentLoaded', function () {
     const detailModal = document.getElementById('medicationDetailModal');
 
-    detailModal.addEventListener('show.bs.modal', function (event) {
-      const medicationName = event.relatedTarget;
-      const uuid = medicationName.getAttribute('data-uuid');
-      const nama = medicationName.getAttribute('data-nama');
-      const dosis = medicationName.getAttribute('data-dosis');
-      const frekuensi = medicationName.getAttribute('data-frekuensi');
-      const waktuJSON = medicationName.getAttribute('data-waktu');
-      const keteranganWaktu = medicationName.getAttribute('data-keterangan-waktu') ||
-        (medicationName.closest('.list-group').querySelector('.list-group-item:first-child').textContent.includes('Sebelum') ?
-          'Sebelum makan' : 'Sesudah makan');
-      const isBeforeMeal = keteranganWaktu.toLowerCase().includes('sebelum');
-      const themeColor = isBeforeMeal ? 'primary' : 'secondary';
-      const modalHeader = detailModal.querySelector('.modal-header');
-      const divider = detailModal.querySelector('hr');
-      const categoryBadge = detailModal.querySelector('.modal-medication-category');
-      const iconContainers = detailModal.querySelectorAll('.rounded-circle');
-      const editButton = detailModal.querySelector('.modal-edit-button');
+    if (!detailModal) {
+      console.error('Elemen modal tidak ditemukan!');
+      return;
+    }
 
-      modalHeader.className = `modal-header bg-${themeColor} text-white`;
-      divider.className = `text-${themeColor} opacity-100 mt-2 mb-1`;
-      categoryBadge.className = `badge bg-bg-white bg-opacity-10 text-${themeColor} border border-${themeColor} border-opacity-25 rounded-pill modal-medication-category px-3 py-2 fs-6`;
-      iconContainers.forEach(container => {
-        container.className = `bg-${themeColor} bg-opacity-10 text-white rounded-circle p-3 me-3 d-flex align-items-center justify-content-center`;
-      });
-      editButton.className = `btn btn-${themeColor} modal-edit-button`;
+    const modalInstance = new bootstrap.Modal(detailModal);
 
-      let waktuArray = [];
+    detailModal.addEventListener('show.bs.modal', async function (event) {
       try {
-        waktuArray = JSON.parse(waktuJSON);
-      } catch (error) {
-        console.error('Error parsing waktu JSON:', error);
-        if (waktuJSON) {
-          try {
-            waktuArray = JSON.parse(waktuJSON.replace(/'/g, '"'));
-          } catch (e) {
-            console.error('Second attempt to parse waktu failed:', e);
-            waktuArray = [waktuJSON];
+        const medicationName = event.relatedTarget;
+
+        if (!medicationName) {
+          console.error('Elemen related target tidak ditemukan!');
+          return;
+        }
+
+        const uuid = medicationName.getAttribute('data-uuid');
+
+        if (!uuid) {
+          console.error('UUID obat pasien tidak ditemukan!');
+          return;
+        }
+
+        const modalBody = detailModal.querySelector('.modal-body');
+        if (modalBody) {
+          modalBody.innerHTML = `
+          <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Mengambil data obat...</p>
+          </div>
+        `;
+        }
+
+        const response = await fetch(`/obat-pasien/${uuid}/detail`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.message || 'Gagal mengambil data obat');
+        }
+
+        const data = result.data;
+        console.log('Data obat yang diterima dari API:', data);
+
+        detailModal.innerHTML = document.getElementById('detailModalTemplate').innerHTML;
+
+        const isBeforeMeal = data.isBeforeMeal;
+        const themeColor = isBeforeMeal ? 'primary' : 'secondary';
+
+        const modalHeader = detailModal.querySelector('.modal-header');
+        const divider = detailModal.querySelector('hr');
+        const categoryBadge = detailModal.querySelector('.modal-medication-category');
+        const iconContainers = detailModal.querySelectorAll('.rounded-circle');
+        const editButton = detailModal.querySelector('.modal-edit-button');
+
+        if (modalHeader) modalHeader.className = `modal-header bg-${themeColor} text-white`;
+        if (divider) divider.className = `text-${themeColor} opacity-100 mt-2 mb-1`;
+        if (categoryBadge) categoryBadge.className = `badge rounded-pill bg-${themeColor} bg-opacity-25 text-white modal-medication-category px-3 py-2 fs-6`;
+
+        iconContainers.forEach(container => {
+          container.className = `bg-${themeColor} bg-opacity-10 text-white rounded-circle p-3 me-3 d-flex align-items-center justify-content-center`;
+        });
+
+        if (editButton) editButton.className = `btn btn-${themeColor} modal-edit-button`;
+
+        const nameElement = detailModal.querySelector('.modal-medication-name');
+        const doseElement = detailModal.querySelector('.modal-medication-dose');
+        const frequencyElement = detailModal.querySelector('.modal-medication-frequency');
+        const scheduleElement = detailModal.querySelector('.modal-medication-schedule');
+
+        if (nameElement) nameElement.textContent = data.obat.nama || 'N/A';
+        if (categoryBadge) categoryBadge.textContent = data.keteranganWaktu || 'N/A';
+        if (doseElement) doseElement.textContent = data.obat.dosis ? `${data.obat.dosis} mg` : 'N/A';
+        if (frequencyElement) frequencyElement.textContent = data.frekuensi ? `${data.frekuensi}x sehari` : 'N/A';
+
+        if (scheduleElement) {
+          scheduleElement.innerHTML = '';
+          console.log('Membangun jadwal dengan waktu:', data.waktuKonsumsi);
+
+          if (data.waktuKonsumsi && data.waktuKonsumsi.length > 0) {
+            data.waktuKonsumsi.forEach(waktu => {
+              if (waktu && waktu.trim() !== '') {
+                const timeCol = document.createElement('div');
+                timeCol.className = 'col-auto mb-2';
+
+                const timeTag = document.createElement('div');
+                timeTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
+                timeTag.innerHTML = `<i class="far fa-clock me-2"></i>${waktu}`;
+
+                console.log('Menambahkan elemen waktu:', waktu);
+                timeCol.appendChild(timeTag);
+                scheduleElement.appendChild(timeCol);
+              }
+            });
+          }
+
+          if (scheduleElement.children.length === 0) {
+            console.log('Tidak ada waktu yang valid, menambahkan placeholder');
+            const timeCol = document.createElement('div');
+            timeCol.className = 'col-12 text-center';
+            timeCol.innerHTML = '<p class="text-muted">Tidak ada jadwal yang ditentukan</p>';
+            scheduleElement.appendChild(timeCol);
           }
         }
+
+        if (editButton) {
+          editButton.onclick = function () {
+            const editSpan = document.querySelector(`.edit-obat[data-uuid="${uuid}"]`);
+            const modalInstance = bootstrap.Modal.getInstance(detailModal);
+
+            if (modalInstance) {
+              modalInstance.hide();
+
+              setTimeout(() => {
+                if (editSpan) {
+                  editSpan.click();
+                } else {
+                  console.error('Tombol edit dengan UUID', uuid, 'tidak ditemukan');
+                }
+              }, 400);
+            }
+          };
+        }
+
+      } catch (error) {
+        console.error('Error saat menyiapkan modal detail obat:', error);
+
+        const modalBody = detailModal.querySelector('.modal-body');
+        if (modalBody) {
+          modalBody.innerHTML = `
+          <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Terjadi kesalahan saat mengambil detail obat. Silakan coba lagi.
+          </div>
+        `;
+        }
       }
+    });
 
-      const nameElement = detailModal.querySelector('.modal-medication-name');
-      const doseElement = detailModal.querySelector('.modal-medication-dose');
-      const frequencyElement = detailModal.querySelector('.modal-medication-frequency');
-      const scheduleElement = detailModal.querySelector('.modal-medication-schedule');
-
-      nameElement.textContent = nama;
-      categoryBadge.textContent = keteranganWaktu;
-      doseElement.textContent = `${dosis} mg`;
-      frequencyElement.textContent = `${frekuensi}x sehari`;
-      scheduleElement.innerHTML = '';
-      waktuArray.forEach(waktu => {
-        const timeCol = document.createElement('div');
-        timeCol.className = 'col-md-6 col-sm-9 col-6 mb-2';
-
-        const timeTag = document.createElement('div');
-        timeTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
-        timeTag.innerHTML = `<i class="far fa-clock me-2"></i>${waktu}`;
-
-        timeCol.appendChild(timeTag);
-        scheduleElement.appendChild(timeCol);
-      });
-
-      editButton.onclick = function () {
-        const editSpan = document.querySelector(`.edit-obat[data-uuid="${uuid}"]`);
-        const detailModalInstance = bootstrap.Modal.getInstance(detailModal);
-        detailModalInstance.hide();
-
-        setTimeout(() => {
-          if (editSpan) {
-            editSpan.click();
-          }
-        }, 400);
-      };
+    detailModal.addEventListener('hidden.bs.modal', function () {
     });
   });
 </script>

@@ -180,4 +180,75 @@ export default class ObatPasiensController {
       })
     }
   }
+  async getDetail({ params, response }: HttpContext) {
+    try {
+      const { uuid } = params
+
+      if (!uuid) {
+        return response.status(400).json({
+          success: false,
+          message: 'UUID obat pasien diperlukan',
+        })
+      }
+
+      const obatPasien = await ObatPasien.query()
+        .where('uuid', uuid)
+        .preload('obat')
+        .preload('kunjungan')
+        .first()
+
+      if (!obatPasien) {
+        return response.status(404).json({
+          success: false,
+          message: 'Data obat pasien tidak ditemukan',
+        })
+      }
+
+      let waktuKonsumsi = []
+      try {
+        if (typeof obatPasien.waktuKonsumsi === 'string') {
+          if (
+            obatPasien.waktuKonsumsi.trim().startsWith('[') &&
+            obatPasien.waktuKonsumsi.trim().endsWith(']')
+          ) {
+            waktuKonsumsi = JSON.parse(obatPasien.waktuKonsumsi)
+          } else if (obatPasien.waktuKonsumsi.includes(',')) {
+            waktuKonsumsi = obatPasien.waktuKonsumsi.split(',').map((time) => time.trim())
+          } else {
+            waktuKonsumsi = [obatPasien.waktuKonsumsi.trim()]
+          }
+        } else if (Array.isArray(obatPasien.waktuKonsumsi)) {
+          waktuKonsumsi = obatPasien.waktuKonsumsi
+        }
+      } catch (error) {
+        console.error('Error parsing waktu konsumsi:', error)
+        waktuKonsumsi = obatPasien.waktuKonsumsi ? [String(obatPasien.waktuKonsumsi)] : []
+      }
+
+      const formattedData = {
+        uuid: obatPasien.uuid,
+        obat: {
+          id: obatPasien.obat.id,
+          nama: obatPasien.obat.nama,
+          dosis: obatPasien.obat.dosis,
+        },
+        frekuensi: obatPasien.frekuensi,
+        keteranganWaktu: obatPasien.keteranganWaktu,
+        waktuKonsumsi: waktuKonsumsi,
+        isBeforeMeal: obatPasien.keteranganWaktu.toLowerCase().includes('sebelum'),
+      }
+
+      return response.json({
+        success: true,
+        data: formattedData,
+      })
+    } catch (error) {
+      console.error('Error fetching medication details:', error)
+      return response.status(500).json({
+        success: false,
+        message: 'Terjadi kesalahan saat mengambil detail obat',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
+    }
+  }
 }
