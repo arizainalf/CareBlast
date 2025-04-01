@@ -56,6 +56,7 @@ router
         router.delete('/pasien/:uuid/obat-kunjungan', [ObatPasiensController, 'destroyByKunjungan'])
         router.post('/pasien/:uuid/kunjungan', [KunjungansController, 'store'])
         router.get('/pasiens', [PasiensController, 'index'])
+        router.get('/obat-pasien/:uuid/detail', [ObatPasiensController, 'getDetail'])
 
         router.get('/data-kunjungan', [KunjungansController, 'index'])
         router.get('/kunjungan/search', [KunjungansController, 'search'])
