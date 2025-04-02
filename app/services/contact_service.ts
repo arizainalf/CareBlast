@@ -21,13 +21,14 @@ export async function saveContact(jid: string, name: string | null) {
       profilePicture = await getProfilePicture(jid)
     } catch (error) {
       console.log('Gagal ambil foto profil:', error)
+      profilePicture = 'images/users/user.png'
     }
 
     const contact = await Contact.create({
       waId: jid,
       username: name || 'Unknown',
       name: name || '',
-      profilePicture: profilePicture || null
+      profilePicture: profilePicture
     })
 
     const newContact = { number, username: name || 'Unknown' }

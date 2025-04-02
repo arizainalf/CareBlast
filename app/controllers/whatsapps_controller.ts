@@ -51,9 +51,19 @@ export default class WhatsappsController {
 
   public async getChat({ response, params }: HttpContext) {
     const message = await Message.query().where('contact_id', params.id).preload('contact').preload('group').orderBy('timestamp', 'asc')
+    const contact = await Contact.findBy('id', params.id)
     return response.json({
       status: 'success',
       message,
+      contact
+    })
+  }
+
+  public async getContact({ response, params }: HttpContext) {
+    const contact = await Contact.findBy('id', params.id)
+    return response.json({
+      status: 'success',
+      contact
     })
   }
   

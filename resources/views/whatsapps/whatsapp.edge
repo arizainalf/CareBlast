@@ -20,7 +20,7 @@
         <div class="flex-grow-1 overflow-auto" id="contact-list">
 
           <div class="list-group list-group-flush">
-            <label class="list-group-item d-flex align-items-center py-3 border-bottom">
+            <label class="list-group-item d-flex align-items-center py-1 border-bottom">
               <input class="form-check-input me-3" type="checkbox" value="">
               <div class="d-flex justify-content-between align-items-center w-100">
                 <div>
@@ -33,13 +33,6 @@
           </div>
 
         </div>
-
-        <div class="p-3 border-top mt-auto bg-white">
-          <button class="btn btn-outline-secondary btn-sm w-100">
-            <i class="fas fa-check-double me-1"></i> Select All Groups
-          </button>
-        </div>
-
       </div>
     </div>
 
@@ -52,7 +45,11 @@
           <div class="row align-items-center my-2">
             <div class="col d-flex align-items-center gap-2">
               <img id="pp" src="{{ asset('images/users/user.png') }}" style="width: 50px;">
-              <h5 class="mb-0" id="chat-head">Broadcast Message</h5>
+              <h5 class="mb-0" id="chat-head">Kontak</h5>
+              <button class="btn btn-primary btn-sm flex-grow-1" data-bs-toggle="modal" data-bs-target="#editKontak"
+                id="buttonEditKontak">
+                <i class="fas fa-plus me-1"></i>Edit
+              </button>
             </div>
           </div>
         </div>
@@ -136,19 +133,54 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="editKontak" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Kontak</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="kontakEdit">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Nama</label>
+            <input type="text" id="editNama" name="nama" class="form-control" placeholder="Masukan Nama">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nomor</label>
+            <input type="text" id="editNomor" name="nomor" class="form-control" placeholder="Masukan Nomor">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 @end
 
 @slot('scripts')
 
 <script>
 
+  async function getContact(id) {
+    $.get('/get-contact/' + id, function (data) {
+      $('#editNama').val(data.contact.username || data.contact.name)
+      const nomor = formatPhoneNumber(data.contact.waId)
+      $('#editNomor').val(nomor)
+      console.log(data.contact)
+    })
+  }
+
   function getChat(id, nama) {
     $.get('/get-chat/' + id, function (data) {
       console.log('chat +', data)
       $('#contactName').val(nama);
-      $('#WaId').val(data.message[0].contact.waId);
+      $('#WaId').val(data.contact.waId);
       const messages = data.message
-      const pp = data.message[0].contact.profilePicture;
+      const pp = data.contact.profilePicture;
       console.log(pp)
 
       $('#chat-body').html('');
@@ -156,6 +188,7 @@
       $('#send-messages').attr('data-id', id);
 
       $('#chat-head').text(nama);
+
       $('#pp').attr('src', pp).css('width', '50px').css('border-radius', '50%');
 
       messages.forEach(message => {
@@ -239,7 +272,7 @@
     contactList.forEach(contact => {
       $('#contact-list').append(`
           <div class="list-group list-group-flush">
-            <label class="list-group-item d-flex align-items-center py-3 border-bottom">
+            <label class="list-group-item d-flex align-items-center py-1 border-bottom">
               <div class="d-flex justify-content-between align-items-center w-100">
                 <a href="javascript:void(0)" data-pp='${contact.profilePicture}' data-number="${contact.waId}" data-id='${contact.id}' data-nama='${contact.name ? contact.name : contact.username}'  class="contact">
                   <h6 class="mb-0">${contact.name ? contact.name : contact.username}</h6>
@@ -261,10 +294,31 @@
 
       $('#contactName').val(nama);
       $('#WaId').val(number);
+      $('#editKontak').attr('data-id', id);
+      $('#kontakEdit').attr('data-id', id);
+
+
 
       console.log('ditekan', id)
       getChat(id, nama);
     });
+
+    $(document).ready(function () {
+      $('#buttonEditKontak').on('click', function (e) {
+        e.preventDefault();
+        const id = $('#editKontak').data('id');
+        getContact(id)
+      });
+
+      $('#kontakEdit').on('submit', function (e) {
+        e.preventDefault();
+
+        const id = $('#kontakEdit').data('id');
+        console.log(id)
+      });
+    });
+
+
   });
 </script>
 

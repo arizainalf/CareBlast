@@ -2,10 +2,9 @@ import cron from 'node-cron'
 import ObatPasien from '#models/obat_pasien'
 import { sendMsg } from '#services/whatsapp_service'
 
-cron.schedule('*/30 * * * *', async () => {
+cron.schedule('0 * * * *', async () => {
     console.log('Cron job started')
     try {
-        console.log('try')
         const obatPasiens = await ObatPasien.query().preload('pasien').preload('obat')
         const now = getCurrentTime()
 
