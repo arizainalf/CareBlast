@@ -20,6 +20,9 @@ router.post('/login', [SessionController, 'store']).as('loginPost')
 router.get('/forgot', async ({ view }) => {
   return view.render('auth/forgot-pw')
 })
+router.get('/pengguna', async ({ view }) => {
+  return view.render('pengguna/index')
+})
 
 router
   .group(() => {
