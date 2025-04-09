@@ -1,0 +1,104 @@
+:root {
+  --primary: #886cc0;
+  --secondary: #efbae6;
+  --accent: #d653c1;
+  --light-primary: rgba(136, 108, 192, 0.1);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.border-primary {
+  border-color: var(--primary);
+}
+
+.border-secondary {
+  border-color: var(--secondary);
+}
+
+.border-accent {
+  border-color: var(--accent);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item.active {
+  color: var(--accent);
+  border-top: 3px solid var(--accent);
+}
+.card {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.medication-card {
+  border-left: 4px solid var(--primary);
+}
+
+.morning {
+  border-left-color: #f59e0b;
+}
+
+.afternoon {
+  border-left-color: #3b82f6;
+}
+
+.evening {
+  border-left-color: #8b5cf6;
+}
+
+.doctor-avatar {
+  transition: transform 0.3s ease;
+}
+
+.doctor-avatar:hover {
+  transform: scale(1.05);
+}
+
+.time-pill {
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Scrollbar styling */
+.doctor-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.doctor-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.doctor-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 10px;
+}

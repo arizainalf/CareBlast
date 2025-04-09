@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import adonisjs from '@adonisjs/vite/client'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
@@ -15,5 +16,6 @@ export default defineConfig({
        */
       reload: ['resources/views/**/*.edge'],
     }),
+    tailwindcss(),
   ],
 })
