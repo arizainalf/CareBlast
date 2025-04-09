@@ -1,10 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-}
 
-html,
-body {
-  height: 100%;
-  width: 100%;
-}
+/* biome-ignore lint/correctness/noInvalidPositionAtImportRule: <explanation> */
+@import "tailwindcss";
+@source "../views";
