@@ -12,7 +12,6 @@ const authConfig = defineConfig({
         model: () => import('#models/user'),
       }),
     }),
-
     pasien: sessionGuard({
       useRememberMeTokens: true,
       provider: sessionUserProvider({

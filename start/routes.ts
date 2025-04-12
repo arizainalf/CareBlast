@@ -42,7 +42,6 @@ router
         router.put('/users/:id/update', [UsersController, 'update']).as('users.update')
         router.delete('/users/:id', [UsersController, 'destroy']).as('users.delete')
       })
-      .use(middleware.role(['super_admin']))
 
     router
       .group(() => {
@@ -144,6 +143,5 @@ router
           return view.render('pages/errors/503')
         })
       })
-      .use(middleware.role(['super_admin', 'admin']))
   })
-  .use(middleware.auth())
+  .use(middleware.auth({ guards: ['web'] }))
