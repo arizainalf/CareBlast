@@ -18,7 +18,7 @@
           <span class="input-group-text bg-light border-end-0">
             <i class="fas fa-envelope text-muted"></i>
           </span>
-          <input type="email" value="{{ old('email') || '' }}" name="email" class="form-control border-start-0"
+          <input type="text" value="{{ old('email') || '' }}" name="email" class="form-control border-start-0"
             placeholder="Enter your email" />
         </div>
         @if(flashMessages.get('errors.email'))
@@ -65,6 +65,5 @@
 </div>
 
 @end
-
 
 @end

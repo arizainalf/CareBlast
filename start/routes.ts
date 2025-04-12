@@ -20,9 +20,16 @@ router.post('/login', [SessionController, 'store']).as('loginPost')
 router.get('/forgot', async ({ view }) => {
   return view.render('auth/forgot-pw')
 })
-router.get('/pengguna', async ({ view }) => {
-  return view.render('pengguna/index')
-})
+
+router
+  .group(() => {
+    router.get('/', async ({ view }) => {
+      return view.render('pengguna/index')
+    })
+    router.get('/logout', [SessionController, 'destroy']).as('logoutPengguna')
+  })
+  .prefix('/pengguna')
+  .use(middleware.auth({ guards: ['pasien'] }))
 
 router
   .group(() => {
@@ -77,6 +84,7 @@ router
           .get('/get-all-contact/', [WhatsappsController, 'getAllContact'])
           .as('get-all-contact')
         router.get('/get-chat/:id', [WhatsappsController, 'getChat']).as('get-chat')
+        router.get('/get-contact/:id', [WhatsappsController, 'getContact']).as('get-contact')
         router.get('/chat/:id/new-messages', [WhatsappsController, 'getNewMessages'])
         router.get('/qrcode', [WhatsappsController, 'getQrCode']).as('qrcode')
         router.get('/status', [WhatsappsController, 'status']).as('status')

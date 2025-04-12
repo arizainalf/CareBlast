@@ -1,22 +1,22 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { makeWASocket, useMultiFileAuthState, Browsers } from '@whiskeysockets/baileys'
-import fs from 'fs'
+import fs from 'node:fs'
 import qrImage from 'qr-image'
 import { Boom } from '@hapi/boom'
 import { NumberHelper } from '#services/number_service'
 import Contact from '#models/contact'
-import path from 'path'
+import path from 'node:path'
 import HasilLab from '#models/hasil_lab'
 import Message from '#models/message'
 import { DateTime } from 'luxon'
 import { saveFile } from '#services/json_service'
 import { saveMessages } from '#services/message_service'
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 import { cuid } from '@adonisjs/core/helpers'
 
-
 let socket: any
-let sendingFile = false;  
-let sentFileMessages = new Set<string>();
+let sendingFile = false
+let sentFileMessages = new Set<string>()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -45,10 +45,10 @@ export async function connectToWhatsApp() {
     const m = message.messages[0]
 
     if (sentFileMessages && m.key.id && sentFileMessages.has(m.key.id)) {
-      console.log('Skipping messages.update for file message:', m.key.id);
+      console.log('Skipping messages.update for file message:', m.key.id)
       // Remove from set after processing
-      sentFileMessages.delete(m.key.id);
-      return;
+      sentFileMessages.delete(m.key.id)
+      return
     }
 
     console.log('message upsert')
@@ -56,29 +56,28 @@ export async function connectToWhatsApp() {
     saveFile('./messages.json', m, 'messages')
   })
 
-
   if (!sentFileMessages) {
-    sentFileMessages = new Set();
+    sentFileMessages = new Set()
   }
-  sendingFile = false;
+  sendingFile = false
 
   // Event untuk menangkap pesan yang kita kirim
   socket.ev.on('messages.update', async (message: any[]) => {
-    const m = message[0];
+    const m = message[0]
 
     // Skip processing if this is a file message we just sent
     if (sentFileMessages && m.key.id && sentFileMessages.has(m.key.id)) {
-      console.log('Skipping messages.update for file message:', m.key.id);
+      console.log('Skipping messages.update for file message:', m.key.id)
       // Remove from set after processing
-      sentFileMessages.delete(m.key.id);
-      return;
+      sentFileMessages.delete(m.key.id)
+      return
     }
 
     console.log('message update')
 
     saveMessages(m)
     saveFile('./messages.json', m, 'messages')
-  });
+  })
 
   socket.ev.on('messaging-history.set', (history: any) => {
     console.log('History set:', history)
@@ -117,13 +116,15 @@ export async function getQrCode(): Promise<string> {
 
 export async function getProfilePicture(jid: string) {
   try {
-    return await socket.profilePictureUrl(jid, 'image') || 'https://placehold.co/150/orange/white'
+    return (await socket.profilePictureUrl(jid, 'image')) || 'https://placehold.co/150/orange/white'
   } catch {
     return 'https://placehold.co/150/orange/white'
   }
 }
 
-export async function isRegisteredWhatsapp(number: string): Promise<{ isRegistered: boolean, username: string | null }> {
+export async function isRegisteredWhatsapp(
+  number: string
+): Promise<{ isRegistered: boolean; username: string | null }> {
   const NumberFormatted = NumberHelper(number)
   const jid = `${NumberFormatted}@s.whatsapp.net`
   console.log('Nomor:', jid)
@@ -166,15 +167,15 @@ export async function getStatus() {
     }
   })
   return socket?.isConnected
- }
+}
 
 export async function sendMsg(number: string, message: string) {
-  let waId;
+  let waId
   if (number.endsWith('@s.whatsapp.net')) {
     waId = number.split('@')[0]
     console.log(waId, number)
   }
-  const NumberFormatted = NumberHelper(waId ? waId : number )
+  const NumberFormatted = NumberHelper(waId ? waId : number)
   const jid = `${NumberFormatted}@s.whatsapp.net`
 
   if (!socket) {
@@ -185,9 +186,9 @@ export async function sendMsg(number: string, message: string) {
     sendingFile = true
     const sentMsg = await socket.sendMessage(jid, { text: message })
     if (!sentFileMessages) {
-      sentFileMessages = new Set();
+      sentFileMessages = new Set()
     }
-    sentFileMessages.add(sentMsg.key.id);
+    sentFileMessages.add(sentMsg.key.id)
 
     const contact = await Contact.findBy('wa_id', jid)
     const contactId = contact?.id
@@ -201,18 +202,15 @@ export async function sendMsg(number: string, message: string) {
       messageType: 'documentMessage',
       content: message,
       timestamp: DateTime.now(),
-      isHasilLab: false
+      isHasilLab: false,
     })
 
     // After sending, clear the flag
-    sendingFile = false;
-
+    sendingFile = false
     return msgCreate
-
-  }
-  catch (error) {
+  } catch (error) {
     console.log('Error di service:', error)
-    sendingFile = false;
+    sendingFile = false
   }
 }
 
@@ -243,7 +241,7 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
       waId: no,
       username: isRegistered.username ?? '',
       name,
-      profilePicture: pp
+      profilePicture: pp,
     })
   }
 
@@ -261,7 +259,7 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
 
   await file.move(uploadDir, {
     name: sanitizedFileName,
-    overwrite: true // Optional: overwrite if file already exists
+    overwrite: true, // Optional: overwrite if file already exists
   })
   console.log('File moved to:', uploadPath)
 
@@ -274,7 +272,7 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
   try {
     // Set a flag to indicate this is a file being sent
     // We'll use this flag in the messages.update event handler
-    sendingFile = true;
+    sendingFile = true
 
     console.log(no)
 
@@ -287,9 +285,9 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
 
     // Store the message ID to be skipped in messages.update
     if (!sentFileMessages) {
-      sentFileMessages = new Set();
+      sentFileMessages = new Set()
     }
-    sentFileMessages.add(sentMsg.key.id);
+    sentFileMessages.add(sentMsg.key.id)
 
     const contact = await Contact.findBy('wa_id', no)
     const contactId = contact?.id
@@ -309,7 +307,7 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
     })
 
     // After sending, clear the flag
-    sendingFile = false;
+    sendingFile = false
 
     // Store the result in HasilLab with sanitized filename
     await HasilLab.create({
@@ -318,15 +316,15 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
       messageId: sentMsg.key.id,
       fileName: sanitizedFileName, // Store sanitized filename
       filePath: uploadPath,
-      caption: caption
+      caption: caption,
     })
 
-    return sentMsg;
+    return sentMsg
   } catch (error) {
     // Clear the flag in case of error
-    sendingFile = false;
+    sendingFile = false
     console.log('Error di service:', error)
-    throw error;  // Re-throw to propagate error to the caller
+    throw error // Re-throw to propagate error to the caller
   }
 }
 

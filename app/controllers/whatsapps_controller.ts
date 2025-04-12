@@ -36,13 +36,30 @@ export default class WhatsappsController {
     })
   }
 
+  public async updateContact({ request, params, response }: HttpContext) {
+    const contact = await Contact.findOrFail(params.id)
+    const waId = params.waId + '@s.whatsapp.net'
+    const data = request.only(['username', 'name'])
+
+    try {
+      contact.merge({ ...data, waId })
+      await contact.save()
+      return response.json({ success: true, message: 'Pengguna berhasil diperbarui!', contact })
+    } catch (error) {
+      return response.json({ success: false, message: 'Gagal memperbarui pengguna!', error })
+    }
+  }
+
   public async createMsg({ view }: HttpContext) {
     return view.render('messages/create')
   }
 
   public async getAllHasilLab({ response }: HttpContext) {
-    const hasil = await Message.query().where('is_hasil_lab', true).preload('contact').preload('group').orderBy('created_at', 'desc')
-    // console.log('cek', hasil)
+    const hasil = await Message.query()
+      .where('is_hasil_lab', true)
+      .preload('contact')
+      .preload('group')
+      .orderBy('created_at', 'desc')
     return response.json({
       status: 'success',
       hasil,
@@ -50,13 +67,27 @@ export default class WhatsappsController {
   }
 
   public async getChat({ response, params }: HttpContext) {
-    const message = await Message.query().where('contact_id', params.id).preload('contact').preload('group').orderBy('timestamp', 'asc')
+    const message = await Message.query()
+      .where('contact_id', params.id)
+      .preload('contact')
+      .preload('group')
+      .orderBy('timestamp', 'asc')
+    const contact = await Contact.findBy('id', params.id)
     return response.json({
       status: 'success',
       message,
+      contact,
     })
   }
-  
+
+  public async getContact({ response, params }: HttpContext) {
+    const contact = await Contact.findBy('id', params.id)
+    return response.json({
+      status: 'success',
+      contact,
+    })
+  }
+
   async getNewMessages({ params, request, response }: HttpContext) {
     const chatId = params.id
     const lastId = request.input('last_id', 0) // Default 0 jika tidak ada last_id
@@ -80,10 +111,13 @@ export default class WhatsappsController {
 
   public async getHasilLab({ response, params }: HttpContext) {
     // console.log(params)
-    const message = await Message.query().where('id', params.uuid).preload('contact').preload('group')
+    const message = await Message.query()
+      .where('id', params.uuid)
+      .preload('contact')
+      .preload('group')
     return response.json({
       status: 'success',
-      message
+      message,
     })
   }
 
@@ -103,14 +137,20 @@ export default class WhatsappsController {
 
     try {
       const responseMsg = await sendFile(jid, file, caption, name)
-      return response.json({ status: 'success', message: 'Hasil Lab Telah Terkirim!', data: responseMsg })
+      return response.json({
+        status: 'success',
+        message: 'Hasil Lab Telah Terkirim!',
+        data: responseMsg,
+      })
     } catch (error) {
       console.log('error di controller')
       console.log(error)
-      return response.badRequest({ success: false, message: 'Error controller Gagal mengirim file ' + error })
+      return response.badRequest({
+        success: false,
+        message: 'Error controller Gagal mengirim file ' + error,
+      })
     }
   }
-
 
   public async sendMsg({ request, response }: HttpContext) {
     const number = request.input('number')
@@ -128,7 +168,7 @@ export default class WhatsappsController {
       return response.json({
         status: 'success',
         message: 'Hasil Lab Telah Terkirim!',
-        data: responseMsg
+        data: responseMsg,
       })
     }
     const contact = await Contact.findBy('waId', number)
@@ -137,7 +177,7 @@ export default class WhatsappsController {
       status: 'success',
       nama,
       contact,
-      responseMsg
+      responseMsg,
     })
   }
 }

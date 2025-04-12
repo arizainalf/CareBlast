@@ -101,7 +101,7 @@ const confirmDelete = (url, callback) => {
 };
 
 function formatPhoneNumber(phone) {
-  return phone.replace(/@.+$/, '').replace(/^62/, "0").replace(/(\d{4})(\d{4})(\d{4})/, "$1 $2 $3");
+  return phone.replace(/@.+$/, '').replace(/^62/, "0")
 }
 
 function formatTimestamp(timestamp) {

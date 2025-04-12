@@ -10,7 +10,7 @@ export default class RoleMiddleware {
     const user = auth.user
 
     // Cek apakah user memiliki role yang diizinkan
-    if (!user || !allowedRoles.includes(user.role)) {
+    if (!user || !('role' in user) || !allowedRoles.includes(user.role as string)) {
       return response.unauthorized({ message: 'Akses ditolak' })
     }
 
