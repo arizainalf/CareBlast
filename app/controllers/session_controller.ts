@@ -12,6 +12,7 @@ export default class SessionController {
     if (user) {
       try {
         const authenticatedUser = await User.verifyCredentials(email, password)
+        
         await auth.use('web').login(authenticatedUser, !!request.input('remember_me'))
 
         return response.ok({

@@ -10548,5 +10548,117 @@
         }
       }
     }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "378EC525FADA488A3911E68767012C45"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "378EC525FADA488A3911E68767012C45",
+    "messageType": "extendedTextMessage",
+    "content": {
+      "extendedTextMessage": {
+        "text": "Tes",
+        "previewType": "NONE",
+        "contextInfo": {
+          "entryPointConversionSource": "non_contact",
+          "entryPointConversionApp": "whatsapp",
+          "entryPointConversionDelaySeconds": 20063
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "JOcDnLJ0lAZdc/WLzRrr1RbtOqjpGrDykAEgF2w6Pro="
+      }
+    },
+    "timestamp": 1744466317,
+    "text": "Tes",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "378EC525FADA488A3911E68767012C45"
+    },
+    "messageTimestamp": 1744466317,
+    "pushName": "pusatgrosircelanatraining",
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Tes",
+        "previewType": "NONE",
+        "contextInfo": {
+          "entryPointConversionSource": "non_contact",
+          "entryPointConversionApp": "whatsapp",
+          "entryPointConversionDelaySeconds": 20063
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "JOcDnLJ0lAZdc/WLzRrr1RbtOqjpGrDykAEgF2w6Pro="
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "299E6DD7CA93CA6ED919AAAA929AF912"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "299E6DD7CA93CA6ED919AAAA929AF912",
+    "messageType": "extendedTextMessage",
+    "content": {
+      "extendedTextMessage": {
+        "text": "Tes",
+        "previewType": "NONE",
+        "contextInfo": {
+          "entryPointConversionSource": "non_contact",
+          "entryPointConversionApp": "whatsapp",
+          "entryPointConversionDelaySeconds": 20097
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "cNnHtQ8+QrmotC3LMDuUxvl49TzXvX8SUz5k4bXpLTY="
+      }
+    },
+    "timestamp": 1744466318,
+    "text": "Tes",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "299E6DD7CA93CA6ED919AAAA929AF912"
+    },
+    "messageTimestamp": 1744466318,
+    "pushName": "pusatgrosircelanatraining",
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Tes",
+        "previewType": "NONE",
+        "contextInfo": {
+          "entryPointConversionSource": "non_contact",
+          "entryPointConversionApp": "whatsapp",
+          "entryPointConversionDelaySeconds": 20097
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "cNnHtQ8+QrmotC3LMDuUxvl49TzXvX8SUz5k4bXpLTY="
+      }
+    }
   }
 ]
