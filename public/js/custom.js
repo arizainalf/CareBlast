@@ -116,3 +116,31 @@ function formatTimestamp(timestamp) {
   }).format(date);
 }
 
+function formatDate(tanggal) {
+  const parsed = Date.parse(tanggal)
+  if (isNaN(parsed)) {
+    console.error('Tanggal tidak valid:', tanggal)
+    return 'Tanggal tidak valid'
+  }
+
+  const date = new Date(parsed)
+  return date.toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
+function formatTanggal(tanggalString) {
+  const tanggal = new Date(tanggalString);
+  if (isNaN(tanggal)) {
+    console.error('Format tanggal tidak valid:', tanggalString);
+    return 'Tanggal tidak valid';
+  }
+
+  const options = { day: '2-digit', month: 'long', year: 'numeric' };
+  return tanggal.toLocaleDateString('id-ID', options);
+}
+
+
+
