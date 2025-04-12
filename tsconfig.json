@@ -5,7 +5,8 @@
     "outDir": "./build",
         "paths": {
       "#app/*": ["./app/*"],
-      "#services/*": ["./app/Services/*"]
+      "#services/*": ["./app/Services/*"],
+      "#controllers/pasien/*": ["./app/Controllers/pasien/*"]
     }
   }
 }

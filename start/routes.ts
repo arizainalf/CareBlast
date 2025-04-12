@@ -8,6 +8,7 @@ const WhatsappsController = () => import('#controllers/whatsapps_controller')
 const KunjungansController = () => import('#controllers/kunjungans_controller')
 const ObatPenyakitController = () => import('#controllers/obat_penyakits_controller')
 const PasiensController = () => import('#controllers/pasiens_controller')
+const PasienController = () => import('#controllers/pasien/pasiens_controller')
 
 router
   .get('/login', async ({ view }) => {
@@ -23,9 +24,7 @@ router.get('/forgot', async ({ view }) => {
 
 router
   .group(() => {
-    router.get('/', async ({ view }) => {
-      return view.render('pengguna/index')
-    })
+    router.get('/', [PasienController, 'index']).as('pengguna.index')
     router.get('/logout', [SessionController, 'destroy']).as('logoutPengguna')
   })
   .prefix('/pengguna')
