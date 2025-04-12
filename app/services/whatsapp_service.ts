@@ -18,7 +18,6 @@ let socket: any
 let sendingFile = false
 let sentFileMessages = new Set<string>()
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 

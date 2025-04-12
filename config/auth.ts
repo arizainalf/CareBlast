@@ -3,7 +3,7 @@ import { sessionGuard, sessionUserProvider } from '@adonisjs/auth/session'
 import type { InferAuthenticators, InferAuthEvents, Authenticators } from '@adonisjs/auth/types'
 
 const authConfig = defineConfig({
-  default: 'web',
+  default: 'web', // bisa default ke 'web' atau 'pasien', sesuai kebutuhanmu
   guards: {
     web: sessionGuard({
       useRememberMeTokens: true,
@@ -12,9 +12,15 @@ const authConfig = defineConfig({
         model: () => import('#models/user'),
       }),
     }),
+
+    pasien: sessionGuard({
+      useRememberMeTokens: true,
+      provider: sessionUserProvider({
+        model: () => import('#models/pasien'),
+      }),
+    }),
   },
 })
-
 export default authConfig
 
 /**

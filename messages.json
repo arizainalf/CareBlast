@@ -10283,5 +10283,270 @@
         "type": "REVOKE"
       }
     }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "F0AFA6B3B00685C631217E7E84D9FEB7"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "F0AFA6B3B00685C631217E7E84D9FEB7",
+    "messageType": "protocolMessage",
+    "content": {
+      "protocolMessage": {
+        "type": "APP_STATE_SYNC_KEY_SHARE",
+        "appStateSyncKeyShare": {
+          "keys": [
+            {
+              "keyId": {
+                "keyId": "AAAAAO8u"
+              },
+              "keyData": {
+                "keyData": "TxlTIxuTG4ZHnjmanHVeP+NlI21zERXioFBGVoPKqSk=",
+                "fingerprint": {
+                  "rawId": 319882586,
+                  "currentIndex": 1,
+                  "deviceIndexes": [
+                    0,
+                    1
+                  ]
+                },
+                "timestamp": "1744206635018"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "timestamp": 1744206635,
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "F0AFA6B3B00685C631217E7E84D9FEB7"
+    },
+    "messageTimestamp": 1744206635,
+    "broadcast": false,
+    "status": 2,
+    "verifiedBizName": "Avonic Gadget Care",
+    "message": {
+      "protocolMessage": {
+        "type": "APP_STATE_SYNC_KEY_SHARE",
+        "appStateSyncKeyShare": {
+          "keys": [
+            {
+              "keyId": {
+                "keyId": "AAAAAO8u"
+              },
+              "keyData": {
+                "keyData": "TxlTIxuTG4ZHnjmanHVeP+NlI21zERXioFBGVoPKqSk=",
+                "fingerprint": {
+                  "rawId": 319882586,
+                  "currentIndex": 1,
+                  "deviceIndexes": [
+                    0,
+                    1
+                  ]
+                },
+                "timestamp": "1744206635018"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "C6F3D6DBB75FD2FBE9D75413D21065F8"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "C6F3D6DBB75FD2FBE9D75413D21065F8",
+    "messageType": "protocolMessage",
+    "content": {
+      "protocolMessage": {
+        "type": "APP_STATE_SYNC_KEY_SHARE",
+        "appStateSyncKeyShare": {
+          "keys": [
+            {
+              "keyId": {
+                "keyId": "AAAAABHq"
+              },
+              "keyData": {
+                "keyData": "E/OGhxcbnFGMIqmNRV7UYn1Hrowiex6cHMbwx/CbZ88=",
+                "fingerprint": {
+                  "rawId": 409473987,
+                  "currentIndex": 1,
+                  "deviceIndexes": [
+                    0,
+                    1
+                  ]
+                },
+                "timestamp": "1744460239734"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "timestamp": 1744460240,
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "C6F3D6DBB75FD2FBE9D75413D21065F8"
+    },
+    "messageTimestamp": 1744460240,
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "protocolMessage": {
+        "type": "APP_STATE_SYNC_KEY_SHARE",
+        "appStateSyncKeyShare": {
+          "keys": [
+            {
+              "keyId": {
+                "keyId": "AAAAABHq"
+              },
+              "keyData": {
+                "keyData": "E/OGhxcbnFGMIqmNRV7UYn1Hrowiex6cHMbwx/CbZ88=",
+                "fingerprint": {
+                  "rawId": 409473987,
+                  "currentIndex": 1,
+                  "deviceIndexes": [
+                    0,
+                    1
+                  ]
+                },
+                "timestamp": "1744460239734"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "1B74479BEF13909476C9322D757CE7A4"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "1B74479BEF13909476C9322D757CE7A4",
+    "messageType": "protocolMessage",
+    "content": {
+      "protocolMessage": {
+        "type": "HISTORY_SYNC_NOTIFICATION",
+        "historySyncNotification": {
+          "fileSha256": "A8gAeHtYIoprUjakiT1YllIEvuLRbuCjDkQPwVhEIQg=",
+          "fileLength": "14",
+          "mediaKey": "zaEvnQUdjdf2w7vKupat9QOYYDmODfsFb0liqK3UaDw=",
+          "fileEncSha256": "+yc/NZttAlAjypGURTXYvMUrqEewh/zXvDvPFGA9IpI=",
+          "directPath": "/v/t62.31111-24/32437942_1028268299223430_1893717594932781789_n.enc?ccb=11-4&oh=01_Q5Aa1QE2ETbH35iKLxo_pa-ekaOzhapsLPcI1cE65prmTnh7_Q&oe=6821CCDB&_nc_sid=5e03e0",
+          "syncType": "RECENT",
+          "chunkOrder": 2,
+          "progress": 100
+        }
+      }
+    },
+    "timestamp": 1744460247,
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "1B74479BEF13909476C9322D757CE7A4"
+    },
+    "messageTimestamp": 1744460247,
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "protocolMessage": {
+        "type": "HISTORY_SYNC_NOTIFICATION",
+        "historySyncNotification": {
+          "fileSha256": "A8gAeHtYIoprUjakiT1YllIEvuLRbuCjDkQPwVhEIQg=",
+          "fileLength": "14",
+          "mediaKey": "zaEvnQUdjdf2w7vKupat9QOYYDmODfsFb0liqK3UaDw=",
+          "fileEncSha256": "+yc/NZttAlAjypGURTXYvMUrqEewh/zXvDvPFGA9IpI=",
+          "directPath": "/v/t62.31111-24/32437942_1028268299223430_1893717594932781789_n.enc?ccb=11-4&oh=01_Q5Aa1QE2ETbH35iKLxo_pa-ekaOzhapsLPcI1cE65prmTnh7_Q&oe=6821CCDB&_nc_sid=5e03e0",
+          "syncType": "RECENT",
+          "chunkOrder": 2,
+          "progress": 100
+        }
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "A298D686FE5BCBDD8F7CE8BE2EB7F5D3"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "A298D686FE5BCBDD8F7CE8BE2EB7F5D3",
+    "messageType": "protocolMessage",
+    "content": {
+      "protocolMessage": {
+        "type": "HISTORY_SYNC_NOTIFICATION",
+        "historySyncNotification": {
+          "fileSha256": "CXAyckCy9W21xn3CpsXrgaSv8EXg4AqAvQNVeiEWnr0=",
+          "fileLength": "14",
+          "mediaKey": "c5s5YVJNMRI10XtubHvoqv5RulC8KWRa2bpYKXENgKk=",
+          "fileEncSha256": "GwFKIO4ODTsC1J08Z8aRxgNg6XzwQ5TcNwFBcBh32Ss=",
+          "directPath": "/v/t62.31111-24/19057933_981384257510475_4674087106013268220_n.enc?ccb=11-4&oh=01_Q5Aa1QH1b_r5f5nxV1pp6brvBsCv1pN7yeUgy2tt5M-a3hgjDw&oe=6821AEFA&_nc_sid=5e03e0",
+          "syncType": "FULL",
+          "chunkOrder": 1,
+          "progress": 100
+        }
+      }
+    },
+    "timestamp": 1744460249,
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "A298D686FE5BCBDD8F7CE8BE2EB7F5D3"
+    },
+    "messageTimestamp": 1744460249,
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "protocolMessage": {
+        "type": "HISTORY_SYNC_NOTIFICATION",
+        "historySyncNotification": {
+          "fileSha256": "CXAyckCy9W21xn3CpsXrgaSv8EXg4AqAvQNVeiEWnr0=",
+          "fileLength": "14",
+          "mediaKey": "c5s5YVJNMRI10XtubHvoqv5RulC8KWRa2bpYKXENgKk=",
+          "fileEncSha256": "GwFKIO4ODTsC1J08Z8aRxgNg6XzwQ5TcNwFBcBh32Ss=",
+          "directPath": "/v/t62.31111-24/19057933_981384257510475_4674087106013268220_n.enc?ccb=11-4&oh=01_Q5Aa1QH1b_r5f5nxV1pp6brvBsCv1pN7yeUgy2tt5M-a3hgjDw&oe=6821AEFA&_nc_sid=5e03e0",
+          "syncType": "FULL",
+          "chunkOrder": 1,
+          "progress": 100
+        }
+      }
+    }
   }
 ]
