@@ -1,0 +1,61 @@
+@layout.app({ title: "Data Dokter" })
+@slot('content')
+
+<div class="container-fluid py-4">
+  <div class="row justify-content-between g-4">
+
+    <!-- Breadcrumb -->
+    <div class="col-12" style="margin-bottom: -1rem;">
+      <nav aria-label="breadcrumb">
+        <div class="row page-titles">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item active"><a href="javascript:void(0)">Bootstrap</a></li>
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Tab</a></li>
+          </ol>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Dokter Tab -->
+    <div class="col-12">
+      <div class="card h-full">
+        <div class="card-body p-4">
+          <!-- Nav tabs -->
+          <div class="default-tab">
+            <ul class="nav nav-tabs flex-wrap" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active text-success" data-bs-toggle="tab" href="#dokter"><i
+                    class="fas fa-user-nurse me-2 text-success"></i> Dokter</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-secondary" data-bs-toggle="tab" href="#spesialist"><i
+                    class="fas fa-stethoscope me-2 text-secondary"></i> Spesialist</a>
+              </li>
+            </ul>
+
+            <div class="tab-content h-full">
+              <div class="tab-pane fade show active h-full" id="dokter" role="tabpanel">
+                @include('puskesmas/tab/dokter')
+              </div>
+
+              <div class="tab-pane fade h-full" id="spesialist" role="tabpanel">
+                @include('puskesmas/tab/spesialis')
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+@end
+
+@slot('styles')
+@include('puskesmas/style/switch')
+@end
+
+@slot('scripts')
+@include('puskesmas/style/script')
+@end
+@end

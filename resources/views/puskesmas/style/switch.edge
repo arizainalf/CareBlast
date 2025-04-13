@@ -1,0 +1,68 @@
+<style>
+  /* Custom toggle switch styles */
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 22px;
+  }
+
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #dc3545;
+    transition: .4s;
+    border-radius: 34px;
+  }
+
+  .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+
+  input:checked+.toggle-slider {
+    background-color: #198754;
+  }
+
+  input:focus+.toggle-slider {
+    box-shadow: 0 0 1px #198754;
+  }
+
+  input:checked+.toggle-slider:before {
+    transform: translateX(22px);
+  }
+
+  .status-wrapper {
+    white-space: nowrap;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    min-width: 70px;
+  }
+</style>
