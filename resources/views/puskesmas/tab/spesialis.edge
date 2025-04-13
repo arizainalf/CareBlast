@@ -1,0 +1,149 @@
+<div class="col-12">
+  <div class="card h-full">
+    <div class="card-header bg-transparent border-bottom-0 d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0">Data Spesialis & Gelar</h5>
+      <button type="button" class="btn btn-rounded fs-12 btn-primary align-items-center gap-2" data-bs-toggle="modal"
+        data-bs-target="#tambahSpesialisModal">
+        <span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i></span>
+        Spesialis
+      </button>
+    </div>
+    <div class="card-body p-4">
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama Spesialis</th>
+              <th>Gelar</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Spesialis Jiwa</td>
+              <td>Sp.KJ</td>
+              <td>
+                <div class="d-flex">
+                  <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal"
+                    data-bs-target="#editSpesialisModal">
+                    <i class="fas fa-pencil-alt"></i>
+                  </a>
+                  <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
+                    data-bs-target="#hapusSpesialisModal">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Spesialis Anak</td>
+              <td>Sp.A</td>
+              <td>
+                <div class="d-flex">
+                  <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal"
+                    data-bs-target="#editSpesialisModal">
+                    <i class="fas fa-pencil-alt"></i>
+                  </a>
+                  <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
+                    data-bs-target="#hapusSpesialisModal">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Spesialis Penyakit Dalam</td>
+              <td>Sp.PD</td>
+              <td>
+                <div class="d-flex">
+                  <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal"
+                    data-bs-target="#editSpesialisModal">
+                    <i class="fas fa-pencil-alt"></i>
+                  </a>
+                  <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
+                    data-bs-target="#hapusSpesialisModal">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="tambahSpesialisModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah Data Spesialis</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form>
+        <div class="modal-body">
+          <div class="mb-2">
+            <input type="text" class="form-control" placeholder="Nama Spesialis" required>
+          </div>
+          <div class="mb-2">
+            <input type="text" class="form-control" placeholder="Gelar (contoh: Sp.A)" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="editSpesialisModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Data Spesialis</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form>
+        <div class="modal-body">
+          <div class="mb-2">
+            <input type="text" class="form-control" value="Spesialis Anak" required>
+          </div>
+          <div class="mb-2">
+            <input type="text" class="form-control" value="Sp.A" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Perbarui</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="hapusSpesialisModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Hapus Spesialis</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin menghapus data spesialis ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary light" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-danger light">Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>

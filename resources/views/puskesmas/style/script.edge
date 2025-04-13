@@ -1,0 +1,40 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggleSwitches = document.querySelectorAll('.status-toggle');
+
+    toggleSwitches.forEach(toggle => {
+      toggle.addEventListener('change', function () {
+        const statusWrapper = this.closest('.status-wrapper');
+        const statusBadge = statusWrapper.querySelector('.status-badge');
+
+        if (this.checked) {
+          statusBadge.textContent = 'Aktif';
+          statusBadge.classList.remove('bg-danger');
+          statusBadge.classList.add('bg-success');
+        } else {
+          statusBadge.textContent = 'Tidak Aktif';
+          statusBadge.classList.remove('bg-success');
+          statusBadge.classList.add('bg-danger');
+        }
+
+        // Here you could add AJAX code to update status in database
+        // const doctorId = this.getAttribute('data-id');
+        // updateDoctorStatus(doctorId, this.checked);
+      });
+    });
+
+    // Example function for AJAX update
+    // function updateDoctorStatus(id, isActive) {
+    //   fetch('/api/doctors/update-status', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ id: id, active: isActive })
+    //   })
+    //   .then(response => response.json())
+    //   .then(data => console.log('Success:', data))
+    //   .catch(error => console.error('Error:', error));
+    // }
+  });
+</script>
