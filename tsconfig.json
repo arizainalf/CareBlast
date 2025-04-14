@@ -3,10 +3,19 @@
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "./build",
-        "paths": {
-      "#app/*": ["./app/*"],
-      "#services/*": ["./app/Services/*"],
-      "#controllers/pasien/*": ["./app/Controllers/pasien/*"]
+    "paths": {
+      "#app/*": [
+        "./app/*"
+      ],
+      "#services/*": [
+        "./app/Services/*"
+      ],
+      "#controllers/pasien/*": [
+        "./app/Controllers/pasien/*"
+      ],
+      "#helpers/*": [
+        "./app/helpers/*"
+      ]
     }
   }
 }

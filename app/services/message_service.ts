@@ -46,6 +46,7 @@ export async function saveMessages(message: any) {
   }
 
   const existingMessage = await Message.findBy('message_id', key.id)
+  console.log('existingMessage', DateTime.fromSeconds(Number(messageTimestamp)))
 
   if (!existingMessage) {
     try {

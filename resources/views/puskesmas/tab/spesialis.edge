@@ -2,8 +2,8 @@
   <div class="card h-full">
     <div class="card-header bg-transparent border-bottom-0 d-flex justify-content-between align-items-center">
       <h5 class="card-title mb-0">Data Spesialis & Gelar</h5>
-      <button type="button" class="btn btn-rounded fs-12 btn-primary align-items-center gap-2" data-bs-toggle="modal"
-        data-bs-target="#tambahSpesialisModal">
+      <button type="button" class="btn btn-rounded fs-12 btn-primary align-items-center gap-2 tambahSpesialis"
+        data-bs-toggle="modal" data-bs-target="#tambahSpesialisModal">
         <span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i></span>
         Spesialis
       </button>
@@ -20,57 +20,27 @@
             </tr>
           </thead>
           <tbody>
+            @each((spesialis, index) in spesialists)
             <tr>
-              <td>1</td>
-              <td>Spesialis Jiwa</td>
-              <td>Sp.KJ</td>
+              <td>{{ index + 1 }}</td>
+              <td>{{ spesialis.nama }}</td>
+              <td>{{ spesialis.gelar }}</td>
               <td>
                 <div class="d-flex">
-                  <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal"
-                    data-bs-target="#editSpesialisModal">
+                  <a href="#" class="btn btn-primary shadow btn-xs sharp me-1 editSpesialist" data-bs-toggle="modal"
+                    data-id="{{ spesialis.id }}" data-nama="{{ spesialis.nama }}" data-gelar="{{ spesialis.gelar }}"
+                    data-bs-target="#tambahSpesialisModal">
                     <i class="fas fa-pencil-alt"></i>
                   </a>
-                  <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
-                    data-bs-target="#hapusSpesialisModal">
+                  <a href="#" class="btn btn-danger shadow btn-xs sharp hapusSPesialis" data-bs-toggle="modal"
+                    data-id="{{ spesialis.id }}" data-bs-target="#hapusSpesialisModal">
                     <i class="fa fa-trash"></i>
                   </a>
                 </div>
               </td>
             </tr>
-            <tr>
-              <td>2</td>
-              <td>Spesialis Anak</td>
-              <td>Sp.A</td>
-              <td>
-                <div class="d-flex">
-                  <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal"
-                    data-bs-target="#editSpesialisModal">
-                    <i class="fas fa-pencil-alt"></i>
-                  </a>
-                  <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
-                    data-bs-target="#hapusSpesialisModal">
-                    <i class="fa fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Spesialis Penyakit Dalam</td>
-              <td>Sp.PD</td>
-              <td>
-                <div class="d-flex">
-                  <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal"
-                    data-bs-target="#editSpesialisModal">
-                    <i class="fas fa-pencil-alt"></i>
-                  </a>
-                  <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
-                    data-bs-target="#hapusSpesialisModal">
-                    <i class="fa fa-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
+            @end
+
           </tbody>
         </table>
       </div>
@@ -85,13 +55,16 @@
         <h5 class="modal-title">Tambah Data Spesialis</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <form>
+      <form id="formSpesialist">
+        {{ csrfField() }}
         <div class="modal-body">
           <div class="mb-2">
-            <input type="text" class="form-control" placeholder="Nama Spesialis" required>
+        <input type="hidden" name="jenis" id="jenis" value="spesialist">
+            <input type="text" class="form-control" name="nama" id="nama_spesialis" placeholder="Nama Spesialis"
+              required>
           </div>
           <div class="mb-2">
-            <input type="text" class="form-control" placeholder="Gelar (contoh: Sp.A)" required>
+            <input type="text" class="form-control" name="gelar" id="gelar" placeholder="Gelar (contoh: Sp.A)" required>
           </div>
         </div>
         <div class="modal-footer">
@@ -104,7 +77,7 @@
 </div>
 
 
-<div class="modal fade" id="editSpesialisModal" tabindex="-1" aria-hidden="true">
+{{-- <div class="modal fade" id="editSpesialisModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -127,7 +100,7 @@
       </form>
     </div>
   </div>
-</div>
+</div> --}}
 
 
 <div class="modal fade" id="hapusSpesialisModal" tabindex="-1" aria-hidden="true">
@@ -137,13 +110,16 @@
         <h5 class="modal-title">Hapus Spesialis</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
-        <p>Apakah Anda yakin ingin menghapus data spesialis ini?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary light" data-bs-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-danger light">Hapus</button>
-      </div>
+      <form id="formHapusSpesialist">
+        {{ csrfField() }}
+        <div class="modal-body">
+          <p>Apakah Anda yakin ingin menghapus data spesialis ini?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-danger light">Hapus</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

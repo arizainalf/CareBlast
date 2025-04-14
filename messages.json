@@ -10660,5 +10660,419 @@
         "messageSecret": "cNnHtQ8+QrmotC3LMDuUxvl49TzXvX8SUz5k4bXpLTY="
       }
     }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "A34BB3F1D03B57A39332B3791A1DD391"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "A34BB3F1D03B57A39332B3791A1DD391",
+    "messageType": "protocolMessage",
+    "content": {
+      "protocolMessage": {
+        "type": "APP_STATE_SYNC_KEY_SHARE",
+        "appStateSyncKeyShare": {
+          "keys": [
+            {
+              "keyId": {
+                "keyId": "AAAAABHq"
+              },
+              "keyData": {
+                "keyData": "E/OGhxcbnFGMIqmNRV7UYn1Hrowiex6cHMbwx/CbZ88=",
+                "fingerprint": {
+                  "rawId": 409473987,
+                  "currentIndex": 1,
+                  "deviceIndexes": [
+                    0,
+                    1
+                  ]
+                },
+                "timestamp": "0"
+              }
+            },
+            {
+              "keyId": {
+                "keyId": "AAAAABHr"
+              },
+              "keyData": {
+                "keyData": "UR5IGLY+ax1RvShYQSavGwoxJKGHcntPO/D4YWjQC6U=",
+                "fingerprint": {
+                  "rawId": 409473987,
+                  "currentIndex": 1,
+                  "deviceIndexes": [
+                    0
+                  ]
+                },
+                "timestamp": "1744541610349"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "timestamp": 1744541630,
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "A34BB3F1D03B57A39332B3791A1DD391"
+    },
+    "messageTimestamp": 1744541630,
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "protocolMessage": {
+        "type": "APP_STATE_SYNC_KEY_SHARE",
+        "appStateSyncKeyShare": {
+          "keys": [
+            {
+              "keyId": {
+                "keyId": "AAAAABHq"
+              },
+              "keyData": {
+                "keyData": "E/OGhxcbnFGMIqmNRV7UYn1Hrowiex6cHMbwx/CbZ88=",
+                "fingerprint": {
+                  "rawId": 409473987,
+                  "currentIndex": 1,
+                  "deviceIndexes": [
+                    0,
+                    1
+                  ]
+                },
+                "timestamp": "0"
+              }
+            },
+            {
+              "keyId": {
+                "keyId": "AAAAABHr"
+              },
+              "keyData": {
+                "keyData": "UR5IGLY+ax1RvShYQSavGwoxJKGHcntPO/D4YWjQC6U=",
+                "fingerprint": {
+                  "rawId": 409473987,
+                  "currentIndex": 1,
+                  "deviceIndexes": [
+                    0
+                  ]
+                },
+                "timestamp": "1744541610349"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "9220B7621A90247FF23B509144EF1460"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "9220B7621A90247FF23B509144EF1460",
+    "messageType": "protocolMessage",
+    "content": {
+      "protocolMessage": {
+        "type": "HISTORY_SYNC_NOTIFICATION",
+        "historySyncNotification": {
+          "fileSha256": "CXAyckCy9W21xn3CpsXrgaSv8EXg4AqAvQNVeiEWnr0=",
+          "fileLength": "14",
+          "mediaKey": "ldSMSJ1PuJ6TgksAVffsaZdYm3PpZCO1kUdPU7ne6gQ=",
+          "fileEncSha256": "OwqI2j2ePlpSBaNaA0jxGpPlwtS7Hj5Khx/1+IhBXRw=",
+          "directPath": "/v/t62.31111-24/24231233_1015090620048365_6373705262543356058_n.enc?ccb=11-4&oh=01_Q5Aa1QHbqOxAZlXZcRKfMiKSuhNUumIrK9J8O_NGfb6k7Y1_ZQ&oe=68231A22&_nc_sid=5e03e0",
+          "syncType": "FULL",
+          "chunkOrder": 1,
+          "progress": 100
+        }
+      }
+    },
+    "timestamp": 1744541641,
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "9220B7621A90247FF23B509144EF1460"
+    },
+    "messageTimestamp": 1744541641,
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "protocolMessage": {
+        "type": "HISTORY_SYNC_NOTIFICATION",
+        "historySyncNotification": {
+          "fileSha256": "CXAyckCy9W21xn3CpsXrgaSv8EXg4AqAvQNVeiEWnr0=",
+          "fileLength": "14",
+          "mediaKey": "ldSMSJ1PuJ6TgksAVffsaZdYm3PpZCO1kUdPU7ne6gQ=",
+          "fileEncSha256": "OwqI2j2ePlpSBaNaA0jxGpPlwtS7Hj5Khx/1+IhBXRw=",
+          "directPath": "/v/t62.31111-24/24231233_1015090620048365_6373705262543356058_n.enc?ccb=11-4&oh=01_Q5Aa1QHbqOxAZlXZcRKfMiKSuhNUumIrK9J8O_NGfb6k7Y1_ZQ&oe=68231A22&_nc_sid=5e03e0",
+          "syncType": "FULL",
+          "chunkOrder": 1,
+          "progress": 100
+        }
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "E367324B44BDB7CBEC7C920F2536D4D6"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "E367324B44BDB7CBEC7C920F2536D4D6",
+    "messageType": "protocolMessage",
+    "content": {
+      "protocolMessage": {
+        "type": "INITIAL_SECURITY_NOTIFICATION_SETTING_SYNC",
+        "initialSecurityNotificationSettingSync": {
+          "securityNotificationEnabled": false
+        }
+      }
+    },
+    "timestamp": 1744543955,
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "E367324B44BDB7CBEC7C920F2536D4D6"
+    },
+    "messageTimestamp": 1744543955,
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "protocolMessage": {
+        "type": "INITIAL_SECURITY_NOTIFICATION_SETTING_SYNC",
+        "initialSecurityNotificationSettingSync": {
+          "securityNotificationEnabled": false
+        }
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "671675DF1243234D471DB1E5C9AA6497"
+    },
+    "contactId": "c54d2c08-892d-47a5-869b-0c4827e17be6",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "671675DF1243234D471DB1E5C9AA6497",
+    "messageType": "protocolMessage",
+    "content": {
+      "protocolMessage": {
+        "type": "HISTORY_SYNC_NOTIFICATION",
+        "historySyncNotification": {
+          "fileSha256": "CXAyckCy9W21xn3CpsXrgaSv8EXg4AqAvQNVeiEWnr0=",
+          "fileLength": "14",
+          "mediaKey": "+0VdPx77EZVYUx0IZdslcRi0u06jHmcqoVtB6aLr4Y0=",
+          "fileEncSha256": "Z20lFadyruTEpX7wd/+kW707YMUWmWYBKsWK/s7AyFQ=",
+          "directPath": "/v/t62.31111-24/19442895_1011037587636832_8960036060068574211_n.enc?ccb=11-4&oh=01_Q5Aa1QGgrPXSbgRgRbcRdsX6yTQQfuYq8jC52fr13EONIf-WjQ&oe=682321E2&_nc_sid=5e03e0",
+          "syncType": "FULL",
+          "chunkOrder": 1,
+          "progress": 100
+        }
+      }
+    },
+    "timestamp": 1744543966,
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "671675DF1243234D471DB1E5C9AA6497"
+    },
+    "messageTimestamp": 1744543966,
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "protocolMessage": {
+        "type": "HISTORY_SYNC_NOTIFICATION",
+        "historySyncNotification": {
+          "fileSha256": "CXAyckCy9W21xn3CpsXrgaSv8EXg4AqAvQNVeiEWnr0=",
+          "fileLength": "14",
+          "mediaKey": "+0VdPx77EZVYUx0IZdslcRi0u06jHmcqoVtB6aLr4Y0=",
+          "fileEncSha256": "Z20lFadyruTEpX7wd/+kW707YMUWmWYBKsWK/s7AyFQ=",
+          "directPath": "/v/t62.31111-24/19442895_1011037587636832_8960036060068574211_n.enc?ccb=11-4&oh=01_Q5Aa1QGgrPXSbgRgRbcRdsX6yTQQfuYq8jC52fr13EONIf-WjQ&oe=682321E2&_nc_sid=5e03e0",
+          "syncType": "FULL",
+          "chunkOrder": 1,
+          "progress": 100
+        }
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true
+    },
+    "update": {
+      "message": {
+        "editedMessage": {
+          "message": null
+        }
+      },
+      "messageTimestamp": 0
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "622139504726@s.whatsapp.net",
+      "id": "BC724C643A3F0FC27A",
+      "fromMe": false
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "fromMe": true,
+      "id": "25D30006C9AB4C40F7B9B80FC0624E45"
+    },
+    "contactId": "f62a5fc5-a548-4462-b501-a4fb952bb6ac",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "25D30006C9AB4C40F7B9B80FC0624E45",
+    "messageType": "extendedTextMessage",
+    "content": {
+      "extendedTextMessage": {
+        "text": "SHOPEE: Ada percobaan untuk log in ke akunmu. Jika benar kamu, klik link ini untuk melanjutkan: id.shp.ee/dlink/knj83ol",
+        "previewType": "NONE",
+        "contextInfo": {
+          "forwardingScore": 1,
+          "isForwarded": true,
+          "businessMessageForwardInfo": {
+            "businessOwnerJid": "622139504726@s.whatsapp.net"
+          }
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "ovArS4f81yoBg7DgdQOwL1iZ4k5Un3b7K89Pz5WZW8k="
+      }
+    },
+    "timestamp": 1744560804,
+    "text": "SHOPEE: Ada percobaan untuk log in ke akunmu. Jika benar kamu, klik link ini untuk melanjutkan: id.shp.ee/dlink/knj83ol",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "fromMe": true,
+      "id": "25D30006C9AB4C40F7B9B80FC0624E45"
+    },
+    "messageTimestamp": 1744560804,
+    "pushName": "pusatgrosircelanatraining",
+    "broadcast": false,
+    "status": 4,
+    "message": {
+      "extendedTextMessage": {
+        "text": "SHOPEE: Ada percobaan untuk log in ke akunmu. Jika benar kamu, klik link ini untuk melanjutkan: id.shp.ee/dlink/knj83ol",
+        "previewType": "NONE",
+        "contextInfo": {
+          "forwardingScore": 1,
+          "isForwarded": true,
+          "businessMessageForwardInfo": {
+            "businessOwnerJid": "622139504726@s.whatsapp.net"
+          }
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "ovArS4f81yoBg7DgdQOwL1iZ4k5Un3b7K89Pz5WZW8k="
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "622139504726@s.whatsapp.net",
+      "id": "BC724C643A3F0FC27A",
+      "fromMe": false
+    },
+    "contactId": "f3f1e36d-cf9e-4e0b-92d1-79315bcfea22",
+    "groupId": null,
+    "pushName": "Unknown",
+    "messageId": "BC724C643A3F0FC27A",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "515DB2DF1BA323D111EA7258BE3A1E5F"
+    },
+    "contactId": "6ef5c6cf-8dcc-4215-978d-4bca84f0b381",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "515DB2DF1BA323D111EA7258BE3A1E5F",
+    "messageType": "extendedTextMessage",
+    "content": {
+      "extendedTextMessage": {
+        "text": "Tes",
+        "previewType": "NONE",
+        "contextInfo": {
+          "entryPointConversionSource": "non_contact",
+          "entryPointConversionApp": "whatsapp",
+          "entryPointConversionDelaySeconds": 192096
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "He0lnXxhVqgu3Q1uoX/gKtvfsA9TqhpmP84b6/LvUjk="
+      }
+    },
+    "timestamp": 1744650427,
+    "text": "Tes",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6285885824268@s.whatsapp.net",
+      "fromMe": true,
+      "id": "515DB2DF1BA323D111EA7258BE3A1E5F"
+    },
+    "messageTimestamp": 1744650427,
+    "pushName": "pusatgrosircelanatraining",
+    "broadcast": false,
+    "status": 2,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Tes",
+        "previewType": "NONE",
+        "contextInfo": {
+          "entryPointConversionSource": "non_contact",
+          "entryPointConversionApp": "whatsapp",
+          "entryPointConversionDelaySeconds": 192096
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "He0lnXxhVqgu3Q1uoX/gKtvfsA9TqhpmP84b6/LvUjk="
+      }
+    }
   }
 ]

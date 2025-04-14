@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { makeWASocket, useMultiFileAuthState, Browsers } from '@whiskeysockets/baileys'
+import { makeWASocket, useMultiFileAuthState, Browsers } from 'baileys'
 import fs from 'node:fs'
 import qrImage from 'qr-image'
 import { Boom } from '@hapi/boom'
