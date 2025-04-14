@@ -23,6 +23,7 @@ export default class extends BaseSchema {
       table.string('no_hp')
       table.string('alamat')
       table.enum('golongan_darah', ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-']).nullable()
+      table.enum('role', ['Pasien']).defaultTo('Pasien')
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

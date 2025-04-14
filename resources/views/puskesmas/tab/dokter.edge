@@ -1,7 +1,7 @@
 <div class="card-header bg-transparent border-bottom-0 d-flex justify-content-between align-items-center">
   <h5 class="card-title mb-0">Data Dokter</h5>
-  <button type="button" class="btn btn-rounded fs-12 btn-primary align-items-center gap-2" data-bs-toggle="modal"
-    data-bs-target="#tambahDokterModal">
+  <button type="button" class="btn btn-rounded fs-12 btn-primary align-items-center gap-2 tambahDokter"
+    data-bs-toggle="modal" data-bs-target="#tambahDokterModal">
     <span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i></span>
     Dokter
   </button>
@@ -21,17 +21,18 @@
       </tr>
     </thead>
     <tbody>
+      @each( (dokter, index) in dokters)
       <tr>
-        <th>1</th>
-        <td>dr. Rina Kartika, Sp.JP</td>
-        <td class="color-primary">198312312005042001</td>
-        <td>Jantung</td>
-        <td>08.00 - 12.00</td>
+        <th>{{ index + 1 }}</th>
+        <td>{{ dokter.nama }}.{{ dokter.spesialist.gelar }}</td>
+        <td class="color-primary">{{ dokter.nip }}</td>
+        <td>{{ dokter.spesialist.nama }}</td>
+        <td>{{dokter.jamMulai}}-{{dokter.jamSelesai}}</td>
         <td>
           <div class="status-wrapper d-flex align-items-center">
             <div class="toggle-switch-wrapper me-2">
               <label class="toggle-switch">
-                <input type="checkbox" class="status-toggle" checked data-id="1">
+                <input type="checkbox" class="status-toggle" checked data-id="{{ dokter.status }}">
                 <span class="toggle-slider"></span>
               </label>
             </div>
@@ -40,113 +41,57 @@
         </td>
         <td>
           <div class="d-flex">
-            <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal" data-bs-target="#modalEditDokter">
+            <a href="#" class="btn btn-primary shadow btn-xs sharp me-1 editDokter" data-id="{{ dokter.id }}"
+              data-nama="{{ dokter.nama }}" data-nip="{{ dokter.nip }}" data-spesialis-id="{{ dokter.spesialist.id }}"
+              data-spesialis="{{ dokter.spesialist.nama }}" data-jam-mulai="{{ dokter.jamMulai }}"
+              data-jam-selesai="{{ dokter.jamSelesai }}" data-status="{{ dokter.status }}" data-bs-toggle="modal"
+              data-bs-target="#tambahDokterModal">
               <i class="fas fa-pencil-alt"></i>
             </a>
-            <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal" data-bs-target="#modalHapusDokter">
+            <a href="#" class="btn btn-danger shadow btn-xs sharp deleteDokter" data-id="{{ dokter.id }}"
+              data-bs-toggle="modal" data-bs-target="#modalHapusDokter">
               <i class="fa fa-trash"></i>
             </a>
           </div>
         </td>
       </tr>
-      <tr>
-        <th>2</th>
-        <td>dr. Andika Prasetya, Sp.KJ</td>
-        <td class="color-success">197905062007011003</td>
-        <td>Jiwa</td>
-        <td>13.00 - 17.00</td>
-        <td>
-          <div class="status-wrapper d-flex align-items-center">
-            <div class="toggle-switch-wrapper me-2">
-              <label class="toggle-switch">
-                <input type="checkbox" class="status-toggle" data-id="2">
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <span class="status-badge badge bg-danger">Tidak Aktif</span>
-          </div>
-        </td>
-        <td>
-          <div class="d-flex">
-            <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal"
-              data-bs-target="#modalEditDokter">
-              <i class="fas fa-pencil-alt"></i>
-            </a>
-            <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal" data-bs-target="#modalHapusDokter">
-              <i class="fa fa-trash"></i>
-            </a>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <th>3</th>
-        <td>dr. Sari Wulandari, Sp.A</td>
-        <td class="color-danger">198605142010012004</td>
-        <td>Anak</td>
-        <td>09.00 - 13.00</td>
-        <td>
-          <div class="status-wrapper d-flex align-items-center">
-            <div class="toggle-switch-wrapper me-2">
-              <label class="toggle-switch">
-                <input type="checkbox" class="status-toggle" checked data-id="3">
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <span class="status-badge badge bg-success">Aktif</span>
-          </div>
-        </td>
-        <td>
-          <div class="d-flex">
-            <a href="#" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal"
-              data-bs-target="#modalEditDokter">
-              <i class="fas fa-pencil-alt"></i>
-            </a>
-            <a href="#" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal" data-bs-target="#modalHapusDokter">
-              <i class="fa fa-trash"></i>
-            </a>
-          </div>
-        </td>
-      </tr>
+      @end
     </tbody>
   </table>
 </div>
 
-<div class="modal fade" id="tambahDokterModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="tambahDokterModal" tabindex="-1">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Tambah Data Dokter</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <form>
+      <form id="formDokter">
+        {{ csrfField() }}
+        <input type="hidden" name="jenis" id="jenis" value="dokter">
         <div class="modal-body">
           <div class="mb-2">
-            <input type="text" class="form-control" placeholder="Nama Lengkap" required>
+            <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Lengkap" required>
           </div>
           <div class="mb-2">
-            <input type="text" class="form-control" placeholder="NIP" required>
+            <input type="text" class="form-control" name="nip" id="nip" placeholder="NIP" required>
           </div>
           <div class="mb-2">
-            <select class="form-control" required>
+            <select class="form-control" required name="spesialist_id" id="spesialist_id">
               <option value="">Pilih Spesialis</option>
-              <option value="Jantung">Jantung</option>
-              <option value="Anak">Anak</option>
-              <option value="Gigi">Gigi</option>
-              <option value="Mata">Mata</option>
-              <!-- Tambahkan opsi lainnya sesuai kebutuhan -->
             </select>
           </div>
           <div class="row mb-2">
             <div class="col-sm-6">
-              <input type="text" name="first_name" class="form-control" placeholder="Jam Mulai" required>
+              <input type="text" name="jam_mulai" id="jam_mulai" class="form-control" placeholder="Jam Mulai" required>
             </div>
             <div class="col-sm-6 mt-2 mt-sm-0">
-              <input type="text" name="last_name" class="form-control" placeholder="Jam Selesai">
+              <input type="text" name="jam_selesai" id="jam_selesai" class="form-control" placeholder="Jam Selesai">
             </div>
           </div>
           <div class="mb-2">
-            <label>Status:</label>
-            <select class="form-control" required>
+            <select class="form-control" required id="status" name="status">
               <option value="1">Aktif</option>
               <option value="0">Tidak Aktif</option>
             </select>
@@ -161,67 +106,24 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalEditDokter" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Edit Data Dokter</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <form>
-        <div class="modal-body">
-          <div class="mb-2">
-            <input type="text" class="form-control" value="dr. Rina Kartika, Sp.JP" required>
-          </div>
-          <div class="mb-2">
-            <input type="text" class="form-control" value="198312312005042001" required>
-          </div>
-          <div class="mb-2">
-            <select class="form-control" required>
-              <option value="Jantung" selected>Jantung</option>
-              <option value="Anak">Anak</option>
-              <option value="Gigi">Gigi</option>
-              <option value="Mata">Mata</option>
-            </select>
-          </div>
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <input type="text" name="first_name" class="form-control" placeholder="Jam Mulai" required>
-            </div>
-            <div class="col-sm-6 mt-2 mt-sm-0">
-              <input type="text" name="last_name" class="form-control" placeholder="Jam Selesai">
-            </div>
-          </div>
-          <div class="mb-2">
-            <label>Status:</label>
-            <select class="form-control" required>
-              <option value="1" selected>Aktif</option>
-              <option value="0">Tidak Aktif</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Perbarui</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
 <div class="modal fade" id="modalHapusDokter" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title" id="modalHapusDokterTitle"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal">
         </button>
       </div>
-      <div class="modal-body"><p>Apakah Anda yakin ingin menghapus data dokter ini?</p></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary light" data-bs-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-danger light">Hapus</button>
-      </div>
+      <form action="" id="formHapusDokter">
+        {{ csrfField() }}
+        <div class="modal-body">
+          <p>Apakah Anda yakin ingin menghapus data dokter ini?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-danger light">Hapus</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

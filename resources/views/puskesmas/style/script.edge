@@ -17,24 +17,263 @@
           statusBadge.classList.add('bg-danger');
         }
 
-        // Here you could add AJAX code to update status in database
-        // const doctorId = this.getAttribute('data-id');
-        // updateDoctorStatus(doctorId, this.checked);
+        console.log(this.checked)
+        const doctorId = this.getAttribute('data-id');
+        updateDoctorStatus(doctorId, this.checked);
       });
     });
 
     // Example function for AJAX update
-    // function updateDoctorStatus(id, isActive) {
-    //   fetch('/api/doctors/update-status', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ id: id, active: isActive })
-    //   })
-    //   .then(response => response.json())
-    //   .then(data => console.log('Success:', data))
-    //   .catch(error => console.error('Error:', error));
-    // }
+    function updateDoctorStatus(id, isActive) {
+      console.log(id, isActive)
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      $.ajax({
+        url: `/dokter/${id}/updateStatus`,
+        method: 'PUT',
+        data: {
+          status: isActive ? 1 : 0,
+          _csrf: csrfToken, // ini wajib!
+        },
+        success: function (response) {
+          if (response.success) {
+            console.log('Status berhasil diperbarui');
+          } else {
+            console.error('Gagal memperbarui status:', response.message);
+            showSwal("error", "Error", response.message);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error('Error AJAX:', error);
+          showSwal("error", "Gagal", "Terjadi kesalahan saat memperbarui status.");
+        }
+      });
+    }
   });
+
+  $(document).ready(function () {
+
+    $(document).on('click', '.tambahDokter', function (e) {
+      $('#formDokter')[0].reset();
+      $('#formDokter').attr('data-id', '');
+      // $('#spesialist_id').empty(); // Clear the options in the select element
+      $.get('/spesialis', function (spesialisList) {
+        spesialisList.spesialist.forEach(function (item) {
+          $('#spesialist_id').append(`<option value="${item.id}">${item.nama}</option>`);
+        });
+      });
+    });
+
+    $(document).on('click', '.tambahSpesialis', function (e) {
+      $('#formSpesialis')[0].reset();
+      $('#formSpesialis').attr('data-id', '');
+    });
+
+  })
+
+  $(document).ready(function () {
+    modalDokter = new bootstrap.Modal(document.getElementById('tambahDokterModal'), {
+      keyboard: false
+    });
+
+    modalSpesialist = new bootstrap.Modal(document.getElementById('tambahSpesialisModal'), {
+      keyboard: false
+    });
+
+    modalHapusSpesialist = new bootstrap.Modal(document.getElementById('hapusSpesialisModal'), {
+      keyboard: false
+    });
+
+    modalHapusDokter = new bootstrap.Modal(document.getElementById('modalHapusDokter'), {
+      keyboard: false
+    });
+
+
+    $(document).on('click', '.editSpesialist', function (e) {
+      e.preventDefault()
+
+      console.log('edit spesialist')
+
+      let spesialisId = $(this).data('id');
+      let spesialisName = $(this).data('nama');
+      let spesialisGelar = $(this).data('gelar');
+      
+      $('#formSpesialist').attr('data-id', spesialisId);
+      $('#nama_spesialis').val(spesialisName);
+      $('#gelar').val(spesialisGelar);
+
+    })
+    $(document).on('click', '.editDokter', function (e) {
+      e.preventDefault()
+
+      let dokterId = $(this).data('id');
+      let dokterName = $(this).data('nama');
+      let dokterNip = $(this).data('nip');
+      let dokterSpesialis = $(this).data('spesialis-id');
+      let dokterJamMulai = $(this).data('jam-mulai');
+      let dokterJamSelesai = $(this).data('jam-selesai');
+      let dokterStatus = $(this).data('status');
+
+
+      $.get('/spesialis', function (spesialisList) {
+        spesialisList.spesialist.forEach(function (item) {
+          $('#spesialist_id').append(`<option value="${item.id}">${item.nama}</option>`);
+        });
+        $('#spesialist_id').val(dokterSpesialis);
+      });
+
+      $('#formDokter').attr('data-id', dokterId);
+      $('#nama').val(dokterName);
+      $('#nip').val(dokterNip);
+      $('#spesialist_id').val(dokterSpesialis);
+      $('#jam_mulai').val(dokterJamMulai);
+      $('#jam_selesai').val(dokterJamSelesai);
+      $('#status').val(dokterStatus);
+
+    })
+
+    $(document).on('click', '.deleteDokter', function (e) {
+      e.preventDefault()
+
+      let dokterId = $(this).data('id')
+      $('#formHapusDokter').attr('data-id', dokterId)
+      $('#modalHapusDokterTitle').text('Hapus Dokter')
+    })
+
+    $(document).on('click', '.deleteSpesialist', function (e) {
+      e.preventDefault()
+
+      let spesialistId = $(this).data('id')
+      $('#formHapusSpesialis').attr('data-id', dokterId)
+      $('#modalHapusSpesialisTitle').text('Hapus Spesialis')
+    })
+
+    $(document).on('submit', '#formHapusDokter', function (e) {
+      e.preventDefault()
+
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+
+      let dokterId = $(this).attr('data-id')
+      let url = `/dokter/${dokterId}/hapus`
+
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: {
+          _csrf: csrfToken,
+        },
+        success: function (response) {
+          if (response.success) {
+            showSwal("success", "Sukses", response.message, function () {
+              modalHapusDokter.hide();
+              location.reload();
+            });
+          } else {
+            showSwal("error", "Error", response.message);
+          }
+        },
+        error: function (error) {
+          showSwal("error", "Gagal", "Terjadi kesalahan dalam menghapus data!");
+        }
+      });
+    })
+
+    $(document).on('submit', '#formHapusSpesialist', function (e) {
+      e.preventDefault()
+
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      let spesialisId = $(this).attr('data-id')
+      let url = `/spesialist/${dokterId}/hapus`
+
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: {
+          _csrf: csrfToken,
+        },
+        success: function (response) {
+          if (response.success) {
+            showSwal("success", "Sukses", response.message, function () {
+              modalHapusSpesialist.hide();
+              location.reload();
+            });
+          } else {
+            showSwal("error", "Error", response.message);
+          }
+        },
+        error: function (error) {
+          showSwal("error", "Gagal", "Terjadi kesalahan dalam menghapus data!");
+        }
+      });
+    })
+
+
+    $('#formDokter').on('submit', function (e) {
+      e.preventDefault();
+
+      let formData = new FormData(this);
+      let dokterId = $(this).attr('data-id');
+      let url = dokterId ? `/dokter/${dokterId}/update` : '/dokter';
+      let method = dokterId ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: url,
+        type: method,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if (response.success) {
+            showSwal("success", "Sukses", response.message, function () {
+              modalHapusDokter.hide();
+              location.reload();
+            });
+          } else {
+            showSwal("error", "Error", response.message);
+          }
+        },
+        error: function (error) {
+          showSwal("error", "Gagal", "Terjadi kesalahan dalam menyimpan data!");
+        }
+      });
+
+    })
+
+    $('#formSpesialist').on('submit', function (e) {
+      e.preventDefault();
+
+      console.log('submit form spesialist')
+
+      let formData = new FormData(this);
+      let spesialistId = $(this).attr('data-id');
+      let url = spesialistId ? `/spesialist/${spesialistId}/update` : '/dokter';
+      let method = spesialistId ? 'PUT' : 'POST';
+
+      console.log(spesialistId, url, method)
+
+      $.ajax({
+        url: url,
+        type: method,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if (response.success) {
+            showSwal("success", "Sukses", response.message, function () {
+              modalSpesialist.hide();
+              location.reload();
+            });
+          } else {
+            showSwal("error", "Error", response.message);
+          }
+        },
+        error: function (error) {
+          showSwal("error", "Gagal", "Terjadi kesalahan dalam menyimpan data!");
+        }
+      });
+
+    })
+
+  })
 </script>

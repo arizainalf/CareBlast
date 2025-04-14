@@ -83,30 +83,6 @@
     reader.readAsDataURL(e.target.files[0]);
   });
 
-  // function showSwal(type, title, message, callback = null) {
-  //   let swalOptions = {
-  //     title: title,
-  //     text: message,
-  //     icon: type,
-  //     confirmButtonColor: "#3085d6",
-  //     confirmButtonText: "OK",
-  //   };
-
-  //   // Jika modal konfirmasi (delete), tambahkan opsi tambahan
-  //   if (type === "warning") {
-  //     swalOptions.showCancelButton = true;
-  //     swalOptions.cancelButtonColor = "#d33";
-  //     swalOptions.cancelButtonText = "Batal";
-  //     swalOptions.confirmButtonText = "Ya, Hapus!";
-  //   }
-
-  //   Swal.fire(swalOptions).then((result) => {
-  //     if (result.isConfirmed && callback) {
-  //       callback();
-  //     }
-  //   });
-  // }
-
   $(document).ready(function () {
     let modalUser = new bootstrap.Modal($('#tambahPengguna')[0]);
 

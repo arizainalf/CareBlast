@@ -1,4 +1,9 @@
 @layout.app({ title: "Data Dokter" })
+
+@slot('styles')
+<meta name="csrf-token" content="{{ csrfToken }}">
+@end
+
 @slot('content')
 
 <div class="container-fluid py-4">
@@ -57,5 +62,10 @@
 
 @slot('scripts')
 @include('puskesmas/style/script')
+<script>
+  $(document).ready(function () {
+
+  })
+</script>
 @end
 @end

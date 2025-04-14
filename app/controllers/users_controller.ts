@@ -82,16 +82,9 @@ export default class UsersController {
   public async update({ request, params, response }: HttpContext) {
     const user = await User.findOrFail(params.id);
     const data = request.only(['fullName', 'email', 'phoneNumber', 'role']);
-    let fotoPath = user.foto ?? 'users/default-profile.jpg'
-
-    const avatar = request.file('avatar')
-
-    if (avatar) {
-      fotoPath = (await this.saveFile(avatar)) ?? 'default-profile.jpg'
-    }
 
     try {
-      user.merge({ ...data, foto: fotoPath });
+      user.merge({ ...data });
       await user.save();
       return response.json({ success: true, message: 'Pengguna berhasil diperbarui!', user });
     } catch (error) {
@@ -125,14 +118,18 @@ export default class UsersController {
 
     if (!payload.current_password || !payload.new_password || !payload.confirm_password) {
       return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'Password lama, password baru, dan konfirmasi password wajib diisi' })
-    } else if (!await user.verifyPassword(payload.current_password)) {
+    } else if (user instanceof User && !await user.verifyPassword(payload.current_password)) {
       return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'Password lama salah' })
     } else if (payload.new_password !== payload.confirm_password) {
       return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'Password baru dan konfirmasi password tidak sama' })
     }
 
     try {
-      user.password = payload.confirm_password
+      if ('password' in user) {
+        user.password = payload.confirm_password
+      } else {
+        return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'User tidak valid untuk operasi ini' })
+      }
       await user.save()
       return response.ok({ status: 'success', title: 'Berhasil!', message: 'Password berhasil diperbarui' })
     } catch (error) {
@@ -158,13 +155,6 @@ export default class UsersController {
     // Ambil data input kecuali 'photo' karena photo adalah file
     const payload = request.only(['fullName', 'email', 'phoneNumber'])
 
-    let fotoPath = user.foto ?? 'users/default-profile.jpg'
-
-    const photo = request.file('photo')
-
-    if (photo) {
-      fotoPath = (await this.saveFile(photo)) ?? 'users/default-profile.jpg'
-    }
 
     if (!payload.fullName || !payload.email || !payload.phoneNumber) {
       return response.badRequest({
@@ -175,7 +165,7 @@ export default class UsersController {
     }
 
     try {
-      user.merge({ ...payload, foto: fotoPath })
+      user.merge({ ...payload })
       await user.save()
       return response.ok({
         status: 'success',

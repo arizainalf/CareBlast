@@ -54,7 +54,7 @@ export default class extends BaseSeeder {
       },
       {
         fullName: 'Admin',
-        email: 'user@gmail.com',
+        email: 'admin@gmail.com',
         password: '11221122',
         role: 'admin',
         phoneNumber: '081930865458',
