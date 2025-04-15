@@ -1,0 +1,84 @@
+<!-- Informasi Pribadi -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100">
+  <div class="px-5 py-4 border-b border-gray-100">
+    <h3 class="text-base font-semibold text-primary">
+      Informasi Pribadi
+    </h3>
+  </div>
+  <div class="p-5 space-y-4">
+    <div class="grid grid-cols-3 gap-3 text-sm">
+      <span class="text-gray-500">Nama Lengkap</span>
+      <span class="col-span-2 font-medium text-gray-800">{{{ pasien.name}}}</span>
+    </div>
+    <div class="grid grid-cols-3 gap-3 text-sm">
+      <span class="text-gray-500">NIK</span>
+      <span class="col-span-2 font-medium text-gray-800">{{{ pasien.nik}}}</span>
+    </div>
+    <div class="grid grid-cols-3 gap-3 text-sm">
+      <span class="text-gray-500">Jenis Kelamin</span>
+      <span class="col-span-2 font-medium text-gray-800">{{{ pasien.jenis_kelamin}}}</span>
+    </div>
+    <div class="grid grid-cols-3 gap-3 text-sm">
+      <span class="text-gray-500">Tempat, Tanggal Lahir</span>
+      <span class="col-span-2 font-medium text-gray-800">{{{tempatLahir}}}, {{{tanggalLahirFormatted}}}</span>
+    </div>
+    <div class="grid grid-cols-3 gap-3 text-sm">
+      <span class="text-gray-500">No. Telepon</span>
+      <span class="col-span-2 font-medium text-gray-800">{{{pasien.no_hp}}}</span>
+    </div>
+    <div class="grid grid-cols-3 gap-3 text-sm">
+      <span class="text-gray-500">Golongan Darah</span>
+      <span class="col-span-2 font-medium text-gray-800">{{{pasien.golongan_darah}}}</span>
+    </div>
+    <div class="grid grid-cols-3 gap-3 text-sm">
+      <span class="text-gray-500">Alamat</span>
+      <span class="col-span-2 font-medium text-gray-800">{{{pasien.alamat}}}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Hasil Diagnosis -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100">
+  <div class="px-5 py-4 border-b border-gray-100">
+    <h3 class="text-base font-semibold text-primary">
+      Hasil Diagnosis
+    </h3>
+  </div>
+  <div class="p-5 space-y-4 text-sm text-gray-700">
+    <div>
+      <h4 class="font-semibold text-gray-800 mb-1">
+        Nama Penyakit
+      </h4>
+      <p>
+        {{ pasien.jenisPenyakit.nama }}
+      </p>
+    </div>
+    <div>
+      <h4 class="font-semibold text-gray-800 mb-1">
+        Deskripsi
+      </h4>
+      <p>
+        {{ pasien.jenisPenyakit.deskripsi }}
+      </p>
+    </div>
+    <div>
+      <h4 class="font-semibold text-gray-800 mb-1">
+        Keluhan Pasien
+      </h4>
+        @if(pasien.kunjungans.length > 0)
+        <p class="text-sm text-gray-700">
+          {{ pasien.kunjungans[0].keterangan || '-' }}
+        </p>
+        @else
+        <p class="text-sm text-gray-500">Belum ada keluhan.</p>
+        @endif
+    </div>
+  </div>
+</div>
+<!-- Tombol Logout -->
+<div class="flex justify-end mt-4">
+  <a href="/pasien/logout"
+    class="text-sm px-4 py-2 rounded-lg border border-primary text-accent hover:bg-primary hover:text-white transition-all">
+    Logout
+  </a>
+</div>
