@@ -1,0 +1,40 @@
+<h2 class="text-base font-semibold text-primary mb-6 flex items-center">
+  <i class="fa-solid fa-calendar-check mr-2 text-accent text-sm"></i>
+  Riwayat Kunjungan
+</h2>
+
+<div class="space-y-4">
+  <!-- Card -->
+  @each(kunjungan in allKunjungan)
+  <div class="bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <div class="p-4">
+      <!-- Content -->
+      <div class="flex justify-between items-start">
+        <div class="flex-1">
+          <h3 class="text-md font-semibold text-gray-800">
+            {{ kunjungan.tema || 'Konsultasi Rutin' }}
+          </h3>
+          <p class="text-xs text-gray-500">
+            Dr. Anita Susanti · Psikiater
+          </p>
+          <p class="text-xs text-gray-400 mt-1">
+            @if(kunjungan.tanggalKunjungan)
+            {{ formatDate(kunjungan.tanggalKunjungan) }} · 10:30 WIB
+            @else
+            Tanggal tidak tersedia
+            @endif
+          </p>
+        </div>
+
+        <span class="bg-green-100 text-green-700 text-[10px] px-2 py-[2px] rounded-full font-medium h-fit">
+          Selesai
+        </span>
+      </div>
+
+      <p class="text-sm text-gray-700 mt-2 leading-relaxed">
+        {{ kunjungan.keterangan || 'Tidak ada keterangan tambahan.' }}
+      </p>
+    </div>
+  </div>
+  @endeach
+</div>
