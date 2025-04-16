@@ -33,6 +33,7 @@
             </div>
             <a class="timeline-panel text-muted" href="/kunjungan/{{ kunjungan.uuid }}">
               <span>{{ formatDate(kunjungan.tanggalKunjungan) }}</span>
+              <span>{{ kunjungan.dokter.nama }}.{{ kunjungan.dokter.spesialist.gelar }}</span>
               <h6 class="mb-0">
                 {{ kunjungan.tema }}
                 <strong class="{{ index === 0 ? 'text-info' : (index === 1 ? 'text-primary' : 'text-dark') }}">{{

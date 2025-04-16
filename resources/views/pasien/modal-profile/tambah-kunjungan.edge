@@ -25,6 +25,16 @@
         </div>
 
         <div class="mb-3">
+          <label for="dokter">Dokter</label>
+          <select class="form-control" name="dokter" id="dokter">
+            <option value="" selected disabled>Pilih Dokter</option>
+            @each(dokter in dokters)
+            <option value="{{ dokter.id }}">{{ dokter.nama }}.{{ dokter.spesialist.gelar }}</option>
+            @end
+          </select>
+        </div>
+        
+        <div class="mb-3">
           <label for="obat">Pilih Jenis Obat:</label>
           <select class="multi-select" name="obatList[]" multiple="multiple" id="obat">
             @each(obat in obats)
@@ -43,7 +53,13 @@
         </div>
 
         <div class="mb-2">
+          <label for="tanggalKunjungan">Tanggal Kunjungan</label>
           <input type="date" name="tanggalKunjungan" class="form-control" placeholder="Tanggal kunjungan" required>
+        </div>
+
+        <div class="mb-2">
+          <label for="kunjunganBerikutnya">Kunjungan Berikutnya</label>
+          <input type="date" name="kunjunganBerikutnya" class="form-control" placeholder="Kunjungan Berikutnya">
         </div>
 
         <div class="modal-footer">

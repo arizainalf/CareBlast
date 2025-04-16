@@ -32,11 +32,12 @@
           <div class="status-wrapper d-flex align-items-center">
             <div class="toggle-switch-wrapper me-2">
               <label class="toggle-switch">
-                <input type="checkbox" class="status-toggle" checked data-id="{{ dokter.status }}">
+                <input type="checkbox" class="status-toggle" {{ dokter.status == 1 ? 'checked' : '' }}
+                  data-id="{{ dokter.id }}">
                 <span class="toggle-slider"></span>
               </label>
             </div>
-            <span class="status-badge badge bg-success">Aktif</span>
+            <span class="status-badge badge {{ dokter.status == 1 ? 'bg-success' : 'bg-danger' }}">{{ dokter.status == 1 ? 'Aktif' : 'Tidak Aktif' }}</span>
           </div>
         </td>
         <td>

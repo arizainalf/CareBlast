@@ -156,64 +156,113 @@
 
   <script>
     $(document).ready(function () {
-      // SmartWizard initialize
       $('#smartwizard').smartWizard();
-    });
-  </script>
-  <script>
-    function cardsCenter() {
+      function cardsCenter() {
 
-      /*  testimonial one function by = owl.carousel.js */
-      jQuery('.card-slider').owlCarousel({
-        loop: true,
-        margin: 0,
-        nav: true,
-        //center:true,
-        slideSpeed: 3000,
-        paginationSpeed: 3000,
-        dots: true,
-        navText: ['<i class="fas fa-arrow-left"></i>', '<i class="fas fa-arrow-right"></i>'],
-        responsive: {
-          0: {
-            items: 1
-          },
-          576: {
-            items: 1
-          },
-          800: {
-            items: 1
-          },
-          991: {
-            items: 1
-          },
-          1200: {
-            items: 1
-          },
-          1600: {
-            items: 1
+        /*  testimonial one function by = owl.carousel.js */
+        jQuery('.card-slider').owlCarousel({
+          loop: true,
+          margin: 0,
+          nav: true,
+          //center:true,
+          slideSpeed: 3000,
+          paginationSpeed: 3000,
+          dots: true,
+          navText: ['<i class="fas fa-arrow-left"></i>', '<i class="fas fa-arrow-right"></i>'],
+          responsive: {
+            0: {
+              items: 1
+            },
+            576: {
+              items: 1
+            },
+            800: {
+              items: 1
+            },
+            991: {
+              items: 1
+            },
+            1200: {
+              items: 1
+            },
+            1600: {
+              items: 1
+            }
           }
-        }
-      })
-    }
-
-    jQuery(window).on('load', function () {
-      setTimeout(function () {
-        cardsCenter();
-      }, 1000);
-    });
-
-  </script>
-
-  <script>
-    const Toast = Swal.mixin({
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
+        })
       }
+
+      jQuery(window).on('load', function () {
+        setTimeout(function () {
+          cardsCenter();
+        }, 1000);
+      });
+
+      const Toast = Swal.mixin({
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+
+
+      function logoutBtn(buttonId) {
+        const logoutButton = document.getElementById(buttonId)
+        logoutButton.addEventListener('click', function (event) {
+          event.preventDefault()
+
+          Swal.fire({
+            title: 'Konfirmasi Logout',
+            text: 'Apakah Anda yakin ingin logout?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Logout',
+            cancelButtonText: 'Batal',
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              // Kirim permintaan logout ke server
+              const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
+              const response = await fetch('/logout', {
+                method: 'POST',
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': csrfToken, // Kirim CSRF token
+                },
+              })
+
+              const result = await response.json()
+
+              if (result.status === 'success') {
+                Swal.fire({
+                  title: 'Logout Berhasil!',
+                  text: 'Anda akan diarahkan ke halaman login...',
+                  icon: 'success',
+                  timer: 2000,
+                  showConfirmButton: false,
+                }).then(() => {
+                  window.location.href = result.redirectUrl
+                })
+              }
+            }
+          })
+        })
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        // Inisialisasi tombol logout
+        logoutBtn('logoutButton')
+        logoutBtn('logoutButton2')
+        logoutBtn('logoutButton3')
+      })
+
+
     });
   </script>
+
 
   @if(flashMessages.get('success'))
   <script>
@@ -251,57 +300,6 @@
   @endif
 
   <script>
-
-    function logoutBtn(buttonId) {
-      const logoutButton = document.getElementById(buttonId)
-      logoutButton.addEventListener('click', function (event) {
-        event.preventDefault()
-
-        Swal.fire({
-          title: 'Konfirmasi Logout',
-          text: 'Apakah Anda yakin ingin logout?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Logout',
-          cancelButtonText: 'Batal',
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            // Kirim permintaan logout ke server
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-
-            const response = await fetch('/logout', {
-              method: 'POST',
-              headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken, // Kirim CSRF token
-              },
-            })
-
-            const result = await response.json()
-
-            if (result.status === 'success') {
-              Swal.fire({
-                title: 'Logout Berhasil!',
-                text: 'Anda akan diarahkan ke halaman login...',
-                icon: 'success',
-                timer: 2000,
-                showConfirmButton: false,
-              }).then(() => {
-                window.location.href = result.redirectUrl
-              })
-            }
-          }
-        })
-      })
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      // Inisialisasi tombol logout
-      logoutBtn('logoutButton')
-      logoutBtn('logoutButton2')
-      logoutBtn('logoutButton3')
-    })
   </script>
 
 </body>
