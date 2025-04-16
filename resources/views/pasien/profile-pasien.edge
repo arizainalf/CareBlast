@@ -179,7 +179,7 @@
                         </span>
                         <div class="d-flex align-items-center">
                           <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3"
-                            data-bs-toggle="modal" data-bs-target="#modalObat" data-uuid="{{ item.uuid }}"
+                            data-bs-toggle="modal" data-bs-target="#basicModal" data-uuid="{{ item.uuid }}"
                             data-nama="{{ item.obat.nama }}" data-frekuensi="{{ item.frekuensi }}"
                             data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}">
                             <i class="fas fa-pencil-alt" style="cursor: pointer; user-select: none;"></i>
@@ -191,6 +191,24 @@
                       @end
                       @endif
                     </ul>
+                  </div>
+                </div>
+                <!-- Hidden template for detail modal -->
+                <script type="text/template" id="detailModalTemplate">
+                  @include('pasien/modal-profile/script/detail-obat-hidden')
+                </script>
+
+                <div class="modal fade" id="medicationDetailModal" tabindex="-1"
+                  aria-labelledby="medicationDetailModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-body p-5 text-center">
+                        <div class="spinner-border text-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Memuat detail obat...</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -234,22 +252,25 @@
 </div>
 @include('pasien/modal-profile/script/hapus-pasien')
 
-<div class="modal fade" id="modalObat" tabindex="-1" aria-labelledby="modalObatLabel" aria-hidden="true">
-  @include('pasien/modal-profile/edit-obat')
-</div>
-
 <div class="modal fade" id="EditPasienModal" tabindex="-1" aria-labelledby="EditPasienModalLabel" aria-hidden="true">
   @include('pasien/modal-profile/edit-pasien')
 </div>
 
+<div class="modal fade" id="basicModal" tabindex="-1" role="dialog">
+  @include('pasien/modal-profile/edit-obat')
+</div>
+</div>
 <div class="modal fade" id="tambahObatModal">
   @include('pasien/modal-profile/tambah-obat')
 </div>
-
+<div class="modal fade" id="medicationDetailModal" tabindex="-1" aria-labelledby="medicationDetailModalLabel"
+  aria-hidden="true">
+  @include('pasien/modal-profile/detail-obat')
+</div>
+</div>
 <div class="modal fade" id="tambahKunjunganModal" tabindex="-1">
   @include('pasien/modal-profile/tambah-kunjungan')
 </div>
-
 <div class="modal fade" id="hapusModal" tabindex="-1" aria-labelledby="hapusModalLabel" aria-hidden="true">
   @include('pasien/modal-profile/hapus-pasien')
 </div>
