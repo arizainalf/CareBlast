@@ -2,9 +2,13 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import User from '#models/user'
 import Pasien from '#models/pasien'
 import JenisPenyakit from '#models/jenis_penyakit'
+import Obat from '#models/obat'
+import Spesialist from '#models/spesialist'
+import Dokter from '#models/dokter'
+import Kunjungan from '#models/kunjungan'
+import ObatPasien from '#models/obat_pasien'
 import { v4 as uuid } from 'uuid'
 import { DateTime } from 'luxon'
-import Obat from '#models/obat'
 
 export default class extends BaseSeeder {
   private generateNIK(): string {
@@ -42,6 +46,31 @@ export default class extends BaseSeeder {
     return `${provinceCode}${regencyCode}${subDistrictCode}${date}${month}${year}${randomNum}`
   }
 
+  private generateTimeSlots(frequency: number): string[] {
+    // Generate appropriate time slots based on frequency
+    const timeSlots: string[] = []
+
+    switch (frequency) {
+      case 1:
+        // Once a day (morning)
+        timeSlots.push('08:00')
+        break
+      case 2:
+        // Twice a day (morning and evening)
+        timeSlots.push('08:00', '20:00')
+        break
+      case 3:
+        // Three times a day (morning, afternoon, evening)
+        timeSlots.push('08:00', '14:00', '20:00')
+        break
+      default:
+        // Default to morning
+        timeSlots.push('08:00')
+    }
+
+    return timeSlots
+  }
+
   public async run() {
     // Seed Users
     await User.createMany([
@@ -61,6 +90,64 @@ export default class extends BaseSeeder {
       },
     ])
 
+    // Seed Spesialist
+    const spesialistData = [
+      { nama: 'Kardiologi', gelar: 'Sp.JP' },
+      { nama: 'Endokrinologi', gelar: 'Sp.PD-KEMD' },
+      { nama: 'Pulmonologi', gelar: 'Sp.P' },
+      { nama: 'Psikiatri', gelar: 'Sp.KJ' },
+      { nama: 'Umum', gelar: 'Sp.UMU' },
+    ]
+
+    const spesialists = await Spesialist.createMany(spesialistData)
+
+    // Seed Dokter
+    const dokterData = [
+      {
+        nip: 'DOK001',
+        nama: 'Dr. Andi Wijaya',
+        spesialistId: spesialists[0].id,
+        jamMulai: '08:00',
+        jamSelesai: '14:00',
+        status: true,
+      },
+      {
+        nip: 'DOK002',
+        nama: 'Dr. Siti Rahma',
+        spesialistId: spesialists[1].id,
+        jamMulai: '09:00',
+        jamSelesai: '15:00',
+        status: true,
+      },
+      {
+        nip: 'DOK003',
+        nama: 'Dr. Budi Santoso',
+        spesialistId: spesialists[2].id,
+        jamMulai: '10:00',
+        jamSelesai: '16:00',
+        status: true,
+      },
+      {
+        nip: 'DOK004',
+        nama: 'Dr. Dewi Anggraini',
+        spesialistId: spesialists[3].id,
+        jamMulai: '13:00',
+        jamSelesai: '19:00',
+        status: true,
+      },
+      {
+        nip: 'DOK005',
+        nama: 'Dr. Rudi Hartono',
+        spesialistId: spesialists[4].id,
+        jamMulai: '08:00',
+        jamSelesai: '16:00',
+        status: true,
+      },
+    ]
+
+    const dokters = await Dokter.createMany(dokterData)
+
+    // Seed Obat
     const obatData = [
       { nama: 'Amlodipine', dosis: 5 },
       { nama: 'Captopril', dosis: 25 },
@@ -74,7 +161,7 @@ export default class extends BaseSeeder {
       { nama: 'Amoxicillin', dosis: 500 },
     ]
 
-    await Obat.createMany(
+    const obats = await Obat.createMany(
       obatData.map((data) => ({
         uuid: uuid(),
         nama: data.nama,
@@ -180,6 +267,170 @@ export default class extends BaseSeeder {
       }
     })
 
-    await Pasien.createMany(pasienData)
+    const pasiens = await Pasien.createMany(pasienData)
+
+    // Generate Kunjungan records
+    const kunjunganData = []
+
+    // Create between 1-3 visits for each patient
+    for (const pasien of pasiens) {
+      const visitCount = 1 + Math.floor(Math.random() * 3)
+
+      for (let i = 0; i < visitCount; i++) {
+        // Calculate random dates
+        const now = DateTime.now()
+        const visitDate = now.minus({ days: Math.floor(Math.random() * 30) })
+        const nextVisitDate = visitDate.plus({ days: 7 + Math.floor(Math.random() * 23) })
+
+        // Pick a relevant doctor based on patient's disease type
+        let relevantDoktorIndex = 0
+
+        if (pasien.jenisPenyakitId) {
+          // Match doctor specialty with disease type
+          switch (pasien.jenisPenyakitId) {
+            case jenisPenyakits.find(
+              (jp) => jp.nama === 'Hipertensi 1' || jp.nama === 'Hipertensi 2'
+            )?.id:
+              relevantDoktorIndex =
+                dokters.findIndex(
+                  (d) => d.spesialistId === spesialists.find((s) => s.nama === 'Kardiologi')?.id
+                ) || 0
+              break
+            case jenisPenyakits.find((jp) => jp.nama === 'Diabetes')?.id:
+              relevantDoktorIndex =
+                dokters.findIndex(
+                  (d) => d.spesialistId === spesialists.find((s) => s.nama === 'Endokrinologi')?.id
+                ) || 0
+              break
+            case jenisPenyakits.find((jp) => jp.nama === 'Tuberkulosis Paru')?.id:
+              relevantDoktorIndex =
+                dokters.findIndex(
+                  (d) => d.spesialistId === spesialists.find((s) => s.nama === 'Pulmonologi')?.id
+                ) || 0
+              break
+            case jenisPenyakits.find((jp) => jp.nama === 'Jiwa')?.id:
+              relevantDoktorIndex =
+                dokters.findIndex(
+                  (d) => d.spesialistId === spesialists.find((s) => s.nama === 'Psikiatri')?.id
+                ) || 0
+              break
+            default:
+              relevantDoktorIndex =
+                dokters.findIndex(
+                  (d) => d.spesialistId === spesialists.find((s) => s.nama === 'Umum')?.id
+                ) || 0
+          }
+
+          // If no match found, use a random doctor
+          if (relevantDoktorIndex === -1) {
+            relevantDoktorIndex = Math.floor(Math.random() * dokters.length)
+          }
+        } else {
+          // If no disease type, use a random doctor
+          relevantDoktorIndex = Math.floor(Math.random() * dokters.length)
+        }
+
+        const temaOptions = [
+          'Konsultasi rutin',
+          'Pemeriksaan lanjutan',
+          'Kontrol obat',
+          'Evaluasi kondisi',
+          'Konsultasi gejala baru',
+        ]
+
+        kunjunganData.push({
+          pasienId: pasien.id,
+          dokterId: dokters[relevantDoktorIndex].id,
+          tema: temaOptions[Math.floor(Math.random() * temaOptions.length)],
+          keterangan: `Kunjungan ${i + 1} untuk pemeriksaan kondisi pasien dan evaluasi pengobatan.`,
+          tanggalKunjungan: visitDate,
+          kunjunganBerikutnya: nextVisitDate,
+        })
+      }
+    }
+
+    const kunjungans = await Kunjungan.createMany(kunjunganData)
+
+    // Generate ObatPasien records
+    const obatPasienData = []
+
+    // Create medication records for each visit
+    for (const kunjungan of kunjungans) {
+      // Get the associated patient
+      const pasien = pasiens.find((p) => p.id === kunjungan.pasienId)
+      if (!pasien) continue
+
+      // Get the patient's disease type
+      const jenisPenyakit = jenisPenyakits.find((jp) => jp.id === pasien.jenisPenyakitId)
+
+      // Define appropriate medications based on disease
+      let relevantObatIds: number[] = []
+
+      if (jenisPenyakit) {
+        switch (jenisPenyakit.nama) {
+          case 'Hipertensi 1':
+          case 'Hipertensi 2':
+            relevantObatIds = obats
+              .filter((o) => o.nama === 'Amlodipine' || o.nama === 'Captopril')
+              .map((o) => o.id)
+            break
+          case 'Diabetes':
+            relevantObatIds = obats
+              .filter((o) => o.nama === 'Metformin' || o.nama === 'Gliclazide')
+              .map((o) => o.id)
+            break
+          case 'Tuberkulosis Paru':
+            relevantObatIds = obats
+              .filter((o) => o.nama === 'Isoniazid (INH)' || o.nama === 'Rifampicin')
+              .map((o) => o.id)
+            break
+          case 'Jiwa':
+            relevantObatIds = obats
+              .filter((o) => o.nama === 'Fluoxetine' || o.nama === 'Risperidone')
+              .map((o) => o.id)
+            break
+          default:
+            relevantObatIds = obats
+              .filter((o) => o.nama === 'Paracetamol' || o.nama === 'Amoxicillin')
+              .map((o) => o.id)
+        }
+      } else {
+        // If no specific disease, use generic medications
+        relevantObatIds = obats
+          .filter((o) => o.nama === 'Paracetamol' || o.nama === 'Amoxicillin')
+          .map((o) => o.id)
+      }
+
+      // For each visit, assign 1-2 medications
+      const medCount = 1 + Math.floor(Math.random() * 2)
+
+      for (let i = 0; i < medCount; i++) {
+        // If we have relevant medications, use them; otherwise, use a random one
+        const obatId =
+          relevantObatIds.length > 0
+            ? relevantObatIds[Math.floor(Math.random() * relevantObatIds.length)]
+            : obats[Math.floor(Math.random() * obats.length)].id
+
+        const frekuensi = 1 + Math.floor(Math.random() * 3) // 1-3 times a day
+
+        // Generate appropriate time slots based on frequency (e.g., ["08:00"], ["08:00", "20:00"])
+        const waktuKonsumsi = this.generateTimeSlots(frekuensi)
+
+        const keteranganWaktuOptions = ['Sebelum makan', 'Sesudah makan']
+
+        obatPasienData.push({
+          uuid: uuid(),
+          pasienId: pasien.id,
+          kunjunganId: kunjungan.id,
+          obatId: obatId,
+          frekuensi: frekuensi,
+          waktuKonsumsi: JSON.stringify(waktuKonsumsi), // JSON array of time strings
+          keteranganWaktu:
+            keteranganWaktuOptions[Math.floor(Math.random() * keteranganWaktuOptions.length)],
+        })
+      }
+    }
+
+    await ObatPasien.createMany(obatPasienData)
   }
 }
