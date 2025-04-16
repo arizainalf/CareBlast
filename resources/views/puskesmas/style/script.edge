@@ -4,6 +4,8 @@
 
     toggleSwitches.forEach(toggle => {
       toggle.addEventListener('change', function () {
+        
+        const doctorId = this.getAttribute('data-id');
         const statusWrapper = this.closest('.status-wrapper');
         const statusBadge = statusWrapper.querySelector('.status-badge');
 
@@ -18,10 +20,29 @@
         }
 
         console.log(this.checked)
-        const doctorId = this.getAttribute('data-id');
         updateDoctorStatus(doctorId, this.checked);
       });
     });
+
+    function checkStatus(dokterId){
+      $.get(`/dokter/${dokterId}/status`, function (response) {
+        if (response.success) {
+          const status = response.status;
+          const statusBadge = document.querySelector(`.status-badge[data-id="${dokterId}"]`);
+          if (status) {
+            statusBadge.textContent = 'Aktif';
+            statusBadge.classList.remove('bg-danger');
+            statusBadge.classList.add('bg-success');
+          } else {
+            statusBadge.textContent = 'Tidak Aktif';
+            statusBadge.classList.remove('bg-success');
+            statusBadge.classList.add('bg-danger');
+          }
+        } else {
+          console.error('Gagal mendapatkan status dokter:', response.message);
+        }
+      });
+    }
 
     // Example function for AJAX update
     function updateDoctorStatus(id, isActive) {

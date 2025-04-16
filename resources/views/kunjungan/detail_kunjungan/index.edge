@@ -103,7 +103,9 @@
             <div class="card-body">
               <p class="mt-2"><strong>Tanggal :</strong> {{ formatDate(kunjungan.tanggalKunjungan) }}</p>
               <p><strong>Jenis Pemeriksaan :</strong> {{ kunjungan.tema }}</p>
+              <p><strong>Dokter :</strong> {{ kunjungan.dokter.nama }}.{{ kunjungan.dokter.spesialist.gelar }}</p>
               <p><strong>Catatan :</strong> {{ kunjungan.keterangan }}</p>
+              <p><strong>Kunjungan Berikutnya :</strong> {{ kunjungan.kunjunganBerikutnya ? formatDate(kunjungan.kunjunganBerikutnya) : 'tidak ada' }}</p>
               <hr style="margin-top: -1px;">
               <div class="mt-2">
                 <div class="d-flex justify-content-between align-items-center mb-3">

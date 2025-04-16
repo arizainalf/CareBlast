@@ -13,6 +13,21 @@
             value="{{ kunjungan.tanggalKunjungan.toFormat('yyyy-MM-dd') }}" required>
         </div>
         <div class="mb-3">
+          <label for="tanggalKunjungan" class="form-label">Kunjungan Berikutnya</label>
+          <input type="date" class="form-control" id="editTanggalKunjungan" name="kunjunganBerikutnya"
+            value="{{ kunjungan.kunjunganBerikutnya ? kunjungan.kunjunganBerikutnya.toFormat('yyyy-MM-dd') : '' }}">
+        </div>
+        <div class="mb-3">
+          <label for="dokter">Dokter</label>
+          <select name="dokter" class="form-control" id="dokter">
+            <option value="" selected disabled>Pilih Dokter</option>
+            @each(dokter in dokters)
+            <option value="{{ dokter.id }}" {{ kunjungan.dokter.id === dokter.id ? 'selected' : '' }}>
+              {{ dokter.nama }}.{{ dokter.spesialist.gelar }}</option>
+            @end
+          </select>
+        </div>
+        <div class="mb-3">
           <label for="tema" class="form-label">Jenis Pemeriksaan</label>
           <input type="text" class="form-control" id="editTema" name="tema" value="{{ kunjungan.tema }}" required>
         </div>

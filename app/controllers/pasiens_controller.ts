@@ -5,6 +5,7 @@ import { DateTime } from 'luxon'
 import { v4 as uuidv4 } from 'uuid'
 import Obat from '#models/obat'
 import Kunjungan from '#models/kunjungan'
+import Dokter from '#models/dokter'
 import ObatPasien from '#models/obat_pasien'
 import { saveContact } from '#services/contact_service'
 
@@ -218,6 +219,7 @@ export default class PasiensController {
         },
       }
       const obats = await Obat.all()
+      const dokters = await Dokter.query().preload('spesialist').where('status', true)
       const keluhan = kunjunganTerbaru ? kunjunganTerbaru.keterangan : 'Tidak ada keluhan'
 
       const kunjungans = pasien.kunjungans.map((kunjungan) => ({
@@ -233,6 +235,7 @@ export default class PasiensController {
         obatSebelumMakan,
         obatSesudahMakan,
         obats,
+        dokters,
         kunjunganTerbaru,
         kunjungans,
         jenisPenyakits,

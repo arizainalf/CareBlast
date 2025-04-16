@@ -5,6 +5,7 @@ import Pasien from '#models/pasien'
 import { v4 as uuidv4 } from 'uuid'
 import Obat from '#models/obat'
 import { DateTime } from 'luxon'
+import Dokter from '#models/dokter'
 
 export default class KunjungansController {
   async index({ view, request }: HttpContext) {
@@ -17,6 +18,8 @@ export default class KunjungansController {
       .preload('kunjungans', (kunjunganQuery) => {
         kunjunganQuery.orderBy('tanggalKunjungan', 'desc').preload('obatPasiens', (obatQuery) => {
           obatQuery.preload('obat')
+        }).preload('dokter', (dokterQuery) => {
+          dokterQuery.preload('spesialist')
         })
       })
 
@@ -28,12 +31,14 @@ export default class KunjungansController {
 
     const pasiens = await query.paginate(page, limit)
     const obats = await Obat.all()
+    const dokters = await Dokter.query().where('status', true).preload('spesialist')
     const allPasiens = await Pasien.all()
 
     return view.render('kunjungan/data-kunjungan', {
       pasiens: pasiens.all(),
       allPasiens,
       meta: pasiens.getMeta(),
+      dokters,
       obats,
       search,
       formatDate: (date: string | Date) => {
@@ -51,16 +56,24 @@ export default class KunjungansController {
         'tanggalKunjungan',
         new Date().toISOString().split('T')[0]
       )
+      const kunjunganBerikutnya = request.input(
+        'kunjunganBerikutnya',
+        new Date().toISOString().split('T')[0]
+      )
       const obatList = request.input('obatList', [])
 
       const pasien = await Pasien.query().select('id').where('uuid', pasienUuid).firstOrFail()
 
+      const dokterId = request.input('dokter')
+
       const kunjungan = await Kunjungan.create({
         uuid: uuidv4(),
+        dokterId: dokterId, // Ganti dengan ID dokter yang sesuai
         pasienId: pasien.id,
         tema: temaKunjungan,
         keterangan,
         tanggalKunjungan,
+        kunjunganBerikutnya,
       })
 
       if (Array.isArray(obatList) && obatList.length > 0) {
@@ -103,10 +116,14 @@ export default class KunjungansController {
       const kunjungan = await Kunjungan.query()
         .where('uuid', uuid)
         .preload('pasien')
-        .preload('obatPasiens', (query) => {
+        .preload('dokter', (dokter) => {
+          dokter.preload('spesialist')
+        }).preload('obatPasiens', (query) => {
           query.preload('obat')
         })
         .firstOrFail()
+
+      const dokters = await Dokter.query().where('status', true).preload('spesialist')
 
       const allKunjunganPasien = await Kunjungan.query()
         .where('pasienId', kunjungan.pasienId)
@@ -122,6 +139,7 @@ export default class KunjungansController {
       return view.render('kunjungan/detail_kunjungan/index', {
         kunjungan,
         allKunjunganPasien,
+        dokters,
         obats,
         currentKunjunganId: kunjungan.uuid,
         formatDate: (date: string | Date) => {
@@ -157,12 +175,14 @@ export default class KunjungansController {
 
     const pasiens = await query.exec()
     const obats = await Obat.all()
+    const dokters = await Dokter.query().where('status', true).preload('spesialist')
     const allPasiens = await Pasien.all()
 
     return response.json({
       pasiens,
       allPasiens,
       obats,
+      dokters,
       search,
       success: true,
     })
@@ -174,11 +194,15 @@ export default class KunjungansController {
       const tema = request.input('tema')
       const keterangan = request.input('keterangan')
       const tanggalKunjungan = request.input('tanggalKunjungan')
+      const kunjunganBerikutnya = request.input('kunjunganBerikutnya')
       const kunjungan = await Kunjungan.findByOrFail('uuid', uuid)
+      const dokterId = request.input('dokter')
 
       kunjungan.tema = tema
       kunjungan.keterangan = keterangan
       kunjungan.tanggalKunjungan = tanggalKunjungan as any
+      kunjungan.kunjunganBerikutnya = kunjunganBerikutnya as any
+      kunjungan.dokterId = dokterId
 
       await kunjungan.save()
 
