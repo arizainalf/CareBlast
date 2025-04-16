@@ -1,0 +1,945 @@
+@layout.app({ title: `Profile ${pasien.name}` })
+@slot('content')
+<div class="container-fluid">
+  <div class="row page-titles">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><a href="javascript:void(0)">Pasien</a></li>
+      <li class="breadcrumb-item"><a href="javascript:void(0)">{{ pasien.name }}</a></li>
+    </ol>
+  </div>
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="profile card card-body px-3 pt-3 pb-0">
+            <div class="profile-head">
+              <div class="photo-content">
+                <div class="cover-photo rounded"></div>
+              </div>
+              <div class="profile-info">
+                <div class="profile-photo" style="margin-top: -8px ;">
+                  <img src="/images/profile-rege.png" class="img-fluid rounded-circle">
+                </div>
+                <div class="profile-details">
+                  <div class="profile-name px-3 pt-2">
+                    <h4 class="text-primary mb-0">{{ pasien.name }}</h4>
+                    <p>{{ pasien.nik }}</p>
+                  </div>
+                  <div class="profile-email px-2 pt-2">
+                    <h4 class="text-muted mb-0">{{ pasien.tempat }}, {{ formatDate(pasien.tanggal_lahir) }}</h4>
+                    <p>{{ calculateAge(pasien.tanggal_lahir) }} tahun</p>
+                  </div>
+                  <div class="dropdown ms-auto">
+                    <a href="#" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true"><svg
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px"
+                        height="18px" viewbox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"></rect>
+                          <circle fill="#000000" cx="5" cy="12" r="2"></circle>
+                          <circle fill="#000000" cx="12" cy="12" r="2"></circle>
+                          <circle fill="#000000" cx="19" cy="12" r="2"></circle>
+                        </g>
+                      </svg>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded">
+                      <li>
+                        <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
+                          data-bs-target="#EditPasienModal">
+                          <i class="fas fa-pen text-warning" style="width: 20px; text-align: center;"></i> Edit Pasien
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
+                          data-bs-target="#tambahObatModal">
+                          <i class="fas fa-capsules text-success" style="width: 20px; text-align: center;"></i> Tambah
+                          Obat
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
+                          data-bs-target="#tambahKunjunganModal">
+                          <i class="fas fa-walking text-primary" style="width: 20px; text-align: center;"></i> Tambah
+                          Kunjungan
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
+                          data-bs-target="#hapusModal">
+                          <i class="fas fa-ban text-danger" style="width: 20px; text-align: center;"></i> Hapus Pasien
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-4">
+          <div class="row">
+            <div class="col-xl-12">
+              <div class="card">
+                <div class="card-header">
+                  <div class="d-flex flex-column">
+                    <h4 class="card-title">Data Obat</h4>
+                  </div>
+                  <div class="bootstrap-badge">
+                    <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-lg"
+                      data-bs-toggle="modal" data-bs-target="#bulkDeleteObatModal">
+                      <i class="far fa-trash-alt"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="modal fade" id="bulkDeleteObatModal">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Hapus Data Obat</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="mb-3">
+                          <label class="form-label">Pilih Kunjungan</label>
+                          <select id="kunjunganDeleteSelect" class="form-select">
+                            @if(kunjunganTerbaru)
+                            <option value="{{ kunjunganTerbaru.id }}" selected>
+                              Kunjungan Terbaru: {{ kunjunganTerbaru.tema }} ({{
+                              formatDate(kunjunganTerbaru.tanggalKunjungan) }})
+                            </option>
+                            @endif
+
+                            @each(kunjungan in kunjungans)
+                            @if(!kunjunganTerbaru || kunjungan.id !== kunjunganTerbaru.id)
+                            <option value="{{ kunjungan.id }}">
+                              {{ kunjungan.tema }} ({{ formatDate(kunjungan.tanggalKunjungan) }})
+                            </option>
+                            @endif
+                            @end
+                          </select>
+                        </div>
+                        <p>Tindakan ini akan menghapus semua data obat yang terkait dengan kunjungan yang dipilih,
+                          tetapi data kunjungan itu sendiri tetap tersimpan.</p>
+                        <p class="text-danger"><strong>Perhatian:</strong> Tindakan ini tidak dapat dibatalkan!</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" id="bulkDeleteObatBtn" class="btn btn-danger">Hapus</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="basic-list-group mb-0">
+                    <ul class="list-group">
+                      <li class="list-group-item active">Sebelum Makan</li>
+                      @if(obatSebelumMakan.length === 0)
+                      <li class="list-group-item text-center">Tidak ada obat</li>
+                      @else
+                      @each(item in obatSebelumMakan)
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="medication-name cursor-pointer" title="{{ item.obat.nama }}" data-bs-toggle="modal"
+                          data-bs-target="#medicationDetailModal" data-uuid="{{ item.uuid }}"
+                          style="cursor: pointer; user-select: none;">
+                          <span class="text-truncate d-inline-block" style="max-width: 150px; vertical-align: middle;">
+                            {{ item.obat.nama.length > 10 ? item.obat.nama.slice(0, 10) + '...' : item.obat.nama }}
+                          </span>
+                          {{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }} mg
+                        </span>
+                        <div class="d-flex align-items-center">
+                          <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3"
+                            data-bs-toggle="modal" data-bs-target="#basicModal" data-uuid="{{ item.uuid }}"
+                            data-nama="{{ item.obat.nama }}" data-frekuensi="{{ item.frekuensi }}"
+                            data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                            <i class="fas fa-pencil-alt" style="cursor: pointer; user-select: none;"></i>
+                          </span>
+                          <span class="badge badge-primary badge-pill" style="cursor: default; user-select: none;">{{
+                            item.frekuensi }}X1</span>
+                        </div>
+                      </li>
+                      @end
+                      @endif
+                    </ul>
+
+                    <ul class="list-group mt-3">
+                      <li class="list-group-item disabled">Sesudah Makan</li>
+                      @if(obatSesudahMakan.length === 0)
+                      <li class="list-group-item text-center">Tidak ada obat</li>
+                      @else
+                      @each(item in obatSesudahMakan)
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="medication-name cursor-pointer" title="{{ item.obat.nama }}" data-bs-toggle="modal"
+                          data-bs-target="#medicationDetailModal" data-uuid="{{ item.uuid }}"
+                          style="cursor: pointer; user-select: none;">
+                          <span class="text-truncate d-inline-block" style="max-width: 150px; vertical-align: middle;">
+                            {{ item.obat.nama.length > 10 ? item.obat.nama.slice(0, 10) + '...' : item.obat.nama }}
+                          </span>
+                          {{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }} mg
+                        </span>
+                        <div class="d-flex align-items-center">
+                          <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3"
+                            data-bs-toggle="modal" data-bs-target="#modalObat" data-uuid="{{ item.uuid }}"
+                            data-nama="{{ item.obat.nama }}" data-frekuensi="{{ item.frekuensi }}"
+                            data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                            <i class="fas fa-pencil-alt" style="cursor: pointer; user-select: none;"></i>
+                          </span>
+                          <span class="badge badge-secondary badge-pill" style="cursor: default; user-select: none;">{{
+                            item.frekuensi }}X1</span>
+                        </div>
+                      </li>
+                      @end
+                      @endif
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-8">
+          <div class="card">
+            <div class="card-body">
+              <div class="profile-tab">
+                <div class="custom-tab-1">
+                  <ul class="nav nav-tabs">
+                    <li class="nav-item"><a href="#data-diri" data-bs-toggle="tab" class="nav-link active show">Data
+                        Diri</a>
+                    </li>
+                    <li class="nav-item"><a href="#data-kunjungan" data-bs-toggle="tab" class="nav-link">Kunjungan</a>
+                    </li>
+                    <li class="nav-item"><a href="#kirim-hasil-lab" data-bs-toggle="tab" class="nav-link">Kirim Hasil
+                        Lab</a>
+                    </li>
+                  </ul>
+                  <div class="tab-content">
+                    <div id="data-diri" class="tab-pane fade active show">
+                        <div class="profile-about-me">
+                            <div class="profile-personal-info">
+                              <h3 class="text-primary mb-2 mt-2">Informasi Pribadi</h3>
+                              <div class="col-xl-9 col-lg-8">
+                                <div class="row">
+                                  <div class="col-sm-6 mb-3">
+                                    <h6 class="text-muted mb-1">Nama Lengkap</h6>
+                                    <h5>{{ pasien.name }}</h5>
+                                  </div>
+                                  <div class="col-sm-6 mb-3">
+                                    <h6 class="text-muted mb-1">NIK</h6>
+                                    <h5>{{ pasien.nik }}</h5>
+                                  </div>
+                                  <div class="col-sm-6 mb-3">
+                                    <h6 class="text-muted mb-1">Jenis Kelamin</h6>
+                                    <h5>{{ pasien.jenis_kelamin }}</h5>
+                                  </div>
+                                  <div class="col-sm-6 mb-3">
+                                    <h6 class="text-muted mb-1">Tempat, Tanggal Lahir</h6>
+                                    <h5>{{ pasien.tempat }}, {{ formatDate(pasien.tanggal_lahir) }}</h5>
+                                  </div>
+                                  <div class="col-sm-6 mb-3">
+                                    <h6 class="text-muted mb-1">No. Telepon</h6>
+                                    <h5>{{ pasien.no_hp }}</h5>
+                                  </div>
+                                  <div class="col-sm-6 mb-3">
+                                    <h6 class="text-muted mb-1">Golongan Darah</h6>
+                                    <h5>{{ pasien.golongan_darah || '-' }}</h5>
+                                  </div>
+                                  <div class="col-12">
+                                    <h6 class="text-muted mb-1">Alamat</h6>
+                                    <h5>{{ pasien.alamat }}</h5>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="pt-4 border-bottom-1 pb-3">
+                              <h3 class="text-primary">Hasil Diagnosis</h3>
+                              <h5 class="mb-1">Nama penyakit : {{ pasien.jenisPenyakit.nama }}</h5>
+                              <p>{{ pasien.jenisPenyakit.deskripsi || 'Tidak ada deskripsi' }}</p>
+                              <h5 class="mb-1">Keluhan Pasien</h5>
+                              <p>{{ keluhan || 'Tidak ada keluhan' }}</p>
+                            </div>
+                          </div>
+                          
+                    </div>
+                    <div id="data-kunjungan" class="tab-pane fade">
+                        <div class="card-body">
+                            <div id="DZ_W_TimeLine" class="widget-timeline dlab-scroll height370">
+                              <ul class="timeline">
+                                @each((kunjungan, index) in pasien.kunjungans)
+                                <li>
+                                  <div class="timeline-badge {{ index === 0 ? 'info' : 'dark' }}"></div>
+                                  <a class="timeline-panel text-muted" href="/kunjungan/{{ kunjungan.uuid }}">
+                                    <span>{{ formatDate(kunjungan.tanggalKunjungan) }}</span>
+                                    <h6 class="mb-0">
+                                      {{ kunjungan.tema }}
+                                      <strong class="{{ index === 0 ? 'text-info' : 'text-dark' }}">{{ kunjungan.keterangan }}</strong>
+                                    </h6>
+                                    <ul>
+                                      @each(obatPasien in kunjungan.obatPasiens)
+                                      <li>{{ obatPasien.obat.nama }} - {{ obatPasien.frekuensi }}x sehari</li>
+                                      @else
+                                      <li class="text-muted">Tidak ada obat</li>
+                                      @end
+                                    </ul>
+                                  </a>
+                                </li>
+                                @else
+                                <li>
+                                  <div class="timeline-badge dark"></div>
+                                  <a class="timeline-panel text-muted" href="#">
+                                    <span>-</span>
+                                    <h6 class="mb-0">Belum ada kunjungan</h6>
+                                  </a>
+                                </li>
+                                @end
+                              </ul>
+                            </div>
+                          </div>
+                          
+                    </div>
+                    <div id="kirim-hasil-lab" class="tab-pane fade">
+                        <div class="pt-3">
+                            <div class="settings-form">
+                              <h4 class="text-primary">Kirim Hasil Lab</h4>
+                              <form id="formHasilLab">
+                                <div class="row">
+                                  {{ csrfField() }}
+                                  <div class="mb-3 col-md-6">
+                                    <label class="form-label">Nama Pasien</label>
+                                    <input type="text" placeholder="Nama pasien" class="form-control" name="nama" value="{{ pasien.name }}">
+                                  </div>
+                                  <div class="mb-3 col-md-6">
+                                    <label class="form-label">NIK</label>
+                                    <input type="text" inputmode="numeric" placeholder="3278098****" class="form-control" value="{{ pasien.nik }}">
+                                  </div>
+                                  <div class="mb-3 col-md-6">
+                                    <label class="form-label">No Whatsapp Aktif</label>
+                                    <input type="text" inputmode="numeric" name="nomor" placeholder="08586166****" class="form-control" value="{{ pasien.no_hp }}">
+                                  </div>
+                                  <label class="form-label">Kirim hasil lab</label>
+                                  <div class="input-group mb-3">
+                                    <span class="input-group-text">2Mb<span class="text-danger">*</span></span>
+                                    <div class="form-file">
+                                      <input type="file" class="form-file-input form-control" name="file">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-lg-12 mb-3">
+                                  <div class="mb-3">
+                                    <label class="text-label form-label">Isi pesan / keterangan</label>
+                                    <Textarea type="text" name="caption" row="4" class="form-control" required="" ></Textarea>
+                                  </div>
+                                </div>
+                                <button class="btn btn-primary" type="submit"><i class="far fa-paper-plane"></i> Kirim</button>
+                              </form>
+                            </div>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const bulkDeleteObatBtn = document.getElementById('bulkDeleteObatBtn');
+      if (bulkDeleteObatBtn) {
+        bulkDeleteObatBtn.addEventListener('click', function () {
+          const kunjunganSelect = document.getElementById('kunjunganDeleteSelect');
+          const kunjunganId = kunjunganSelect ? kunjunganSelect.value : '';
+  
+          if (!kunjunganId) {
+            alert('Silakan pilih kunjungan terlebih dahulu');
+            return;
+          }
+  
+          if (!confirm('Anda yakin ingin menghapus semua data obat dari kunjungan ini?')) {
+            return;
+          }
+  
+          const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  
+          if (!csrfToken) {
+            alert('CSRF token tidak ditemukan. Silakan refresh halaman dan coba lagi.');
+            return;
+          }
+  
+          fetch(`/pasien/{{ pasien.uuid }}/obat-kunjungan`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ kunjunganId })
+          })
+            .then(response => response.json())
+            .then(data => {
+              const modal = bootstrap.Modal.getInstance(document.getElementById('bulkDeleteObatModal'));
+              if (modal) {
+                modal.hide();
+              }
+  
+              if (data.success) {
+                alert(data.message);
+                window.location.reload();
+              } else {
+                alert(data.message || 'Gagal menghapus data obat');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Terjadi kesalahan saat menghapus data obat');
+            });
+        });
+      }
+    });
+  </script>
+  
+
+<div class="modal fade" id="modalObat" tabindex="-1" aria-labelledby="modalObatLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Obat</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="edit-medicine-form">
+              {{ csrfField() }}
+              <input type="hidden" id="edit-obat-uuid" name="uuid" value="">
+              <div class="row">
+                <div class="col-md-6 mb-2">
+                  <label class="form-label">Keterangan Waktu</label>
+                  <select id="edit-keterangan-waktu" class="form-select" name="keteranganWaktu">
+                    <option value="Sesudah makan">Sesudah makan</option>
+                    <option value="Sebelum makan">Sebelum makan</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-2">
+                  <label class="form-label">Berapa kali sehari</label>
+                  <select id="frequency-select" class="form-select" name="frekuensi">
+                    <option value="1">sehari 1x</option>
+                    <option value="2">sehari 2x</option>
+                    <option value="3">sehari 3x</option>
+                    <option value="4">sehari 4x</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Waktu Konsumsi</label>
+                <div id="time-inputs" class="time-inputs-grid">
+                  <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
+                    <input type="text" class="form-control clockpicker-input" value="08:00">
+                    <span class="input-group-text"><i class="far fa-clock"></i></span>
+                  </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-primary" id="save-edit-obat">Simpan</button>
+          </div>
+        </div>
+      </div>
+      <style>
+        .time-inputs-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 0.5rem;
+        }
+      
+        .time-inputs-grid .input-group {
+          margin-bottom: 0.5rem;
+        }
+      
+        .time-inputs-grid .form-label {
+          font-size: 0.85rem;
+          margin-bottom: 0.25rem;
+        }
+      
+        @media (max-width: 576px) {
+          .time-inputs-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      </style>
+      
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const frequencySelect = document.getElementById("frequency-select");
+          const timeInputsContainer = document.getElementById("time-inputs");
+          const editButtons = document.querySelectorAll(".edit-obat");
+          const modalTitle = document.querySelector("#basicModal .modal-title");
+          const saveButton = document.getElementById("save-edit-obat");
+          const editObatUuidInput = document.getElementById("edit-obat-uuid");
+          const editKeteranganWaktu = document.getElementById("edit-keterangan-waktu");
+          let currentObatUuid = null;
+      
+          if (frequencySelect) {
+            frequencySelect.addEventListener("change", function () {
+              updateTimeInputs(parseInt(this.value, 10));
+            });
+          }
+      
+          function updateTimeInputs(frequency, times = []) {
+            timeInputsContainer.innerHTML = "";
+      
+            const normalizedTimes = Array.isArray(times) ? times : [times];
+      
+            for (let i = 0; i < frequency; i++) {
+              const defaultTime = normalizedTimes[i] || "";
+      
+              const inputGroup = document.createElement("div");
+              inputGroup.classList.add("input-group");
+      
+              inputGroup.innerHTML = `
+              <div class="w-100">
+                <label class="form-label">Jam ke-${i + 1}</label>
+                <div class="input-group clockpicker" data-autoclose="true">
+                  <input type="text" class="form-control clockpicker-input"
+                         value="${defaultTime}"
+                         name="waktu[]"
+                         placeholder="Pilih waktu"
+                         required>
+                  <span class="input-group-text"><i class="far fa-clock"></i></span>
+                </div>
+                <div class="invalid-feedback">Waktu tidak boleh kosong</div>
+              </div>
+            `;
+      
+              timeInputsContainer.appendChild(inputGroup);
+            }
+      
+            setTimeout(() => {
+              $(".clockpicker-input").clockpicker({
+                autoclose: true
+              });
+            }, 100);
+          }
+      
+          editButtons.forEach(button => {
+            button.addEventListener("click", function () {
+              const obatUuid = this.getAttribute("data-uuid");
+              const obatNama = this.getAttribute("data-nama");
+              const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
+              const waktuStr = this.getAttribute("data-waktu");
+              const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
+      
+              let waktuArray = [];
+              if (typeof waktuStr === 'string') {
+                try {
+                  waktuArray = JSON.parse(waktuStr);
+                } catch (e) {
+                  waktuArray = waktuStr.includes(',')
+                    ? waktuStr.split(',').map(time => time.trim())
+                    : [waktuStr.trim()];
+                }
+              }
+      
+              waktuArray = waktuArray.filter(time => time && typeof time === 'string');
+      
+              if (modalTitle) {
+                modalTitle.textContent = `Edit Obat ${obatNama}`;
+              }
+      
+              if (editObatUuidInput) {
+                editObatUuidInput.value = obatUuid;
+              }
+      
+              if (editKeteranganWaktu) {
+                editKeteranganWaktu.value = keteranganWaktu;
+              }
+      
+              if (frequencySelect) {
+                frequencySelect.value = frekuensi;
+              }
+      
+              if (frequencySelect) {
+                updateTimeInputs(frekuensi, waktuArray);
+              }
+              currentObatUuid = obatUuid;
+            });
+          });
+      
+          if (saveButton) {
+            saveButton.addEventListener("click", function () {
+              const obatUuid = editObatUuidInput
+                ? editObatUuidInput.value
+                : currentObatUuid;
+      
+              if (!obatUuid) {
+                alert('Error: ID obat tidak ditemukan');
+                return;
+              }
+      
+              const frekuensi = frequencySelect.value;
+              const keteranganWaktu = editKeteranganWaktu.value;
+              const timeInputs = document.querySelectorAll("input[name='waktu[]']");
+      
+              let isValid = true;
+              timeInputs.forEach(input => {
+                if (!input.value.trim()) {
+                  input.classList.add('is-invalid');
+                  isValid = false;
+                } else {
+                  input.classList.remove('is-invalid');
+                }
+              });
+      
+              if (!isValid) {
+                alert('Harap isi semua waktu konsumsi');
+                return;
+              }
+      
+              const waktuArray = Array.from(timeInputs).map(input => input.value);
+              const csrfToken = document.querySelector('input[name="_csrf"]').value;
+      
+              fetch(`/obat-pasien/${obatUuid}`, {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                  frekuensi,
+                  keteranganWaktu,
+                  waktu: waktuArray
+                })
+              })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('basicModal'));
+                    modal.hide();
+                    window.location.reload();
+                  } else {
+                    alert('Error: ' + data.message);
+                  }
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  alert('Terjadi kesalahan saat menyimpan data');
+                });
+            });
+          }
+        });
+      </script>
+      
+      
+</div>
+
+<div class="modal fade" id="EditPasienModal" tabindex="-1" aria-labelledby="EditPasienModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Data Pasien</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <form action="{{ route('pasien.update', { uuid: pasien.uuid }) }}?_method=PUT" method="POST">
+            {{ csrfField() }}
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Nama Depan</label>
+                  <input type="text" class="form-control" name="first_name" required value="{{ pasien.name.split(' ')[0] }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Nama Belakang</label>
+                  <input type="text" class="form-control" name="last_name"
+                    value="{{ pasien.name.split(' ').slice(1).join(' ') }}">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">NIK</label>
+                  <input type="text" class="form-control" name="nik" required value="{{ pasien.nik }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Jenis Penyakit</label>
+                  <select class="form-select" name="jenisPenyakitId" required>
+                    @each(jenisPenyakit in jenisPenyakits)
+                    <option value="{{ jenisPenyakit.id }}" {{ pasien.jenisPenyakitId===jenisPenyakit.id ? 'selected' : '' }}>
+                      {{ jenisPenyakit.nama }}
+                    </option>
+                    @end
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Tempat Lahir</label>
+                  <input type="text" class="form-control" name="tempat" required value="{{ pasien.tempat }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Tanggal Lahir</label>
+                  <input type="date" class="form-control" name="tanggal_lahir" required
+                    value="{{ pasien.tanggal_lahir ? pasien.tanggal_lahir.toFormat('yyyy-MM-dd') : '' }}">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Jenis Kelamin</label>
+                  <select class="form-select" name="jenis_kelamin" required>
+                    <option value="Laki-laki" {{ pasien.jenis_kelamin==='Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                    <option value="Perempuan" {{ pasien.jenis_kelamin==='Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Golongan Darah</label>
+                  <select class="form-select" name="golongan_darah">
+                    <option value="" {{ !pasien.golongan_darah ? 'selected' : '' }}>Pilih Golongan Darah</option>
+                    @each(golDarah in ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-'])
+                    <option value="{{ golDarah }}" {{ pasien.golongan_darah===golDarah ? 'selected' : '' }}>{{ golDarah }}
+                    </option>
+                    @end
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">No. HP</label>
+                  <input type="text" class="form-control" name="no_hp" required value="{{ pasien.no_hp }}">
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Alamat</label>
+                <textarea class="form-control" name="alamat" rows="3" required>{{ pasien.alamat }}</textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+</div>
+
+<div class="modal fade" id="tambahObatModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Data Obat</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="add-medicine-form" method="POST" action="/pasien/{{ pasien.uuid }}/obat">
+              {{ csrfField() }}
+              <div class="mb-3">
+                <label class="form-label">Nama Pasien</label>
+                <input type="text" class="form-control input-default" value="{{ pasien.name }}" disabled>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Terkait Kunjungan</label>
+                <select class="form-select" name="kunjunganId">
+                  <option value="">Pilih Tanggal Kunjungan</option>
+                  @each(kunjungan in pasien.kunjungans)
+                  <option value="{{ kunjungan.id }}">
+                    {{ formatDate(kunjungan.tanggalKunjungan) }} - {{ kunjungan.tema }}
+                  </option>
+                  @end
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Nama Obat</label>
+                <select class="form-select" name="obatNama">
+                  <option value="">Pilih Obat</option>
+                  @each(obat in obats)
+                  <option value="{{ obat.nama }}">
+                    {{ obat.nama }} - {{ obat.dosis % 1 == 0 ? parseInt(obat.dosis) : obat.dosis }} mg
+                  </option>
+                  @end
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Keterangan Waktu</label>
+                <select class="form-select" name="keteranganWaktu">
+                  <option value="Sesudah makan">Sesudah makan</option>
+                  <option value="Sebelum makan">Sebelum makan</option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const form = document.getElementById("add-medicine-form");
+          const submitButton = form.querySelector("button[type='submit']");
+          const inputs = form.querySelectorAll("input:not([disabled]), select:not([disabled])");
+      
+          function validateForm() {
+            let isValid = true;
+      
+            inputs.forEach((input) => {
+              if (!input.value.trim()) {
+                isValid = false;
+              }
+            });
+      
+            submitButton.disabled = !isValid;
+          }
+      
+          inputs.forEach((input) => {
+            input.addEventListener("input", validateForm);
+            input.addEventListener("change", validateForm);
+          });
+      
+          validateForm();
+        });
+      </script>
+      
+      
+</div>
+
+<div class="modal fade" id="tambahKunjunganModal" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Data Kunjungan Pasien</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="form-kunjungan" method="POST" action="/pasien/{{ pasien.uuid }}/kunjungan">
+              {{ csrfField() }}
+      
+              <div class="row mb-2">
+                <div class="col-sm-6">
+                  <input class="form-control" list="GFGOptions" name="pasienNama" placeholder="Nama Pasien"
+                    value="{{ pasien.name }}" disabled>
+                  <datalist id="GFGOptions">
+                    @each(pasien in pasiens)
+                    <option value="{{ pasien.nama }}">{{ pasien.nama }}</option>
+                    @end
+                  </datalist>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" name="pasienNik" inputmode="numeric" placeholder="NIK"
+                    value="{{ pasien.nik }}" disabled>
+                </div>
+              </div>
+      
+              <div class="mb-3">
+                <label for="dokter">Dokter</label>
+                <select class="form-control" name="dokter" id="dokter">
+                  <option value="" selected disabled>Pilih Dokter</option>
+                  @each(dokter in dokters)
+                  <option value="{{ dokter.id }}">{{ dokter.nama }}.{{ dokter.spesialist.gelar }}</option>
+                  @end
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label for="obat">Pilih Jenis Obat:</label>
+                <select class="multi-select" name="obatList[]" multiple="multiple" id="obat">
+                  @each(obat in obats)
+                  <option value="{{ obat.id }}">{{ obat.nama }} - {{ obat.dosis % 1 == 0 ? parseInt(obat.dosis) : obat.dosis
+                    }} mg</option>
+                  @end
+                </select>
+              </div>
+      
+              <div class="mb-3">
+                <input type="text" class="form-control input-default" name="temaKunjungan" placeholder="Tema kunjungan" required>
+              </div>
+      
+              <div class="mb-2">
+                <input type="text" class="form-control input-default" name="keterangan" placeholder="Keterangan/keluhan pasien" required>
+              </div>
+      
+              <div class="mb-2">
+                <label for="tanggalKunjungan">Tanggal Kunjungan</label>
+                <input type="date" name="tanggalKunjungan" class="form-control" placeholder="Tanggal kunjungan" required>
+              </div>
+      
+              <div class="mb-2">
+                <label for="kunjunganBerikutnya">Kunjungan Berikutnya</label>
+                <input type="date" name="kunjunganBerikutnya" class="form-control" placeholder="Kunjungan Berikutnya">
+              </div>
+      
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+</div>
+
+<div class="modal fade" id="hapusModal" tabindex="-1" aria-labelledby="hapusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="hapusModalLabel">Konfirmasi Hapus Pasien</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-triangle me-2"></i> Peringatan!
+            </div>
+            <p>Anda akan menghapus seluruh data pasien <strong>{{ pasien.name }}</strong> beserta:</p>
+            <ul>
+              <li>Riwayat kunjungan</li>
+              <li>Data obat yang terkait</li>
+              <li>Jadwal pengobatan</li>
+              <li>Dan semua data lain yang berhubungan dengan pasien ini</li>
+            </ul>
+            <p class="mb-0 fw-bold">Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <form action="{{ route('pasien.destroy', { uuid: pasien.uuid }) }}" method="POST">
+              {{ csrfField() }}
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt me-1"></i> Hapus Semua Data
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+</div>
+
+@end
+
+@slot('scripts')
+<script>
+  $(document).ready(function () {
+    console.log('ready')
+    // $('#btnKirim').on('click', () => {
+    //   console.log('btnKirim')
+    //   showModal('kirimHasilModal');
+    // });
+
+    $('#formHasilLab').on('submit', function (e) {
+      e.preventDefault();
+
+      let formData = new FormData(this);
+      let url = '/send-file';
+      let method = 'POST';
+
+      ajaxRequest(url, method, formData, () => {
+        // hideModal('kirimHasilModal');
+        location.reload();
+      });
+    });
+
+  });
+</script>
+@end
+
+@end

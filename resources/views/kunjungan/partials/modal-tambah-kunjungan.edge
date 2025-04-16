@@ -22,6 +22,18 @@
           </div>
 
           <div class="mb-3">
+            <label for="dokter">Dokter</label>
+            <select name="dokter" class="form-control" id="dokter">
+              <option value="">Pilih Dokter</option>
+              @if(dokters && dokters.length > 0)
+              @each(dokter in dokters)
+              <option value="{{ dokter.id }}">{{ dokter.nama }}.{{ dokter.spesialist.gelar }}</option>
+              @end
+              @end
+            </select>
+          </div>
+
+          <div class="mb-3">
             <label for="obatDropdown">Pilih Jenis Obat:</label>
             <select class="multi-select" name="obatList[]" multiple="multiple" id="obatDropdown">
               @if(obats && obats.length > 0)
@@ -51,10 +63,16 @@
               value="{{ new Date().toISOString().split('T')[0] }}" required>
           </div>
 
+          <div class="mb-3">
+            <label for="kunjunganBerikutnyaDropdown">Kunjungan Berikutnya:</label>
+            <input type="date" id="kunjunganBerikutnyaDropdown" name="kunjunganBerikutnya" class="form-control" value="">
+          </div>
+
           <div class="modal-footer">
             <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
             <button type="submit" class="btn btn-primary">Simpan</button>
           </div>
+
         </form>
       </div>
     </div>
@@ -294,12 +312,13 @@
     const setDefaultDate = () => {
       const today = new Date().toISOString().split('T')[0];
       const dateInputs = document.querySelectorAll('input[type="date"]');
-
+      
       dateInputs.forEach(input => {
         if (!input.value) {
           input.value = today;
         }
       });
+      document.querySelector('#kunjunganBerikutnyaDropdown').value = '';
     };
 
     setDefaultDate();
