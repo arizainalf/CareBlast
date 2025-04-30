@@ -4,7 +4,7 @@
     async function loadQRCode() {
         try {
             const response = await axios.get('/qrcode');
-            if (response.data.status === 'success') {
+            if (response.data.success === true) {
                 if (response.data.qrCode === 'You are already logged in') {
                     handleConnected();
                 } else {
@@ -23,7 +23,7 @@
     async function checkStatus() {
         try {
             const response = await axios.get('/status');
-            if (response.data.status === 'success') {
+            if (response.data.success === true) {
                 if (response.data.connected === 'open') {
                     handleConnected();
                     stopStatusCheck();
@@ -39,7 +39,7 @@
     function handleConnected() {
         document.getElementById('qrCode').style.display = 'none';
         document.getElementById('status').className = 'alert alert-success text-center fs-15 mb-4';
-        document.getElementById('status').textContent = 'Connected to WhatsApp!';
+        document.getElementById('status').textContent = 'Terkoneksi Dengan WhatsApp!';
         document.getElementById('logoutBtn').style.display = 'block';
     }
 
@@ -66,6 +66,7 @@
     async function refreshQR() {
         loadQRCode();
     }
+    
     async function logout() {
         const logoutBtn = document.getElementById('logoutBtn');
         const originalText = logoutBtn.innerHTML;
@@ -76,7 +77,7 @@
 
             const response = await axios.get('logoutWhatsapp');
 
-            if (response.data.status === 'success') {
+            if (response.data.success === true) {
                 showDisconnected('Logged out successfully');
                 setTimeout(() => {
                     loadQRCode();

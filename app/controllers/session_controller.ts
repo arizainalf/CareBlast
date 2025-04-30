@@ -4,75 +4,85 @@ import Pasien from '#models/pasien'
 
 export default class SessionController {
   async store({ request, auth, response }: HttpContext) {
-    const { email, password } = request.all()
+    const { email, password, remember_me } = request.all()
 
-    // Coba cari user sebagai admin (dari tabel users)
-    const user = await User.findBy('email', email)
+    if (!email || !password) {
+      return response.json({
+        success: false,
+        message: 'Email dan password wajib diisi.',
+      })
+    }
 
-    if (user) {
-      try {
-        const authenticatedUser = await User.verifyCredentials(email, password)
-        
-        await auth.use('web').login(authenticatedUser, !!request.input('remember_me'))
+    // Cek apakah email mengandung "@" untuk menentukan apakah itu admin atau pasien
+    if (email.includes('@')) {
+      // Login sebagai admin
+      const user = await User.findBy('email', email)
 
-        return response.ok({
-          title: 'Berhasil!',
-          status: 'success',
-          message: 'Login Admin Berhasil!',
-          redirectUrl: '/',
-        })
-      } catch (error) {
-        return response.badRequest({ title: 'Error!', status: 'error', message: 'Password salah' })
+      if (user) {
+        try {
+          const authenticatedUser = await User.verifyCredentials(email, password)
+          await auth.use('web').login(authenticatedUser, !!remember_me)
+
+          return response.json({
+            success: true,
+            message: 'Login Admin Berhasil! Anda akan dialihkan ke halaman admin',
+            // redirectUrl: '/',
+          })
+        } catch {
+          return response.json({
+            success: false,
+            message: 'Password salah untuk akun admin!',
+          })
+        }
       }
-    }
+    } else {
+      // Login sebagai pasien (gunakan NIK)
+      const pasien = await Pasien.findBy('nik', email)
 
-    // Kalau bukan user admin, cek apakah email itu NIK pasien
-    const pasien = await Pasien.findBy('nik', email)
+      if (!pasien) {
+        return response.json({
+          success: false,
+          message: 'Email atau NIK tidak ditemukan.',
+        })
+      }
 
-    if (!pasien) {
-      return response.badRequest({
-        title: 'Gagal!',
-        status: 'error',
-        message: 'Email atau NIK tidak ditemukan',
+      const tanggalLahir = pasien.tanggal_lahir?.toFormat?.('yyyy-MM-dd')
+
+      if (tanggalLahir !== password) {
+        return response.json({
+          success: false,
+          message: 'Tanggal lahir salah.',
+        })
+      }
+
+      await auth.use('pasien').login(pasien)
+
+      return response.json({
+        success: true,
+        message: 'Login Pasien Berhasil! Anda akan dialihkan ke halaman pengguna',
+        redirectUrl: '/pengguna',
       })
     }
 
-    // Validasi tanggal lahir sebagai "password"
-    const tanggalLahirString = pasien.tanggal_lahir.toFormat('yyyy-MM-dd')
-
-    if (tanggalLahirString !== password) {
-      console.log('Tanggal lahir salah', password, tanggalLahirString)
-      return response.badRequest({
-        title: 'Error!',
-        status: 'error',
-        message: 'Tanggal lahir salah',
-      })
-    }
-
-    // Login pasien
-    await auth.use('pasien').login(pasien)
-
-    return response.ok({
-      title: 'Berhasil!',
-      status: 'success',
-      message: 'Login Pasien Berhasil!',
-      redirectUrl: '/pengguna',
+    // Jika email tidak valid (bukan admin atau pasien)
+    return response.json({
+      success: false,
+      message: 'Email atau NIK tidak valid.',
     })
   }
 
   async destroy({ auth, response }: HttpContext) {
-    // Logout dari kedua guard jika login
     if (auth.use('web').isAuthenticated) {
       await auth.use('web').logout()
     }
+
     if (auth.use('pasien').isAuthenticated) {
       await auth.use('pasien').logout()
     }
 
-    return response.ok({
-      title: 'Berhasil!',
-      status: 'success',
-      message: 'Logout Berhasil!',
+    return response.json({
+      success: true,
+      message: 'Logout Berhasil! Anda akan dialihkan ke halaman login',
       redirectUrl: '/login',
     })
   }

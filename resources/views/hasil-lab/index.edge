@@ -97,7 +97,7 @@
 
   async function getHasilLab(uuid) {
     const response = await axios.get('/get-hasil-lab/' + uuid);
-    if (response.data.status === 'success') {
+    if (response.data.success === true) {
       console.log(response.data.message)
       return response.data.message
     }
@@ -106,7 +106,7 @@
   async function loadHasilLab() {
     try {
       const response = await axios.get('/get-all-hasil-lab');
-      if (response.data.status === 'success') {
+      if (response.data.success === true) {
         if (response.data.hasil) {
           console.log(response.data.hasil)
         } else {

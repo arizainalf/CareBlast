@@ -134,6 +134,7 @@
       let url = userId ? `/users/${userId}/update` : '/users/create';
       let method = userId ? 'PUT' : 'POST';
 
+
       $.ajax({
         url: url,
         type: method,
@@ -144,7 +145,7 @@
           if (response.success) {
             showSwal("success", "Sukses", response.message, function () {
               modalUser.hide();
-              location.reload(); // Refresh tabel
+              location.reload();
             });
           } else {
             showSwal("error", "Error", response.message);
