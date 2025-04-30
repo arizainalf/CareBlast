@@ -13,7 +13,9 @@ export default class PasiensController {
       .where('id', userId)
       .preload('jenisPenyakit')
       .preload('kunjungans', (query) => {
-        query.orderBy('tanggalKunjungan', 'desc')
+        query.orderBy('tanggalKunjungan', 'desc').preload('dokter', (dokterQuery) => {
+          dokterQuery.preload('spesialist')
+        })
       })
       .firstOrFail()
 
