@@ -281,10 +281,6 @@
 <script>
   $(document).ready(function () {
     console.log('ready')
-    // $('#btnKirim').on('click', () => {
-    //   console.log('btnKirim')
-    //   showModal('kirimHasilModal');
-    // });
 
     $('#formHasilLab').on('submit', function (e) {
       e.preventDefault();
@@ -294,7 +290,6 @@
       let method = 'POST';
 
       ajaxRequest(url, method, formData, () => {
-        // hideModal('kirimHasilModal');
         location.reload();
       });
     });

@@ -16,7 +16,7 @@ export default class WhatsappsController {
     console.log('requesting qr code from service')
     const qrCode = await getQrCode()
     return response.json({
-      status: 'success',
+      success : true,
       qrCode,
     })
   }
@@ -24,7 +24,7 @@ export default class WhatsappsController {
   async status({ response }: HttpContext) {
     const connected = await getStatus()
     return response.json({
-      status: 'success',
+      success : true,
       connected,
     })
   }
@@ -32,7 +32,7 @@ export default class WhatsappsController {
   async logout({ response }: HttpContext) {
     await logoutWhatsapp()
     return response.json({
-      status: 'success',
+      success: true,
     })
   }
 
@@ -61,7 +61,7 @@ export default class WhatsappsController {
       .preload('group')
       .orderBy('created_at', 'desc')
     return response.json({
-      status: 'success',
+      success: true,
       hasil,
     })
   }
@@ -74,7 +74,7 @@ export default class WhatsappsController {
       .orderBy('timestamp', 'asc')
     const contact = await Contact.findBy('id', params.id)
     return response.json({
-      status: 'success',
+      success: true,
       message,
       contact,
     })
@@ -83,7 +83,7 @@ export default class WhatsappsController {
   public async getContact({ response, params }: HttpContext) {
     const contact = await Contact.findBy('id', params.id)
     return response.json({
-      status: 'success',
+      success: true,
       contact,
     })
   }
@@ -104,7 +104,7 @@ export default class WhatsappsController {
   public async getAllContact({ response }: HttpContext) {
     const contact = await Contact.all()
     return response.json({
-      status: 'success',
+      success: true,
       contact,
     })
   }
@@ -116,7 +116,7 @@ export default class WhatsappsController {
       .preload('contact')
       .preload('group')
     return response.json({
-      status: 'success',
+      success: true,
       message,
     })
   }
@@ -137,8 +137,9 @@ export default class WhatsappsController {
 
     try {
       const responseMsg = await sendFile(jid, file, caption, name)
+      console.log('sendfile response:', responseMsg)
       return response.json({
-        status: 'success',
+        success: true,
         message: 'Hasil Lab Telah Terkirim!',
         data: responseMsg,
       })

@@ -156,6 +156,11 @@
 
   <script>
     $(document).ready(function () {
+
+      logoutBtn('#logoutButton')
+      logoutBtn('#logoutButton2')
+      // logoutBtn('logoutButton3')
+
       $('#smartwizard').smartWizard();
       function cardsCenter() {
 
@@ -207,59 +212,6 @@
         }
       });
 
-
-      function logoutBtn(buttonId) {
-        const logoutButton = document.getElementById(buttonId)
-        logoutButton.addEventListener('click', function (event) {
-          event.preventDefault()
-
-          Swal.fire({
-            title: 'Konfirmasi Logout',
-            text: 'Apakah Anda yakin ingin logout?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Logout',
-            cancelButtonText: 'Batal',
-          }).then(async (result) => {
-            if (result.isConfirmed) {
-              // Kirim permintaan logout ke server
-              const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-
-              const response = await fetch('/logout', {
-                method: 'POST',
-                headers: {
-                  'X-Requested-With': 'XMLHttpRequest',
-                  'Content-Type': 'application/json',
-                  'X-CSRF-TOKEN': csrfToken, // Kirim CSRF token
-                },
-              })
-
-              const result = await response.json()
-
-              if (result.status === 'success') {
-                Swal.fire({
-                  title: 'Logout Berhasil!',
-                  text: 'Anda akan diarahkan ke halaman login...',
-                  icon: 'success',
-                  timer: 2000,
-                  showConfirmButton: false,
-                }).then(() => {
-                  window.location.href = result.redirectUrl
-                })
-              }
-            }
-          })
-        })
-      }
-
-      document.addEventListener('DOMContentLoaded', function () {
-        // Inisialisasi tombol logout
-        logoutBtn('logoutButton')
-        logoutBtn('logoutButton2')
-        logoutBtn('logoutButton3')
-      })
-
-
     });
   </script>
 
@@ -294,6 +246,7 @@
     });
   </script>
   @end
+  
 
   @if($slots.scripts)
   {{{ await $slots.scripts() }}}

@@ -189,6 +189,7 @@ export async function sendMsg(number: string, message: string) {
       sentFileMessages = new Set()
     }
     sentFileMessages.add(sentMsg.key.id)
+    console.log(sentMsg, 'ini adalah msg id', sentMsg.key.id)
 
     const contact = await Contact.findBy('wa_id', jid)
     const contactId = contact?.id
@@ -217,18 +218,18 @@ export async function sendMsg(number: string, message: string) {
 export async function sendFile(jid: string, file: any, caption: string, name: string) {
   const NumberFormatted = NumberHelper(jid)
   const no = `${NumberFormatted}@s.whatsapp.net`
-  console.log('Nomor:', no)
+  console.log('function sendFile Nomor:', no)
 
   if (!socket) {
-    throw new Error('Socket not connected')
+    throw new Error('function sendFile Socket not connected')
   }
 
   const isRegistered = await isRegisteredWhatsapp(jid)
   if (!isRegistered.isRegistered) {
-    throw new Error('Nomor tidak terdaftar di WhatsApp')
+    throw new Error('isRegistered Nomor tidak terdaftar di WhatsApp')
   }
   if (!file) {
-    throw new Error('No file uploaded')
+    throw new Error('isRegistered No file uploaded')
   }
 
   // Check if contact exists and create if needed
@@ -261,10 +262,10 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
     name: sanitizedFileName,
     overwrite: true, // Optional: overwrite if file already exists
   })
-  console.log('File moved to:', uploadPath)
+  console.log('sendFile File moved to:', uploadPath)
 
   if (!fs.existsSync(uploadPath)) {
-    throw new Error('File upload failed')
+    throw new Error('function sendFile : File upload failed')
   }
 
   const fileBuffer = fs.readFileSync(uploadPath)

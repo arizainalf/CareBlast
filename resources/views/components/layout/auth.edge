@@ -26,52 +26,6 @@
   </div>
   @include('auth/layout/footer')
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
-  <script src="{{asset('js/custom.js')}}"></script>
-
-  @if($slots.styles)
-  {{{ await $slots.styles() }}}
-  @endif
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-      const form = document.getElementById('loginForm')
-      form.addEventListener('submit', async function (event) {
-        event.preventDefault()
-
-        const formData = new FormData(form)
-        const response = await fetch(form.action, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json',
-          },
-        })
-
-        const result = await response.json()
-
-        Swal.fire({
-          title: result.title,
-          text: result.message,
-          icon: result.status,
-          timer: 2000,
-          showConfirmButton: false,
-        })
-
-        if (result.status === 'success') {
-
-          setTimeout(() => {
-            window.location.href = result.redirectUrl;
-          }, 2000);
-        }
-      })
-    })
-  </script>
-
-
 </body>
 
 
