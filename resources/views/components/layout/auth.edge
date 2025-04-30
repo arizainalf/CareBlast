@@ -9,6 +9,21 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="{{ asset('css/auth.css') }}" rel="stylesheet">
+  <style>
+    html,
+    body {
+      height: 100% !important;
+      margin: 0;
+      padding: 0;
+    }
+
+    .swal2-container {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 100vh !important;
+    }
+  </style>
 
   @if($slots.styles)
   {{{ await $slots.styles() }}}
@@ -16,7 +31,7 @@
 
 </head>
 
-<body class="h-100 d-flex align-items-center">
+<body style="min-height: 100vh;" class="h-100 d-flex align-items-center">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-md-8 col-lg-6 col-xl-5">

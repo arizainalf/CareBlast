@@ -1,4 +1,21 @@
 <script>
+
+  $(document).ready(function (){
+    $('.tambahPasien').on('submit', function (e) {
+      e.preventDefault();
+
+      console.log('submit tambah pasien')
+
+      let formData = new FormData(this);
+      let url = $(this).attr('action');
+      let method = $(this).attr('method');
+
+      ajaxRequest(url, method, formData, () => {
+        location.reload();
+      });
+    });
+  })
+
   document.getElementById('searchPasien').addEventListener('input', function () {
     let query = this.value.trim();
 
@@ -95,26 +112,3 @@
   });
 </script>
 
-@if(request.qs('success'))
-<script>
-  Swal.fire({
-    icon: 'success',
-    title: 'Berhasil!',
-    text: 'Data pasien berhasil ditambahkan!',
-    confirmButtonText: 'OK',
-    timer: 5000,
-  });
-</script>
-@endif
-
-@if(request.qs('error'))
-<script>
-  Swal.fire({
-    icon: 'error',
-    title: 'Gagal!',
-    text: 'Terjadi kesalahan saat menambahkan data!',
-    confirmButtonText: 'OK',
-    timer: 5000,
-  });
-</script>
-@endif

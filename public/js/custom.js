@@ -210,6 +210,7 @@ const showSwal = (type, title, message, callback = null, redirectUrl = null) => 
     icon: type,
     title: title,
     text: message,
+    position: 'center',
     showConfirmButton: true,
   }).then((result) => {
     if (callback && result.isConfirmed) callback();
@@ -241,7 +242,7 @@ const loadDataToModal = (url, modalId, callback) => {
 };
 
 // 🔄 AJAX Request (dengan showSwal & optional callback)
-const ajaxRequest = (url, method, formData, callback = null) => {
+const ajaxRequest = (url, method, formData = null , callback = null) => {
   $.ajax({
     url: url,
     enctype: "multipart/form-data",
@@ -277,26 +278,30 @@ const confirmDelete = (url, callback = null) => {
   }).then((result) => {
     if (!result.isConfirmed) return;
 
-    $.ajax({
-      url: url,
-      type: "DELETE",
-      headers: {
-        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-      },
-      success: (response) => {
-        if (response.success) {
-          showSwal("success", "Terhapus!", response.message, () => {
-            if (callback) callback();
-          });
-        } else {
-          showSwal("error", "Error!", response.message);
-        }
-      },
-      error: (xhr) => {
-        const message = xhr.responseJSON?.message || "Terjadi kesalahan saat menghapus!";
-        showSwal("error", "Gagal!", message);
-      },
+    ajaxRequest(url, "DELETE", null, () => {
+      showSwal("success", "Terhapus!", "Data berhasil dihapus!", callback);
     });
+
+    // $.ajax({
+    //   url: url,
+    //   type: "DELETE",
+    //   headers: {
+    //     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+    //   },
+    //   success: (response) => {
+    //     if (response.success) {
+    //       showSwal("success", "Terhapus!", response.message, () => {
+    //         if (callback) callback();
+    //       });
+    //     } else {
+    //       showSwal("error", "Error!", response.message);
+    //     }
+    //   },
+    //   error: (xhr) => {
+    //     const message = xhr.responseJSON?.message || "Terjadi kesalahan saat menghapus!";
+    //     showSwal("error", "Gagal!", message);
+    //   },
+    // });
   });
 };
 
