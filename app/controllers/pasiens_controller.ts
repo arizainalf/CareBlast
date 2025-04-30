@@ -1,4 +1,4 @@
-import type { HttpContext } from '@adonisjs/core/http'
+import { Redirect, type HttpContext } from '@adonisjs/core/http'
 import Pasien from '#models/pasien'
 import JenisPenyakit from '#models/jenis_penyakit'
 import { DateTime } from 'luxon'
@@ -85,8 +85,12 @@ export default class PasiensController {
 
       const existingPatient = await Pasien.query().where('nik', data.nik).first()
       if (existingPatient) {
-        session.flash({ error: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.' })
-        return response.redirect().back()
+        // session.flash({ error: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.' })
+        // return response.redirect().back()
+        return response.json({
+          success: false,
+          message: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.',
+        })
       }
 
       await Pasien.transaction(async (trx) => {
@@ -110,12 +114,20 @@ export default class PasiensController {
         await Pasien.create(data, { client: trx })
       })
 
-      session.flash({ success: 'Data pasien berhasil ditambahkan' })
-      return response.redirect().toRoute('pasien.index')
+      // session.flash({ success: 'Data pasien berhasil ditambahkan' })
+      // return response.redirect().toRoute('pasien.index')
+      return response.json({
+        success: true,
+        message: 'Data pasien berhasil ditambahkan',
+      })
     } catch (error) {
       console.error('Error storing patient:', error)
-      session.flash({ error: 'Gagal menambahkan data pasien. Silakan coba lagi.' })
-      return response.redirect().back()
+      // session.flash({ error: 'Gagal menambahkan data pasien. Silakan coba lagi.' })
+      // return response.redirect().back()
+      return response.json({
+        success: false,
+        message: 'Gagal menambahkan data pasien. Silakan coba lagi.',
+      })
     }
   }
 
@@ -339,13 +351,23 @@ export default class PasiensController {
           .delete()
         await pasien.useTransaction(trx).delete()
 
-        session.flash({ success: 'Data pasien berhasil dihapus' })
+        // session.flash({ success: 'Data pasien berhasil dihapus' })
+        return response.json({
+          success: true,
+          message: 'Data pasien berhasil dihapus',
+          redirectUrl: '/pasien',
+        })
       } catch (error) {
         console.error('Error deleting patient:', error)
-        session.flash({ error: 'Gagal menghapus data pasien. Silakan coba lagi.' })
+        // session.flash({ error: 'Gagal menghapus data pasien. Silakan coba lagi.' })
+        return response.json({
+          success: false,
+          message: 'Gagal menghapus data pasien. Silakan coba lagi.',
+          redirectUrl: '/pasien',
+        })
+
       }
     })
 
-    return response.redirect().toRoute('pasien.index')
   }
 }

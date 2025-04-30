@@ -26,7 +26,7 @@ export default class SessionController {
           return response.json({
             success: true,
             message: 'Login Admin Berhasil! Anda akan dialihkan ke halaman admin',
-            // redirectUrl: '/',
+            redirectUrl: '/',
           })
         } catch {
           return response.json({
@@ -83,7 +83,6 @@ export default class SessionController {
     return response.json({
       success: true,
       message: 'Logout Berhasil! Anda akan dialihkan ke halaman login',
-      redirectUrl: '/login',
     })
   }
 }

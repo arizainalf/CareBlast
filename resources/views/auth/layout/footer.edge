@@ -45,6 +45,12 @@
   });
 
   $(document).ready(function () {
+
+    $('.forgot-password').on('click', function (e) {
+      e.preventDefault()
+      showSwal('success', 'percobaan swall', 'ini adalah percobaan swall')
+    })
+
     $('#loginForm').on('submit', function (event) {
       event.preventDefault()
 
