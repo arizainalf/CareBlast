@@ -15,7 +15,7 @@
             {{ kunjungan.tema || 'Konsultasi Rutin' }}
           </h3>
           <p class="text-xs text-gray-500">
-            Dr. Anita Susanti · Psikiater
+            {{ kunjungan.dokter.nama }} · {{ kunjungan.dokter.spesialist.nama }}
           </p>
           <p class="text-xs text-gray-400 mt-1">
             @if(kunjungan.tanggalKunjungan)
