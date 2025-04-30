@@ -226,9 +226,17 @@
             <div class="absolute bottom-0 right-0 bg-green-500 h-4 w-4 rounded-full border-2 border-white">
             </div>
           </div>
-          <h4 class="font-medium text-gray-800 text-center ">
-            {{ dokter.nama }}
-          </h4>
+          <div class="relative text-center">
+            <h4 class="font-medium text-gray-800 cursor-pointer" onclick="toggleTooltip(this)" data-nama="{{ dokter.nama }}">
+              {{ dokter.nama.substring(0, 14) }}{{ dokter.nama.length > 14 ? '...' : '' }}
+            </h4>
+
+            <div
+              class="hidden absolute left-1/2 transform -translate-x-1/2 mt-2 bg-white text-sm text-gray-800 shadow-lg rounded px-3 py-1 z-10 max-w-xs"
+              style="min-width: 100px;" data-tooltip>
+              {{ dokter.nama }}
+            </div>
+          </div>
           <p class="text-xs text-gray-600 text-center mb-3">
             {{ dokter.spesialist?.gelar || 'Dokter Umum' }}
           </p>
@@ -241,4 +249,17 @@
     </div>
   </div>
 </div>
+<script>
+  function toggleTooltip(el) {
+      const tooltip = el.nextElementSibling;
+      document.querySelectorAll('div[data-tooltip]').forEach(t => t.classList.add('hidden'));
+      tooltip.classList.toggle('hidden');
+    }
+    document.addEventListener('click', function (e) {
+      const isTooltip = e.target.closest('[onclick="toggleTooltip(this)"]');
+      if (!isTooltip) {
+        document.querySelectorAll('div[data-tooltip]').forEach(t => t.classList.add('hidden'));
+      }
+    });
+</script>
 @end
