@@ -1,69 +1,155 @@
 @layout.auth()
 @slot('auth')
-{{-- {{ inspect(flashMessages.all())}} --}}
-<div class="card p-4">
-  <div class="card-body">
-    <div class="login-icon">
-      <i class="fas fa-user-shield text-white fa-2x"></i>
+<div class="row justify-content-center">
+  <div class="col-11 col-md-8 col-lg-5">
+    <div class="card shadow border-0">
+      <div class="card-body p-4 p-lg-5">
+        <div class="text-center mb-4">
+          <div class="login-icon mb-3">
+            <i class="fas fa-user fa-lg text-white"></i>
+          </div>
+          <h3 class="fw-bold">Sistem Pelayanan</h3>
+        </div>
+
+        <div class="nav nav-pills mb-4 d-flex" role="tablist">
+          <button class="nav-link active flex-fill py-2" id="patientToggle" data-bs-toggle="pill"
+            data-bs-target="#patientForm" type="button" role="tab">
+            <i class="fas fa-user-plus me-2"></i>Pasien
+          </button>
+          <button class="nav-link flex-fill py-2" id="adminToggle" data-bs-toggle="pill" data-bs-target="#adminForm"
+            type="button" role="tab">
+            <i class="fas fa-user-shield me-2"></i>Admin
+          </button>
+        </div>
+
+        <div class="tab-content">
+          <!-- Form Login Pasien -->
+          <div class="tab-pane fade show active" id="patientForm" role="tabpanel">
+            <form action="{{ route('loginPost') }}" method="POST" id="patientLoginForm">
+              {{ csrfField() }}
+              <input type="hidden" name="user_type" value="patient">
+
+              <div class="mb-3">
+                <label class="form-label text-muted small">NIK</label>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i class="fas fa-id-card"></i>
+                  </span>
+                  <input type="text" name="nik" value="{{ old('nik') || '' }}" class="form-control border-start-0"
+                    placeholder="Masukkan NIK Anda" required />
+                </div>
+                @if(flashMessages.get('errors.nik'))
+                <p class="text-danger small mt-1">{{ flashMessages.get('errors.nik') }}</p>
+                @end
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label text-muted small">Password (format: YYYY-MM-DD)</label>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                  <input type="password" name="password" id="patientPassword" class="form-control border-start-0"
+                    placeholder="Masukkan password Anda" required />
+                  <a class="input-group-text bg-light border-start-0" href="#"
+                    onclick="togglePasswordVisibility('#patientPassword', '#toggle-password-patient'); event.preventDefault();">
+                    <i id="toggle-password-patient" class="fas fa-eye"></i>
+                  </a>
+                </div>
+                @if(flashMessages.get('errors.password'))
+                <p class="text-danger small mt-1">{{ flashMessages.get('errors.password') }}</p>
+                @end
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                  <input type="checkbox" name="remember_me" value="{{ old('remember_me') || '' }}"
+                    class="form-check-input" id="patientRemember" />
+                  <label class="form-check-label text-muted" for="patientRemember">Ingat saya</label>
+                </div>
+                <a href="/forgot" class="text-decoration-none small">Lupa password?</a>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100 py-3">
+                <i class="fas fa-sign-in-alt me-2"></i>Masuk
+              </button>
+            </form>
+          </div>
+
+          <!-- Form Login Admin -->
+          <div class="tab-pane fade" id="adminForm" role="tabpanel">
+            <form action="{{ route('loginPost') }}" method="POST" id="adminLoginForm">
+              {{ csrfField() }}
+              <input type="hidden" name="user_type" value="admin">
+
+              <div class="mb-3">
+                <label class="form-label text-muted small">Email</label>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                  <input type="email" value="{{ old('email') || '' }}" name="email" class="form-control border-start-0"
+                    placeholder="Masukkan email Anda" required />
+                </div>
+                @if(flashMessages.get('errors.email'))
+                <p class="text-danger small mt-1">{{ flashMessages.get('errors.email') }}</p>
+                @end
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label text-muted small">Password</label>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                  <input type="password" minlength="8" value="{{ old('password') || '' }}" name="password"
+                    id="adminPassword" class="form-control border-start-0" placeholder="Masukkan password Anda"
+                    required />
+                  <a class="input-group-text bg-light border-start-0" href="#"
+                    onclick="togglePasswordVisibility('#adminPassword', '#toggle-password-admin'); event.preventDefault();">
+                    <i id="toggle-password-admin" class="fas fa-eye"></i>
+                  </a>
+                </div>
+                @if(flashMessages.get('errors.password'))
+                <p class="text-danger small mt-1">{{ flashMessages.get('errors.password') }}</p>
+                @end
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                  <input type="checkbox" name="remember_me" value="{{ old('remember_me') || '' }}"
+                    class="form-check-input" id="adminRemember" />
+                  <label class="form-check-label text-muted" for="adminRemember">Ingat saya</label>
+                </div>
+                <a href="/forgot" class="text-decoration-none small">Lupa password?</a>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100 py-3">
+                <i class="fas fa-sign-in-alt me-2"></i>Masuk
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <h4 class="text-center mb-4 fw-bold">
-      Admin Login
-    </h4>
-
-    <form action="{{ route('loginPost') }}" method="POST" id="loginForm">
-      {{ csrfField() }}
-      <div class="mb-4">
-        <label class="form-label text-muted">Email</label>
-        <div class="input-group">
-          <span class="input-group-text bg-light border-end-0">
-            <i class="fas fa-envelope text-muted"></i>
-          </span>
-          <input type="text" value="{{ old('email') || '' }}" name="email" class="form-control border-start-0"
-            placeholder="Enter your email" />
-        </div>
-        @if(flashMessages.get('errors.email'))
-        <p class="text-danger text-sm">
-          {{ flashMessages.get('errors.email') }}
-        </p>
-        @end
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label text-muted">Password</label>
-        <div class="input-group">
-          <span class="input-group-text bg-light border-end-0">
-            <i class="fas fa-lock text-muted"></i>
-          </span>
-          <input minlength=8 type="password" value="{{ old('password') || '' }}" id="password" name="password"
-            class="form-control border-start-0" placeholder="Enter your password" />
-          <a class="input-group-text"
-            onclick="togglePasswordVisibility('#password', '#toggle-password'); event.preventDefault();">
-            <i id="toggle-password" class="fas fa-eye"></i>
-          </a>
-        </div>
-        @if(flashMessages.get('errors.password'))
-        <p class="text-danger text-sm">
-          {{ flashMessages.get('errors.password') }}
-        </p>
-        @end
-      </div>
-
-      <div class="d-flex justify-content-between mb-4">
-        <div class="form-check">
-          <input type="checkbox" name="remember_me" value="{{ old('remember_me') || '' }}" class="form-check-input"
-            id="remember" />
-          <label class="form-check-label text-muted" for="remember">Remember me</label>
-        </div>
-        <a href="#" class="text-decoration-none forgot-password">Forgot password?</a>
-      </div>
-
-      <button type="submit" class="btn btn-primary w-100 mb-4">
-        <i class="fas fa-sign-in-alt me-2"></i>Login
-      </button>
-    </form>
   </div>
 </div>
 
-@end
+<script>
+  function togglePasswordVisibility(passwordSelector, toggleIconSelector) {
+    const passwordInput = document.querySelector(passwordSelector)
+    const toggleIcon = document.querySelector(toggleIconSelector)
 
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text'
+      toggleIcon.classList.remove('fa-eye')
+      toggleIcon.classList.add('fa-eye-slash')
+    } else {
+      passwordInput.type = 'password'
+      toggleIcon.classList.remove('fa-eye-slash')
+      toggleIcon.classList.add('fa-eye')
+    }
+  }
+</script>
+@end
 @end
