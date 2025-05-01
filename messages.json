@@ -13607,5 +13607,40 @@
         "messageSecret": "2CQeyngzLFI6Pt5MptWgRhdLKGxvoMlsjFHyKiKib+M="
       }
     }
+  },
+  {
+    "key": {
+      "remoteJid": "120363318728384033@g.us",
+      "fromMe": false,
+      "id": "3286641293",
+      "participant": "6289616821379@s.whatsapp.net"
+    },
+    "contactId": "51daec72-2b8f-4813-899c-b08be89b09b1",
+    "groupId": "b1143f54-157f-4cb7-9efe-589376789fc1",
+    "pushName": "Unknown",
+    "messageId": "3286641293",
+    "messageType": "unknown",
+    "content": null,
+    "timestamp": {
+      "low": 1746026163,
+      "high": 0,
+      "unsigned": true
+    },
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "120363318728384033@g.us",
+      "fromMe": false,
+      "id": "3286641293",
+      "participant": "6289616821379@s.whatsapp.net"
+    },
+    "messageTimestamp": "1746026163",
+    "participant": "6289616821379@s.whatsapp.net",
+    "messageStubType": "GROUP_PARTICIPANT_LEAVE",
+    "messageStubParameters": [
+      "6289616821379@s.whatsapp.net"
+    ]
   }
 ]
