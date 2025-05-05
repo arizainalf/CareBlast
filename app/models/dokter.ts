@@ -15,6 +15,9 @@ export default class Dokter extends BaseModel {
   declare nama: string
 
   @column()
+  declare noWhatsapp: string
+
+  @column()
   declare spesialistId: number
 
   @column()
