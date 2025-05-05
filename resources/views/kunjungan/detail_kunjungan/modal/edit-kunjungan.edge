@@ -4,7 +4,7 @@
       <h5 class="modal-title">Edit Kunjungan</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <form action="/kunjungan/{{ kunjungan.uuid }}?_method=PUT" method="POST">
+    <form class="edit-kunjungan" data-id="{{ kunjungan.uuid }}">
       {{ csrfField() }}
       <div class="modal-body">
         <div class="mb-3">

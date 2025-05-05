@@ -46,12 +46,17 @@
 
   $(document).ready(function () {
 
-    $('.forgot-password').on('click', function (e) {
-      e.preventDefault()
-      showSwal('success', 'percobaan swall', 'ini adalah percobaan swall')
+    $('#adminLoginForm').on('submit', function (event) {
+      event.preventDefault()
+
+      const url = $(this).attr('action')
+      const method = $(this).attr('method')
+      const formData = new FormData(this)
+
+      ajaxRequest(url, method, formData)
     })
 
-    $('#loginForm').on('submit', function (event) {
+    $('#patientLoginForm').on('submit', function (event) {
       event.preventDefault()
 
       const url = $(this).attr('action')
@@ -62,5 +67,3 @@
     })
   })
 </script>
-
-

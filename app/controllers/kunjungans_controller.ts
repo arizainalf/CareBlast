@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import Obat from '#models/obat'
 import { DateTime } from 'luxon'
 import Dokter from '#models/dokter'
+import Message from '#models/message'
 
 export default class KunjungansController {
   async index({ view, request }: HttpContext) {
@@ -66,6 +67,8 @@ export default class KunjungansController {
 
       const dokterId = request.input('dokter')
 
+      console.log(request.input('dokter'), request.input('obatList'))
+
       const kunjungan = await Kunjungan.create({
         uuid: uuidv4(),
         dokterId: dokterId, // Ganti dengan ID dokter yang sesuai
@@ -99,8 +102,10 @@ export default class KunjungansController {
         })
       }
 
-      const referer = request.header('referer') || `/pasien/${pasienUuid}`
-      return response.redirect().toPath(referer)
+      return response.json({
+        success: true,
+        message: 'Data kunjungan berhasil ditambahkan',
+      })
     } catch (error) {
       console.error('Error menambahkan kunjungan:', error)
       return response
@@ -206,7 +211,12 @@ export default class KunjungansController {
 
       await kunjungan.save()
 
-      return response.redirect().toPath(`/kunjungan/${uuid}`)
+      // return response.redirect().toPath(`/kunjungan/${uuid}`)
+      return response.json({
+        success: true,
+        message: 'Data kunjungan berhasil diperbarui',
+        redirectUrl: `/kunjungan/${uuid}`
+      })
     } catch (error) {
       console.error('Error updating kunjungan:', error)
       return response
@@ -223,7 +233,12 @@ export default class KunjungansController {
 
       await kunjungan.delete()
 
-      return response.redirect().toPath(`/pasien/${pasien.uuid}`)
+      // return response.redirect().toPath(`/pasien/${pasien.uuid}`)
+      return response.json({
+        success: true,
+        message: 'Data kunjungan berhasil dihapus',
+        redirectUrl: `/pasien/${pasien.uuid}`
+      })
     } catch (error) {
       console.error('Error deleting kunjungan:', error)
       return response

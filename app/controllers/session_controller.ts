@@ -4,7 +4,7 @@ import Pasien from '#models/pasien'
 
 export default class SessionController {
   async store({ request, auth, response }: HttpContext) {
-    const { email, password, remember_me } = request.all()
+    const { email, password, remember_me, user_type, nik } = request.all()
 
     if (!email || !password) {
       return response.json({
@@ -13,11 +13,9 @@ export default class SessionController {
       })
     }
 
-    // Cek apakah email mengandung "@" untuk menentukan apakah itu admin atau pasien
-    if (email.includes('@')) {
+    if (user_type === 'admin') {
       // Login sebagai admin
       const user = await User.findBy('email', email)
-
       if (user) {
         try {
           const authenticatedUser = await User.verifyCredentials(email, password)
@@ -34,15 +32,20 @@ export default class SessionController {
             message: 'Password salah untuk akun admin!',
           })
         }
+      } else {
+        return response.json({
+          success: false,
+          message: 'Email tidak ditemukan.',
+        })
       }
-    } else {
+    } else if (user_type === 'pasien') {
       // Login sebagai pasien (gunakan NIK)
-      const pasien = await Pasien.findBy('nik', email)
+      const pasien = await Pasien.findBy('nik', nik)
 
       if (!pasien) {
         return response.json({
           success: false,
-          message: 'Email atau NIK tidak ditemukan.',
+          message: 'NIK Pasien tidak ditemukan.',
         })
       }
 
@@ -62,14 +65,15 @@ export default class SessionController {
         message: 'Login Pasien Berhasil! Anda akan dialihkan ke halaman pengguna',
         redirectUrl: '/pengguna',
       })
+    } else {
+      return response.json({
+        success: false,
+        message: 'Pengguna tidak valid.',
+      })
     }
 
-    // Jika email tidak valid (bukan admin atau pasien)
-    return response.json({
-      success: false,
-      message: 'Email atau NIK tidak valid.',
-    })
   }
+
 
   async destroy({ auth, response }: HttpContext) {
     if (auth.use('web').isAuthenticated) {

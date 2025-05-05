@@ -99,34 +99,37 @@
                         <h5 class="modal-title">Hapus Data Obat</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                       </div>
-                      <div class="modal-body">
-                        <div class="mb-3">
-                          <label class="form-label">Pilih Kunjungan</label>
-                          <select id="kunjunganDeleteSelect" class="form-select">
-                            @if(kunjunganTerbaru)
-                            <option value="{{ kunjunganTerbaru.id }}" selected>
-                              Kunjungan Terbaru: {{ kunjunganTerbaru.tema }} ({{
-                              formatDate(kunjunganTerbaru.tanggalKunjungan) }})
-                            </option>
-                            @endif
+                      <form class="bulkDeleteObat">
+                        <div class="modal-body">
+                          {{ csrfField() }}
+                          <div class="mb-3">
+                            <label class="form-label">Pilih Kunjungan</label>
+                            <select id="kunjunganDeleteSelect" class="form-select">
+                              @if(kunjunganTerbaru)
+                              <option value="{{ kunjunganTerbaru.id }}" selected>
+                                Kunjungan Terbaru: {{ kunjunganTerbaru.tema }} ({{
+                                formatDate(kunjunganTerbaru.tanggalKunjungan) }})
+                              </option>
+                              @endif
 
-                            @each(kunjungan in kunjungans)
-                            @if(!kunjunganTerbaru || kunjungan.id !== kunjunganTerbaru.id)
-                            <option value="{{ kunjungan.id }}">
-                              {{ kunjungan.tema }} ({{ formatDate(kunjungan.tanggalKunjungan) }})
-                            </option>
-                            @endif
-                            @end
-                          </select>
+                              @each(kunjungan in kunjungans)
+                              @if(!kunjunganTerbaru || kunjungan.id !== kunjunganTerbaru.id)
+                              <option value="{{ kunjungan.id }}">
+                                {{ kunjungan.tema }} ({{ formatDate(kunjungan.tanggalKunjungan) }})
+                              </option>
+                              @endif
+                              @end
+                            </select>
+                          </div>
+                          <p>Tindakan ini akan menghapus semua data obat yang terkait dengan kunjungan yang dipilih,
+                            tetapi data kunjungan itu sendiri tetap tersimpan.</p>
+                          <p class="text-danger"><strong>Perhatian:</strong> Tindakan ini tidak dapat dibatalkan!</p>
                         </div>
-                        <p>Tindakan ini akan menghapus semua data obat yang terkait dengan kunjungan yang dipilih,
-                          tetapi data kunjungan itu sendiri tetap tersimpan.</p>
-                        <p class="text-danger"><strong>Perhatian:</strong> Tindakan ini tidak dapat dibatalkan!</p>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                        <button type="button" id="bulkDeleteObatBtn" class="btn btn-danger">Hapus</button>
-                      </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                          <button type="submit" id="bulkDeleteObatBtn" class="btn btn-danger">Hapus</button>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>

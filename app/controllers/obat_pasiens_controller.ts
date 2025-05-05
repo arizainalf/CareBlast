@@ -61,11 +61,7 @@ export default class ObatPasiensController {
         keteranganWaktu,
       })
 
-      const referer = request.headers().referer || `/pasien/${pasienUuid}`
-
-      return request.accepts(['html', 'json']) === 'json'
-        ? response.json({ success: true, message: 'Obat berhasil ditambahkan', data: obatPasien })
-        : response.redirect().toPath(referer)
+      return response.json({ success: true, message: 'Obat berhasil ditambahkan', data: obatPasien, redirectUrl: `/pasien/${pasienUuid}` })
     } catch (error) {
       console.error('Error adding medication:', error)
       return response.status(500).json({
@@ -98,9 +94,8 @@ export default class ObatPasiensController {
 
       const referer = request.headers().referer || `/pasien/${params.pasienUuid}`
 
-      return request.accepts(['html', 'json']) === 'json'
-        ? response.json({ success: true, message: 'Jadwal obat berhasil diperbarui' })
-        : response.redirect().toPath(referer)
+      return response.json({ success: true, message: 'Jadwal obat berhasil diperbarui', redirectUrl: referer })
+        
     } catch (error) {
       console.error('Error updating medication:', error)
       return response
@@ -170,6 +165,7 @@ export default class ObatPasiensController {
         success: true,
         message: `Berhasil menghapus ${deleted} data obat`,
         deletedCount: deleted,
+        redirectUrl: `/pasien/${pasienUuid}`,
       })
     } catch (error) {
       console.error('Error menghapus data obat:', error)

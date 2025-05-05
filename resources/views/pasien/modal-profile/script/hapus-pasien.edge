@@ -4,11 +4,7 @@
       const kunjunganId = $('#kunjunganDeleteSelect').val();
 
       if (!kunjunganId) {
-        alert('Silakan pilih kunjungan terlebih dahulu');
-        return;
-      }
-
-      if (!confirm('Anda yakin ingin menghapus semua data obat dari kunjungan ini?')) {
+        showSwal('error', 'Pilih kunjungan terlebih dahulu!')
         return;
       }
 
@@ -19,29 +15,21 @@
         return;
       }
 
-      $.ajax({
-        url: `/pasien/{{ pasien.uuid }}/obat-kunjungan`,
-        type: 'DELETE',
-        contentType: 'application/json',
-        data: JSON.stringify({ kunjunganId: kunjunganId }),
-        headers: {
-          'X-CSRF-TOKEN': csrfToken
-        },
-        success: function (data) {
-          $('#bulkDeleteObatModal').modal('hide');
 
-          if (data.success) {
-            alert(data.message);
-            window.location.reload();
-          } else {
-            alert(data.message || 'Gagal menghapus data obat');
-          }
-        },
-        error: function (xhr, status, error) {
-          console.error('Error:', error);
-          alert('Terjadi kesalahan saat menghapus data obat');
-        }
-      });
+      $('.bulkDeleteObat').on('submit', function (e) {
+        e.preventDefault();
+
+        console.log('bulk delete obat di submit')
+
+        const url = '/pasien/{{ pasien.uuid }}/obat-kunjungan'
+        console.log(url)
+        const method = 'DELETE'
+        const formData = new FormData(this)
+
+        ajaxRequest(url, method, formData)
+
+      })
+
     });
     $(document).on('submit', '.hapusPasien', function (e) {
       e.preventDefault();
@@ -49,15 +37,25 @@
       console.log('hapus pasien di submit')
       const form = $(this);
       const url = form.attr('action');
-      const csrfToken = $('meta[name="csrf-token"]').attr('content');
-      const method = form.attr('method').toUpperCase();
+      const method = 'DELETE';
+      const formData = new FormData(this)
 
-      if (!csrfToken) {
-        alert('CSRF token tidak ditemukan. Silakan refresh halaman dan coba lagi.');
-        return;
-      }
 
-      ajaxRequest(url, method)
+      ajaxRequest(url, method, formData)
     });
+
+    $(document).on('submit', '#form-kunjungan', function (e) {
+      e.preventDefault
+
+      const form = $(this);
+      const uuid = $('#pasien_id').val()
+      const url = '/pasien/' + uuid + '/kunjungan'
+      const method = 'POST'
+      const formData = new FormData(this)
+
+      ajaxRequest(url, method, formData)
+    })
+
+
   });
 </script>
