@@ -28,6 +28,17 @@ export default class PasiensController {
       .first()
 
     const todaysDoctors = await Dokter.query().where('status', true).preload('spesialist').limit(4)
+
+    todaysDoctors.forEach((dokter) => {
+      const noWa = dokter.noWhatsapp || ''
+      dokter.formattedWhatsapp = noWa.startsWith('0')
+        ? '62' + noWa.slice(1)
+        : noWa || '6281234567890'
+
+      const message = `Halo Dokter ${dokter.nama},\n\nSaya ${pasien.name} (${pasien.nik}) ingin melakukan konsultasi. Bisa dibantu?\n\nTerima kasih.`
+      dokter.whatsappMessage = encodeURIComponent(message)
+    })
+
     const obatPasiens: ObatPasien[] = latestVisit?.obatPasiens || []
     const medications: {
       sebelumMakan: ObatPasien[]

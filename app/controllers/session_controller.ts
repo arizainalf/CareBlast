@@ -6,16 +6,15 @@ export default class SessionController {
   async store({ request, auth, response }: HttpContext) {
     const { email, password, remember_me, user_type, nik } = request.all()
 
-    if (!email || !password) {
-      return response.json({
-        success: false,
-        message: 'Email dan password wajib diisi.',
-      })
-    }
-
     if (user_type === 'admin') {
       // Login sebagai admin
       const user = await User.findBy('email', email)
+      if (!email || !password) {
+        return response.json({
+          success: false,
+          message: 'Email dan password wajib diisi.',
+        })
+      }
       if (user) {
         try {
           const authenticatedUser = await User.verifyCredentials(email, password)
@@ -71,9 +70,7 @@ export default class SessionController {
         message: 'Pengguna tidak valid.',
       })
     }
-
   }
-
 
   async destroy({ auth, response }: HttpContext) {
     if (auth.use('web').isAuthenticated) {

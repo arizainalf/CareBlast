@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('nip').notNullable()
       table.string('nama').notNullable()
+      table.string('no_whatsapp').notNullable()
       table
         .integer('spesialist_id')
         .unsigned()

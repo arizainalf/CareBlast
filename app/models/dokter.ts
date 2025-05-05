@@ -15,6 +15,9 @@ export default class Dokter extends BaseModel {
   declare nama: string
 
   @column()
+  declare noWhatsapp: string
+
+  @column()
   declare spesialistId: number
 
   @column()
@@ -37,4 +40,14 @@ export default class Dokter extends BaseModel {
 
   @hasMany(() => Kunjungan)
   declare kunjungan: HasMany<typeof Kunjungan>
+
+  declare formattedWhatsapp: string
+  declare whatsappMessage: string
+
+  serializeExtras() {
+    return {
+      formattedWhatsapp: this.formattedWhatsapp,
+      whatsappMessage: this.whatsappMessage,
+    }
+  }
 }
