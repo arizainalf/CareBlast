@@ -9,6 +9,12 @@ export default class SessionController {
     if (user_type === 'admin') {
       // Login sebagai admin
       const user = await User.findBy('email', email)
+      if (!email || !password) {
+        return response.json({
+          success: false,
+          message: 'Email dan password wajib diisi.',
+        })
+      }
       if (user) {
         if (!email || !password) {
           return response.json({
@@ -70,9 +76,7 @@ export default class SessionController {
         message: 'Pengguna tidak valid.',
       })
     }
-
   }
-
 
   async destroy({ auth, response }: HttpContext) {
     if (auth.use('web').isAuthenticated) {

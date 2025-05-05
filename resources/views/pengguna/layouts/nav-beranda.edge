@@ -198,7 +198,6 @@
 
 </div>
 @endif
-
 <!-- Today's Doctors - Horizontal Scrollable -->
 @if(todaysDoctors.length > 0)
 <div class="mb-6">
@@ -209,40 +208,44 @@
     </h3>
     <span class="text-xs bg-primary text-white rounded-full px-2 py-1">{{ todaysDoctors.length }} Dokter</span>
   </div>
-
   <div class="overflow-x-auto doctor-scroll pb-2">
     <div class="flex space-x-3" style="min-width: 100%">
       @each(dokter in todaysDoctors)
       <div class="card bg-white p-3 flex-shrink-0" style="width: 150px">
         <div class="flex flex-col items-center">
-          <div class="relative mb-3 mt-2">
+          <div class="relative mb-2 mt-1">
             <div
-              class="doctor-avatar h-20 w-20 rounded-full bg-primary flex items-center justify-center border-2 border-secondary">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" viewBox="0 0 20 20"
+              class="doctor-avatar h-16 w-16 rounded-full bg-primary flex items-center justify-center border-2 border-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 20 20"
                 fill="currentColor">
                 <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
               </svg>
             </div>
-            <div class="absolute bottom-0 right-0 bg-green-500 h-4 w-4 rounded-full border-2 border-white">
+            <div class="absolute bottom-0 right-0 bg-green-500 h-3 w-3 rounded-full border-2 border-white">
             </div>
           </div>
           <div class="relative text-center">
-            <h4 class="font-medium text-gray-800 cursor-pointer" onclick="toggleTooltip(this)" data-nama="{{ dokter.nama }}">
-              {{ dokter.nama.substring(0, 14) }}{{ dokter.nama.length > 14 ? '...' : '' }}
+            <h4 class="font-medium text-gray-800 text-sm cursor-pointer" onclick="toggleTooltip(this)"
+              data-nama="{{ dokter.nama }}">
+              {{ dokter.nama.substring(0, 12) }}{{ dokter.nama.length > 12 ? '...' : '' }}
             </h4>
-
             <div
               class="hidden absolute left-1/2 transform -translate-x-1/2 mt-2 bg-white text-sm text-gray-800 shadow-lg rounded px-3 py-1 z-10 max-w-xs"
               style="min-width: 100px;" data-tooltip>
               {{ dokter.nama }}
             </div>
           </div>
-          <p class="text-xs text-gray-600 text-center mb-3">
+          <p class="text-xs text-gray-600 text-center mb-1">
             {{ dokter.spesialist?.gelar || 'Dokter Umum' }}
           </p>
-          <div class="bg-primary bg-opacity-10 w-full rounded-md px-3 py-2 text-xs text-center text-white">
+          <div class="bg-primary bg-opacity-10 w-full rounded-md px-2 py-1 text-xs text-center text-white mb-2">
             {{ dokter.jamMulai }} - {{ dokter.jamSelesai }}
           </div>
+          <a href="https://wa.me/{{ dokter.formattedWhatsapp }}?text={{ dokter.whatsappMessage }}"
+            class="w-full bg-accent hover:bg-secondary text-white rounded-md py-1 px-2 text-xs flex items-center justify-center transition-colors duration-300"
+            target="_blank" rel="noopener">
+            <i class="fab fa-whatsapp mr-1"></i> Konsultasi
+          </a>
         </div>
       </div>
       @end

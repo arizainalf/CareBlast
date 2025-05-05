@@ -106,7 +106,7 @@ export default class extends BaseSeeder {
       {
         nip: 'DOK001',
         nama: 'Dr. Andi Wijaya',
-        noWhatsapp: '098863876234',
+        noWhatsapp: '087818179639',
         spesialistId: spesialists[0].id,
         jamMulai: '08:00',
         jamSelesai: '14:00',
@@ -115,7 +115,9 @@ export default class extends BaseSeeder {
       {
         nip: 'DOK002',
         nama: 'Dr. Siti Rahma',
-        noWhatsapp: '098863876234',
+
+        noWhatsapp: '087818179639',
+
         spesialistId: spesialists[1].id,
         jamMulai: '09:00',
         jamSelesai: '15:00',
@@ -124,7 +126,7 @@ export default class extends BaseSeeder {
       {
         nip: 'DOK003',
         nama: 'Dr. Budi Santoso',
-        noWhatsapp: '098863876234',
+        noWhatsapp: '087818179639',
         spesialistId: spesialists[2].id,
         jamMulai: '10:00',
         jamSelesai: '16:00',
@@ -133,7 +135,7 @@ export default class extends BaseSeeder {
       {
         nip: 'DOK004',
         nama: 'Dr. Dewi Anggraini',
-        noWhatsapp: '098863876234',
+        noWhatsapp: '087818179639',
         spesialistId: spesialists[3].id,
         jamMulai: '13:00',
         jamSelesai: '19:00',
@@ -142,7 +144,7 @@ export default class extends BaseSeeder {
       {
         nip: 'DOK005',
         nama: 'Dr. Rudi Hartono',
-        noWhatsapp: '098863876234',
+        noWhatsapp: '087818179639',
         spesialistId: spesialists[4].id,
         jamMulai: '08:00',
         jamSelesai: '16:00',
