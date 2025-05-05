@@ -28,7 +28,7 @@
                 data-bs-target="#editPenyakit${penyakit.uuid}">
                 <i class="fas fa-pencil-alt"></i>
               </button>
-              <form action="/obat-penyakit/${penyakit.uuid}/delete" method="POST" class="d-inline">
+              <form action="/obat-penyakit/${penyakit.uuid}/delete" method="POST" class="d-inline" id="hapus-penyakit-form">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}">
                 <button type="submit" class="btn btn-danger shadow btn-xs sharp"
                   onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">
@@ -55,6 +55,30 @@
     searchForm.addEventListener('submit', function (event) {
       event.preventDefault();
       searchPenyakit(searchInput.value.trim());
+    });
+    $('#tambah-penyakit-form').on('submit', function (event) {
+      event.preventDefault();
+      let formData = new FormData(this);
+      const url = $(this).attr('action');
+      const method = $(this).attr('method') || 'POST';
+
+      ajaxRequest(url, method, formData)
+    });
+    $('#update-penyakit-form').on('submit', function (event) {
+      event.preventDefault();
+      let formData = new FormData(this);
+      const url = $(this).attr('action');
+      const method = $(this).attr('method') || 'POST';
+
+      ajaxRequest(url, method, formData)
+    });
+    $('#hapus-penyakit-form').on('submit', function (event) {
+      event.preventDefault();
+      let formData = new FormData(this);
+      const url = $(this).attr('action');
+      const method = $(this).attr('method') || 'POST';
+
+      ajaxRequest(url, method, formData)
     });
   });
 </script>

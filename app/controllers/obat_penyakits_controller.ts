@@ -3,6 +3,7 @@ import JenisPenyakit from '#models/jenis_penyakit'
 import Obat from '#models/obat'
 import { inject } from '@adonisjs/core'
 import type { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
+import { hash } from 'crypto'
 
 interface FlashMessage {
   type: 'penyakit' | 'obat'
@@ -29,48 +30,93 @@ export default class ObatPenyakitController {
   }
 
   async storePenyakit({ request, response, session }: HttpContext) {
-    await this.handleDatabaseOperation(
-      async () => {
-        await this.createPenyakit(request.only(['nama', 'deskripsi']))
-        this.setFlashMessage(session, {
-          type: 'penyakit',
-          message: 'Data penyakit berhasil ditambahkan',
-        })
-      },
-      session,
-      response,
-      '#dataPenyakit'
-    )
+    // await this.handleDatabaseOperation(
+    //   async () => {
+    //     await this.createPenyakit(request.only(['nama', 'deskripsi']))
+    //     this.setFlashMessage(session, {
+    //       type: 'penyakit',
+    //       message: 'Data penyakit berhasil ditambahkan',
+    //     })
+    //   },
+    //   session,
+    //   response,
+    //   '#dataPenyakit'
+    // )
+    try {
+      await this.createPenyakit(request.only(['nama', 'deskripsi']))
+      return response.json({
+        success: true,
+        message: 'Data penyakit berhasil ditambahkan',
+        hash: '#dataPenyakit',
+      })
+    } catch (error) {
+      console.error('Error creating penyakit:', error)
+      return response.status(500).json({
+        success: false,
+        message: 'Terjadi kesalahan saat memproses data',
+        error: error.message,
+        hash: '#dataPenyakit',
+      })
+    }
   }
 
   async updatePenyakit({ request, response, session, params }: HttpContext) {
-    await this.handleDatabaseOperation(
-      async () => {
-        await this.modifyPenyakit(params.uuid, request.only(['nama', 'deskripsi']))
-        this.setFlashMessage(session, {
-          type: 'penyakit',
-          message: 'Data penyakit berhasil diperbarui',
-        })
-      },
-      session,
-      response,
-      '#dataPenyakit'
-    )
+    // await this.handleDatabaseOperation(
+    //   async () => {
+    //     await this.modifyPenyakit(params.uuid, request.only(['nama', 'deskripsi']))
+    //     this.setFlashMessage(session, {
+    //       type: 'penyakit',
+    //       message: 'Data penyakit berhasil diperbarui',
+    //     })
+    //   },
+    //   session,
+    //   response,
+    //   '#dataPenyakit'
+    // )
+    try {
+      await this.modifyPenyakit(params.uuid, request.only(['nama', 'deskripsi']))
+      return response.json({
+        success: true,
+        message: 'Data penyakit berhasil diubah!',
+        hash: '#dataPenyakit',
+      })
+    } catch (error) {
+      console.error('Error update penyakit:', error)
+      return response.status(500).json({
+        success: false,
+        message: 'Terjadi kesalahan saat mengedit data',
+        error: error.message,
+        hash: '#dataPenyakit',
+      })
+    }
   }
 
   async destroyPenyakit({ response, session, params }: HttpContext) {
-    await this.handleDatabaseOperation(
-      async () => {
-        await this.deletePenyakit(params.uuid)
-        this.setFlashMessage(session, {
-          type: 'penyakit',
-          message: 'Data penyakit berhasil dihapus',
-        })
-      },
-      session,
-      response,
-      '#dataPenyakit'
-    )
+    // await this.handleDatabaseOperation(
+    //   async () => {
+    //     await this.deletePenyakit(params.uuid)
+    //     this.setFlashMessage(session, {
+    //       type: 'penyakit',
+    //       message: 'Data penyakit berhasil dihapus',
+    //     })
+    //   },
+    //   session,
+    //   response,
+    //   '#dataPenyakit'
+    // )
+    try {
+      await this.deletePenyakit(params.uuid)
+      return response.json({
+        success: true,
+        message: 'Data penyakit berhasil dihapus',
+      })
+    } catch (error) {
+      console.log('error hapus penyakit ', error)
+      return response.json({
+        success: true,
+        message: 'Data penyakit gagal dihapus',
+      })
+    }
   }
 
   async searchPenyakit({ request, response }: HttpContext) {
@@ -80,39 +126,87 @@ export default class ObatPenyakitController {
   }
 
   async storeObat({ request, response, session }: HttpContext) {
-    await this.handleDatabaseOperation(
-      async () => {
-        await this.createObat(request.only(['nama', 'dosis']))
-        this.setFlashMessage(session, { type: 'obat', message: 'Data obat berhasil ditambahkan' })
-      },
-      session,
-      response,
-      '#dataObat'
-    )
+    // await this.handleDatabaseOperation(
+    //   async () => {
+    //     await this.createObat(request.only(['nama', 'dosis']))
+    //     this.setFlashMessage(session, { type: 'obat', message: 'Data obat berhasil ditambahkan' })
+    //   },
+    //   session,
+    //   response,
+    //   '#dataObat'
+    // )
+    try {
+      await this.createObat(request.only(['nama', 'dosis']))
+      return response.json({
+        success: true,
+        message: 'Data obat berhasil ditambahkan',
+        // redirectUrl: '/obat-penyakit',
+        hash: '#dataObat',
+      })
+    } catch (error) {
+      console.error('Error creating obat:', error)
+      return response.status(500).json({
+        success: false,
+        message: 'Terjadi kesalahan saat memproses data',
+        error: error.message,
+        hash: '#dataObat',
+      })
+    }
+
   }
 
   async updateObat({ request, response, session, params }: HttpContext) {
-    await this.handleDatabaseOperation(
-      async () => {
-        await this.modifyObat(params.uuid, request.only(['nama', 'dosis']))
-        this.setFlashMessage(session, { type: 'obat', message: 'Data obat berhasil diperbarui' })
-      },
-      session,
-      response,
-      '#dataObat'
-    )
+    // await this.handleDatabaseOperation(
+    //   async () => {
+    //     await this.modifyObat(params.uuid, request.only(['nama', 'dosis']))
+    //     this.setFlashMessage(session, { type: 'obat', message: 'Data obat berhasil diperbarui' })
+    //   },
+    //   session,
+    //   response,
+    //   '#dataObat'
+    // )
+    try {
+      await this.modifyObat(params.uuid, request.only(['nama', 'dosis']))
+      return response.json({
+        success: true,
+        message: 'Data obat berhasil diubah!',
+        hash: '#dataObat'
+      })
+    } catch (error) {
+      console.error('Error update obat:', error)
+      return response.status(500).json({
+        success: false,
+        message: 'Terjadi kesalahan saat mengedit data',
+        error: error.message,
+        hash: '#dataObat',
+      })
+    }
   }
 
   async destroyObat({ response, session, params }: HttpContext) {
-    await this.handleDatabaseOperation(
-      async () => {
-        await this.deleteObat(params.uuid)
-        this.setFlashMessage(session, { type: 'obat', message: 'Data obat berhasil dihapus' })
-      },
-      session,
-      response,
-      '#dataObat'
-    )
+    // await this.handleDatabaseOperation(
+    //   async () => {
+    //     await this.deleteObat(params.uuid)
+    //     this.setFlashMessage(session, { type: 'obat', message: 'Data obat berhasil dihapus' })
+    //   },
+    //   session,
+    //   response,
+    //   '#dataObat'
+    // )
+    try {
+      await this.deleteObat(params.uuid)
+      return response.json({
+        success: true,
+        message: 'Data obat berhasil dihapus',
+      })
+    } catch (error) {
+      console.log('error hapus obat ', error)
+      return response.json({
+        success: true,
+        message: 'Data obat gagal dihapus'
+      })
+
+    }
   }
 
   async searchObat({ request, response }: HttpContext) {

@@ -27,7 +27,7 @@
           <div class="tab-pane fade show active" id="patientForm" role="tabpanel">
             <form action="{{ route('loginPost') }}" method="POST" id="patientLoginForm">
               {{ csrfField() }}
-              <input type="hidden" name="user_type" value="patient">
+              <input type="hidden" name="user_type" value="pasien">
 
               <div class="mb-3">
                 <label class="form-label text-muted small">NIK</label>
@@ -38,9 +38,6 @@
                   <input type="text" name="nik" value="{{ old('nik') || '' }}" class="form-control border-start-0"
                     placeholder="Masukkan NIK Anda" required />
                 </div>
-                @if(flashMessages.get('errors.nik'))
-                <p class="text-danger small mt-1">{{ flashMessages.get('errors.nik') }}</p>
-                @end
               </div>
 
               <div class="mb-3">
@@ -56,9 +53,6 @@
                     <i id="toggle-password-patient" class="fas fa-eye"></i>
                   </a>
                 </div>
-                @if(flashMessages.get('errors.password'))
-                <p class="text-danger small mt-1">{{ flashMessages.get('errors.password') }}</p>
-                @end
               </div>
 
               <div class="d-flex justify-content-between align-items-center mb-4">
@@ -91,9 +85,6 @@
                   <input type="email" value="{{ old('email') || '' }}" name="email" class="form-control border-start-0"
                     placeholder="Masukkan email Anda" required />
                 </div>
-                @if(flashMessages.get('errors.email'))
-                <p class="text-danger small mt-1">{{ flashMessages.get('errors.email') }}</p>
-                @end
               </div>
 
               <div class="mb-3">
@@ -110,9 +101,6 @@
                     <i id="toggle-password-admin" class="fas fa-eye"></i>
                   </a>
                 </div>
-                @if(flashMessages.get('errors.password'))
-                <p class="text-danger small mt-1">{{ flashMessages.get('errors.password') }}</p>
-                @end
               </div>
 
               <div class="d-flex justify-content-between align-items-center mb-4">
@@ -135,21 +123,5 @@
   </div>
 </div>
 
-<script>
-  function togglePasswordVisibility(passwordSelector, toggleIconSelector) {
-    const passwordInput = document.querySelector(passwordSelector)
-    const toggleIcon = document.querySelector(toggleIconSelector)
-
-    if (passwordInput.type === 'password') {
-      passwordInput.type = 'text'
-      toggleIcon.classList.remove('fa-eye')
-      toggleIcon.classList.add('fa-eye-slash')
-    } else {
-      passwordInput.type = 'password'
-      toggleIcon.classList.remove('fa-eye-slash')
-      toggleIcon.classList.add('fa-eye')
-    }
-  }
-</script>
 @end
 @end

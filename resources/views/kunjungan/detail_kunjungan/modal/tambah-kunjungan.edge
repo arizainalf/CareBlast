@@ -6,7 +6,8 @@
       </button>
     </div>
     <div class="modal-body">
-      <form>
+      <form id="tambah-kunjungan"">
+        {{ csrfField() }}
         <div class="row mb-2">
           <div class="col-sm-6">
             <input class="form-control" list="GFGOptions" placeholder="Nama Pasien">

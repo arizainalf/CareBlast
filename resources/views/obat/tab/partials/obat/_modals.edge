@@ -11,8 +11,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
-        <form action="{{ route('delete-obat', { uuid: obat.uuid }) }}" method="POST" class="d-inline">
-          {{ csrfField() }}
+        <form action="{{ route('delete-obat', { uuid: obat.uuid }) }}" method="POST" class="d-inline"
+          id="hapus-obat-form">
+          {{--  {{ csrfField() }}  --}}
           <button type="submit" class="btn btn-danger light">Hapus</button>
         </form>
       </div>
@@ -25,8 +26,8 @@
 <div class="modal fade" id="tambahObat" tabindex="-1" aria-labelledby="tambahObatLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="/obat-penyakit/obat" method="POST">
-        {{ csrfField() }}
+      <form action="/obat-penyakit/obat" method="POST" id="tambah-obat-form">
+        {{-- {{ csrfField() }} --}}
         <div class="modal-header">
           <h5 class="modal-title" id="tambahObatLabel">Tambah Obat</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -57,13 +58,13 @@
 <div class="modal fade" id="editObat{{ obat.uuid }}" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ route('update-obat', { uuid: obat.uuid }) }}" method="POST">
-        {{ csrfField() }}
+      <form action="{{ route('update-obat', { uuid: obat.uuid }) }}" method="POST" id="update-obat-form">
         <div class="modal-header">
           <h5 class="modal-title">Edit Obat</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          {{ csrfField() }}
           <div class="mb-3">
             <label for="nama-{{ obat.uuid }}" class="form-label">Nama Obat</label>
             <input type="text" class="form-control" id="nama-{{ obat.uuid }}" name="nama" value="{{ obat.nama }}"

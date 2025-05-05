@@ -4,7 +4,7 @@
       <h5 class="modal-title">Edit Data Pasien</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
-    <form action="{{ route('pasien.update', { uuid: pasien.uuid }) }}?_method=PUT" method="POST">
+    <form class="edit-pasien" data-id="{{ pasien.uuid }}">
       {{ csrfField() }}
       <div class="modal-body">
         <div class="row">

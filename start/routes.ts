@@ -78,8 +78,8 @@ router
     router.get('/data-pasien/search', [PasiensController, 'search']).as('pasien.search')
 
     router.get('/pasien/:uuid', [PasiensController, 'show']).as('profile.pasien')
-    router.post('/pasien/:uuid', [PasiensController, 'update']).as('pasien.update')
-    router.post('/pasien/:uuid/delete', [PasiensController, 'destroy']).as('pasien.destroy')
+    router.put('/pasien/:uuid', [PasiensController, 'update']).as('pasien.update')
+    router.delete('/pasien/:uuid/delete', [PasiensController, 'destroy']).as('pasien.destroy')
     router.post('/pasien/:uuid/obat', [ObatPasiensController, 'store'])
     router.patch('/obat-pasien/:uuid', [ObatPasiensController, 'update'])
     router.post('/obat-pasien/:uuid', [ObatPasiensController, 'destroy'])
@@ -91,7 +91,7 @@ router
     router.get('/data-kunjungan', [KunjungansController, 'index'])
     router.get('/kunjungan/search', [KunjungansController, 'search'])
     router.get('/kunjungan/:uuid', [KunjungansController, 'show'])
-    router.post('/kunjungan/:uuid', [KunjungansController, 'update'])
+    router.put('/kunjungan/:uuid', [KunjungansController, 'update'])
     router.post('/kunjungans/:uuid', [KunjungansController, 'destroy'])
 
     router.get('/send-file', [WhatsappsController, 'sendFile']).as('send-file')

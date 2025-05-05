@@ -1,26 +1,44 @@
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("add-medicine-form");
-    const submitButton = form.querySelector("button[type='submit']");
-    const inputs = form.querySelectorAll("input:not([disabled]), select:not([disabled])");
+  $(document).ready(function () {
+    const $form = $('#add-medicine-form');
+    const $submitButton = $form.find("button[type='submit']");
+    const $inputs = $form.find("input:not([disabled]), select:not([disabled])");
 
     function validateForm() {
       let isValid = true;
 
-      inputs.forEach((input) => {
-        if (!input.value.trim()) {
+      $inputs.each(function () {
+        if (!$(this).val().trim()) {
           isValid = false;
+          return false; // break loop
         }
       });
 
-      submitButton.disabled = !isValid;
+      $submitButton.prop('disabled', !isValid);
     }
 
-    inputs.forEach((input) => {
-      input.addEventListener("input", validateForm);
-      input.addEventListener("change", validateForm);
-    });
+    $inputs.on('input change', validateForm);
 
-    validateForm();
+    validateForm(); // initial call
+    $('#add-medicine-form').on('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const url = '/pasien/{{ pasien.uuid }}/obat'
+      const method = 'POST';
+
+      ajaxRequest(url, method, formData)
+    });
+    $('.edit-pasien').on('submit', function (e) {
+      e.preventDefault();
+
+      const form = $(this);
+      const pasienUuid = form.data('id');
+      const url = '/pasien/' + pasienUuid
+      const method = 'PUT';
+      const formData = new FormData(this)
+
+      ajaxRequest(url, method, formData)
+    });
   });
 </script>

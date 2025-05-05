@@ -8,8 +8,6 @@
       </div>
       <div class="modal-body">
         <form id="form-kunjungan-dropdown" method="POST">
-          {{ csrfField() }}
-
           <div class="row mb-2">
             <div class="col-sm-6">
               <label for="pasienNama">Nama Pasien:</label>
@@ -65,7 +63,8 @@
 
           <div class="mb-3">
             <label for="kunjunganBerikutnyaDropdown">Kunjungan Berikutnya:</label>
-            <input type="date" id="kunjunganBerikutnyaDropdown" name="kunjunganBerikutnya" class="form-control" value="">
+            <input type="date" id="kunjunganBerikutnyaDropdown" name="kunjunganBerikutnya" class="form-control"
+              value="">
           </div>
 
           <div class="modal-footer">
@@ -106,9 +105,18 @@
       const modal = $(this);
       modal.find('#pasienNama').val(patientName);
       modal.find('#pasienNik').val(patientNik);
-      modal.find('#form-kunjungan-dropdown').attr('action', `/pasien/${patientUuid}/kunjungan`);
-    });
+      // modal.find('#form-kunjungan-dropdown').attr('action', `/pasien/${patientUuid}/kunjungan`);
 
+      $('#form-kunjungan-dropdown').on('submit', function (e) {
+        e.preventDefault(); // Mencegah submit default
+
+        const url = `/pasien/${patientUuid}/kunjungan`;
+        const method = 'POST';
+        const formData = new FormData(this);
+
+        ajaxRequest(url, method, formData);
+      });
+    });
     // Improved search functionality
     const searchInput = document.getElementById('searchPasien');
     const searchResults = document.getElementById('searchResults');
@@ -312,7 +320,7 @@
     const setDefaultDate = () => {
       const today = new Date().toISOString().split('T')[0];
       const dateInputs = document.querySelectorAll('input[type="date"]');
-      
+
       dateInputs.forEach(input => {
         if (!input.value) {
           input.value = today;

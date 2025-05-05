@@ -1,7 +1,7 @@
 <div class="modal fade" id="tambahPenyakit" tabindex="-1" aria-labelledby="tambahPenyakitLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="/obat-penyakit/penyakit" method="POST">
+      <form action="/obat-penyakit/penyakit" method="POST" id="tambah-penyakit-form">
         {{ csrfField() }}
         <div class="modal-body">
           <div class="mb-3">
@@ -26,7 +26,7 @@
 <div class="modal fade" id="editPenyakit{{ penyakit.uuid }}" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="/obat-penyakit/penyakit/{{ penyakit.uuid }}/update" method="POST">
+      <form action="/obat-penyakit/penyakit/{{ penyakit.uuid }}/update" method="POST" id="update-penyakit-form">
         {{ csrfField() }}
         <input type="hidden" name="_method" value="PUT">
         <div class="modal-body">

@@ -284,10 +284,14 @@ export default class PasiensController {
           .whereNot('id', pasien.id)
           .first()
         if (existingPatient) {
-          session.flash({
-            error: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.',
+          console.error('NIK already registered:', data.nik)
+          // session.flash({
+          //   error: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.',
+          // })
+          return response.json({
+            success: false,
+            message: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.',
           })
-          return response.redirect().back()
         }
       }
 
@@ -299,34 +303,54 @@ export default class PasiensController {
       const jenisPenyakit = await JenisPenyakit.find(data.jenisPenyakitId)
       if (!jenisPenyakit) {
         console.error('Invalid jenis penyakit selected:', data.jenisPenyakitId)
-        session.flash({ error: 'Jenis penyakit tidak valid' })
-        return response.redirect().back()
+        // session.flash({ error: 'Jenis penyakit tidak valid' })
+        // return response.redirect().back()
+        return response.json({
+          success: false,
+          message: 'Jenis penyakit tidak valid'
+        })
       }
 
       const validGolonganDarah = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-']
       if (data.golongan_darah && !validGolonganDarah.includes(data.golongan_darah)) {
         console.error('Invalid golongan darah:', data.golongan_darah)
-        session.flash({ error: 'Golongan darah tidak valid' })
-        return response.redirect().back()
+        // session.flash({ error: 'Golongan darah tidak valid' })
+        // return response.redirect().back()
+        return response.json({
+          success: false,
+          message: 'Golongan darah tidak valid'
+        })
+
       }
 
       try {
         await pasien.merge(data).save()
         console.log('Patient updated successfully')
-        session.flash({ success: 'Data pasien berhasil diperbarui' })
-        return response.redirect().toRoute('profile.pasien', { uuid: pasien.uuid })
+        // session.flash({ success: 'Data pasien berhasil diperbarui' })
+        // return response.redirect().toRoute('profile.pasien', { uuid: pasien.uuid })
+        return response.json({
+          success: true,
+          message: 'Data pasien berhasil diperbarui',
+          redirectUrl: `/pasien/${pasien.uuid}`,
+        })
       } catch (saveError) {
         console.error('Error saving patient:', saveError)
         if (saveError instanceof Error) {
           console.error('Error message:', saveError.message)
           console.error('Error stack:', saveError.stack)
         }
-        session.flash({
-          error:
+        // session.flash({
+        //   error:
+        //     'Gagal menyimpan data pasien. Detail: ' +
+        //     (saveError instanceof Error ? saveError.message : 'Unknown error'),
+        // })
+        // return response.redirect().back()
+        return response.json({
+          success: false,
+          message:
             'Gagal menyimpan data pasien. Detail: ' +
             (saveError instanceof Error ? saveError.message : 'Unknown error'),
         })
-        return response.redirect().back()
       }
     } catch (error) {
       console.error('Error in update function:', error)
@@ -334,12 +358,17 @@ export default class PasiensController {
         console.error('Error message:', error.message)
         console.error('Error stack:', error.stack)
       }
-      session.flash({ error: 'Gagal memperbarui data pasien. Silakan coba lagi.' })
-      return response.redirect().back()
+      // session.flash({ error: 'Gagal memperbarui data pasien. Silakan coba lagi.' })
+      // return response.redirect().back()
+      return response.json({
+        success: false,
+        message: 'Gagal memperbarui data pasien. Silakan coba lagi.',
+      })
+
     }
   }
 
-  async destroy({ params, response, session }: HttpContext) {
+  async destroy({ params, response }: HttpContext) {
     const pasien = await Pasien.findByOrFail('uuid', params.uuid)
     await Pasien.transaction(async (trx) => {
       try {
@@ -355,7 +384,7 @@ export default class PasiensController {
         return response.json({
           success: true,
           message: 'Data pasien berhasil dihapus',
-          redirectUrl: '/pasien',
+          redirectUrl: '/data-pasien',
         })
       } catch (error) {
         console.error('Error deleting patient:', error)
@@ -363,7 +392,7 @@ export default class PasiensController {
         return response.json({
           success: false,
           message: 'Gagal menghapus data pasien. Silakan coba lagi.',
-          redirectUrl: '/pasien',
+          redirectUrl: '/data-pasien',
         })
 
       }

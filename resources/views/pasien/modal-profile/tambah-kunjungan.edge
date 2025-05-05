@@ -5,11 +5,12 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form id="form-kunjungan" method="POST" action="/pasien/{{ pasien.uuid }}/kunjungan">
+      <form id="form-kunjungan">
         {{ csrfField() }}
 
         <div class="row mb-2">
           <div class="col-sm-6">
+            <input type="hidden" name="id" id="pasien_id" value="{{pasien.uuid}}">
             <input class="form-control" list="GFGOptions" name="pasienNama" placeholder="Nama Pasien"
               value="{{ pasien.name }}" disabled>
             <datalist id="GFGOptions">
@@ -33,7 +34,7 @@
             @end
           </select>
         </div>
-        
+
         <div class="mb-3">
           <label for="obat">Pilih Jenis Obat:</label>
           <select class="multi-select" name="obatList[]" multiple="multiple" id="obat">
@@ -45,11 +46,13 @@
         </div>
 
         <div class="mb-3">
-          <input type="text" class="form-control input-default" name="temaKunjungan" placeholder="Tema kunjungan" required>
+          <input type="text" class="form-control input-default" name="temaKunjungan" placeholder="Tema kunjungan"
+            required>
         </div>
 
         <div class="mb-2">
-          <input type="text" class="form-control input-default" name="keterangan" placeholder="Keterangan/keluhan pasien" required>
+          <input type="text" class="form-control input-default" name="keterangan"
+            placeholder="Keterangan/keluhan pasien" required>
         </div>
 
         <div class="mb-2">

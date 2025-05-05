@@ -85,5 +85,27 @@
         }
       });
     });
+
+    $('.edit-kunjungan').on('submit', function (e) {
+      e.preventDefault();
+      const form = $(this);
+      const kunjunganId = form.data('id');
+      const url = `/kunjungan/${kunjunganId}`;
+      const formData = new FormData(this);
+      const method = 'PUT';
+
+      ajaxRequest(url, method, formData)
+    });
+
+    $('.tambah-kunjungan').on('submit', function (e) {
+      e.preventDefault();
+      const form = $(this);
+      const kunjunganId = form.data('id');
+      const url = `/kunjungan/${kunjunganId}`;
+      const formData = new FormData(this);
+      const method = 'PUT';
+
+      ajaxRequest(url, method, formData)
+    });
   });
 </script>

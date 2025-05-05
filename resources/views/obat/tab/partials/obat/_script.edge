@@ -49,5 +49,35 @@
       event.preventDefault();
       searchObat(searchInput.value.trim());
     });
+
+    $('#tambah-obat-form').on('submit', function (event) {
+      event.preventDefault();
+      let formData = new FormData(this);
+      const url = $(this).attr('action');
+      const method = $(this).attr('method') || 'POST';
+
+      ajaxRequest(url, method, formData)
+    });
+
+    $('#update-obat-form').on('submit', function (event) {
+      event.preventDefault();
+
+
+      console.log('update form di submit')
+      let formData = new FormData(this);
+      const url = $(this).attr('action');
+      const method = $(this).attr('method') || 'POST';
+
+      ajaxRequest(url, method, formData)
+    });
+
+    $('#hapus-obat-form').on('submit', function (event) {
+      event.preventDefault();
+
+      let formData = new FormData(this);
+      const url = $(this).attr('action');
+      const method = $(this).attr('method') || 'POST';
+      ajaxRequest(url, method, formData)
+    })
   });
 </script>
