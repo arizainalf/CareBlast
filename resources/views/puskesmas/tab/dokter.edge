@@ -14,6 +14,7 @@
         <th>#</th>
         <th>Nama</th>
         <th>NIP</th>
+        <th>No Whatsapp</th>
         <th>Spesialis</th>
         <th>Jam Kerja</th>
         <th>Status</th>
@@ -26,18 +27,20 @@
         <th>{{ index + 1 }}</th>
         <td>{{ dokter.nama }}.{{ dokter.spesialist.gelar }}</td>
         <td class="color-primary">{{ dokter.nip }}</td>
+        <td>{{ dokter.noWhatsapp }}</td>
         <td>{{ dokter.spesialist.nama }}</td>
         <td>{{dokter.jamMulai}}-{{dokter.jamSelesai}}</td>
         <td>
           <div class="status-wrapper d-flex align-items-center">
             <div class="toggle-switch-wrapper me-2">
               <label class="toggle-switch">
-                <input type="checkbox" class="status-toggle" {{ dokter.status == 1 ? 'checked' : '' }}
+                <input type="checkbox" class="status-toggle" {{ dokter.status==1 ? 'checked' : '' }}
                   data-id="{{ dokter.id }}">
                 <span class="toggle-slider"></span>
               </label>
             </div>
-            <span class="status-badge badge {{ dokter.status == 1 ? 'bg-success' : 'bg-danger' }}">{{ dokter.status == 1 ? 'Aktif' : 'Tidak Aktif' }}</span>
+            <span class="status-badge badge {{ dokter.status == 1 ? 'bg-success' : 'bg-danger' }}">{{ dokter.status == 1
+              ? 'Aktif' : 'Tidak Aktif' }}</span>
           </div>
         </td>
         <td>
@@ -45,8 +48,8 @@
             <a href="#" class="btn btn-primary shadow btn-xs sharp me-1 editDokter" data-id="{{ dokter.id }}"
               data-nama="{{ dokter.nama }}" data-nip="{{ dokter.nip }}" data-spesialis-id="{{ dokter.spesialist.id }}"
               data-spesialis="{{ dokter.spesialist.nama }}" data-jam-mulai="{{ dokter.jamMulai }}"
-              data-jam-selesai="{{ dokter.jamSelesai }}" data-status="{{ dokter.status }}" data-bs-toggle="modal"
-              data-bs-target="#tambahDokterModal">
+              data-no-whatsapp="{{dokter.noWhatsapp}}" data-jam-selesai="{{ dokter.jamSelesai }}"
+              data-status="{{ dokter.status }}" data-bs-toggle="modal" data-bs-target="#tambahDokterModal">
               <i class="fas fa-pencil-alt"></i>
             </a>
             <a href="#" class="btn btn-danger shadow btn-xs sharp deleteDokter" data-id="{{ dokter.id }}"
@@ -77,6 +80,9 @@
           </div>
           <div class="mb-2">
             <input type="text" class="form-control" name="nip" id="nip" placeholder="NIP" required>
+          </div>
+          <div class="mb-2">
+            <input type="text" class="form-control" name="no_whatsapp" id="no_whatsapp" placeholder="No Whatsapp">
           </div>
           <div class="mb-2">
             <select class="form-control" required name="spesialist_id" id="spesialist_id">

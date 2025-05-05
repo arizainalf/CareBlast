@@ -16,6 +16,12 @@ export default class SessionController {
         })
       }
       if (user) {
+        if (!email || !password) {
+          return response.json({
+            success: false,
+            message: 'Email dan password wajib diisi.',
+          })
+        }
         try {
           const authenticatedUser = await User.verifyCredentials(email, password)
           await auth.use('web').login(authenticatedUser, !!remember_me)

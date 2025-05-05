@@ -115,7 +115,9 @@ export default class extends BaseSeeder {
       {
         nip: 'DOK002',
         nama: 'Dr. Siti Rahma',
+
         noWhatsapp: '087818179639',
+
         spesialistId: spesialists[1].id,
         jamMulai: '09:00',
         jamSelesai: '15:00',
