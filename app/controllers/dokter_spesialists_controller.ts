@@ -25,10 +25,12 @@ export default class DokterSpesialistsController {
    */
   async store({ request, response }: HttpContext) {
     if (request.input('jenis') === 'dokter') {
-      const { nip, nama, spesialist_id, jam_mulai, jam_selesai, status } = request.all()
+      const { nip, nama, spesialist_id, jam_mulai, jam_selesai, status, no_whatsapp } = request.all()
+      console.log(no_whatsapp)
       const dokter = await Dokter.create({
         nip,
         nama,
+        noWhatsapp: no_whatsapp,
         spesialistId: spesialist_id,
         jamMulai: jam_mulai,
         jamSelesai: jam_selesai,
@@ -74,7 +76,7 @@ export default class DokterSpesialistsController {
     } else if (params.id_dokter) {
       console.log('be update spesialist')
       const dokter = await Dokter.findOrFail(params.id_dokter)
-      const data = request.only(['nama', 'nip', 'spesialist_id', 'jam_mulai', 'jam_selesai', 'status'])
+      const data = request.only(['nama', 'nip', 'spesialist_id', 'jam_mulai', 'jam_selesai', 'status', 'no_whatsapp'])
       dokter.merge(data)
       await dokter.save()
       return response.json({ success: true, message: 'Pengguna berhasil diperbarui!', dokter });
