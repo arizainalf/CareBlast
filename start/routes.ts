@@ -1,5 +1,8 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+const ProfilesController = () => import('#controllers/pasien/profiles_controller')
+const VisitsController = () => import('#controllers/pasien/visits_controller')
+const HomeController = () => import('#controllers/pasien/home_controller')
 const SessionController = () => import('#controllers/session_controller')
 const DashboardController = () => import('#controllers/dashboard_controller')
 const UsersController = () => import('#controllers/users_controller')
@@ -23,14 +26,19 @@ router.get('/forgot', async ({ view }) => {
   return view.render('auth/forgot-pw')
 })
 
+// Route Patients
 router
   .group(() => {
-    router.get('/', [PasienController, 'index']).as('pengguna.index')
+    router.get('/hihi', [PasienController, 'index']).as('pengguna.index')
+    router.get('/', [HomeController, 'index']).as('pengguna.home')
+    router.get('/kunjungan', [VisitsController, 'index']).as('pengguna.kunjungan')
+    router.get('/profile', [ProfilesController, 'index']).as('pengguna.profile')
     router.get('/logout', [SessionController, 'destroy']).as('logoutPengguna')
   })
   .prefix('/pengguna')
   .use(middleware.auth({ guards: ['pasien'] }))
 
+// Route Admin/Super admin
 router
   .group(() => {
     router.get('/users', [UsersController, 'index']).as('users.index')

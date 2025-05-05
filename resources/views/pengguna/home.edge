@@ -1,0 +1,273 @@
+@layout.pengguna()
+
+@slot('content')
+<div class="mb-6">
+  <div class="flex justify-between items-center mb-3">
+    <h2 class="text-lg font-semibold text-primary">
+      {{ pasien.name }}
+    </h2>
+    <div class="bg-light-primary rounded-full px-3 py-1 text-xs font-medium text-primary" id="tanggal_lahir">
+      {{ calculateAge(pasien.tanggal_lahir) }}
+    </div>
+  </div>
+  <div
+    class="bg-white rounded-lg shadow-md p-4 border-l-4 border-accent flex justify-between items-center transition transform duration-200 hover:scale-[1.02] hover:shadow-lg">
+    <div>
+      <p class="text-sm text-gray-600">
+        Status
+      </p>
+      <p class="font-medium text-primary">
+        {{ pasien.jenisPenyakit ? 'Dalam perawatan' : 'Belum didiagnosa' }}
+      </p>
+    </div>
+    <div class="text-right">
+      <p class="text-sm text-gray-600">
+        Terakhir update
+      </p>
+      <p class="font-medium" id="tanggal_update">
+        {{ latestVisit ? formatDate(latestVisit.tanggalKunjungan) : 'Belum ada kunjungan' }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Obat pasien dari kunjungan terbaru -->
+<div class="mb-6">
+  <h3 class="text-lg font-semibold mb-4 flex items-center text-primary">
+    <i class="fa-solid fa-clock-rotate-left mr-2 text-accent"></i>
+    Jadwal Obat Hari Ini
+  </h3>
+
+  @if(medications.sebelumMakan.length > 0)
+  <div class="mb-6">
+    <h4 class="text-sm font-bold mb-3 text-accent">
+      🕗 Sebelum Makan
+    </h4>
+
+    @each(med in medications.sebelumMakan)
+    <details class="card bg-white mb-3 medication-card morning">
+      <summary class="cursor-pointer px-4 py-3 flex justify-between items-center">
+        <div>
+          <p class="font-semibold text-primary">
+            {{ med.obat.nama }} - {{ med.obat.dosis }}mg
+          </p>
+        </div>
+        <span class="bg-accent text-white text-xs px-3 py-1 rounded-full time-pill">{{ med.frekuensi }}x sehari</span>
+      </summary>
+      <p class="text-sm text-gray-600 mb-1 ms-4">Dimunum pada waktu:</p>
+
+      <div class="border-t px-4 py-3 text-sm text-gray-700 bg-light-primary rounded-b-xl">
+        @if(med.waktuKonsumsi?.length)
+        <div class="flex flex-wrap gap-2 mt-2">
+          @each(waktu in med.waktuKonsumsi)
+          <span class="bg-white text-primary border border-primary/20 px-3 py-1 rounded-full text-xs shadow-sm">
+            {{ waktu }}
+          </span>
+          @end
+        </div>
+        @else
+        <p class="text-gray-400 italic text-xs">Tidak ada waktu konsumsi yang ditentukan</p>
+        @endif
+
+        <p class="text-xs italic text-gray-500 mt-4 border-t pt-2">
+          Diminum sebelum makan untuk hasil maksimal
+        </p>
+      </div>
+
+    </details>
+    @end
+  </div>
+  @endif
+
+  @if(medications.sesudahMakan.length > 0)
+  <div class="mb-6">
+    <h4 class="text-sm font-bold mb-3 text-accent">
+      🕘 Sesudah Makan
+    </h4>
+
+    @each(med in medications.sesudahMakan)
+    <details class="card bg-white mb-3 medication-card evening">
+      <summary class="cursor-pointer px-4 py-3 flex justify-between items-center">
+        <div>
+          <p class="font-semibold text-primary">
+            {{ med.obat.nama }} - {{ med.obat.dosis }}mg
+          </p>
+        </div>
+        <span class="bg-accent text-white text-xs px-3 py-1 rounded-full time-pill">{{ med.frekuensi }}x sehari</span>
+      </summary>
+      <p class="text-sm text-gray-600 mb-1 ms-4">Dimunum pada waktu:</p>
+
+      <div class="border-t px-4 py-3 text-sm text-gray-700 bg-light-primary rounded-b-xl">
+        @if(med.waktuKonsumsi?.length)
+        <div class="flex flex-wrap gap-2 mt-2">
+          @each(waktu in med.waktuKonsumsi)
+          <span class="bg-white text-primary border border-primary/20 px-3 py-1 rounded-full text-xs shadow-sm">
+            {{ waktu }}
+          </span>
+          @end
+        </div>
+        @endif
+        <p class="text-xs italic text-gray-500 pt-2">
+          Diminum setelah makan
+        </p>
+      </div>
+    </details>
+    @end
+  </div>
+  @endif
+
+  @if(medications.lainnya.length > 0)
+  <div class="mb-6">
+    <h4 class="text-sm font-bold mb-3 text-accent">
+      🕙 Lainnya
+    </h4>
+
+    @each(med in medications.lainnya)
+    <details class="card bg-white mb-3 medication-card">
+      <summary class="cursor-pointer px-4 py-3 flex justify-between items-center">
+        <div>
+          <p class="font-semibold text-primary">
+            {{ med.obat.nama }} - {{ med.obat.dosis }}
+          </p>
+          <p class="text-xs text-gray-500">
+            {{ med.frekuensi }}x sehari - {{ med.obat.dosis }}
+          </p>
+        </div>
+        <span class="bg-accent text-white text-xs px-3 py-1 rounded-full time-pill">{{ med.frekuensi }}x sehari</span>
+      </summary>
+      <div class="border-t px-4 py-3 text-sm text-gray-700 space-y-2 bg-light-primary">
+        @if(med.waktuKonsumsi)
+        @each(waktu in med.waktuKonsumsi)
+        <div class="flex justify-between">
+          <span>{{ waktu }}</span>
+        </div>
+        @end
+        @endif
+        <p class="text-xs italic text-gray-500 pt-2">
+          Pastikan mengikuti aturan konsumsi dengan baik
+        </p>
+      </div>
+    </details>
+    @end
+  </div>
+  @endif
+</div>
+
+<!-- Recent Visit Card - If available -->
+@if(latestVisit)
+<div class="mb-6">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-semibold flex items-center text-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-accent" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+          clip-rule="evenodd" />
+      </svg>
+      Kunjungan Terbaru
+    </h3>
+  </div>
+
+  <div
+    class="bg-white rounded-xl shadow-sm hover:shadow-md transition duration-200 overflow-hidden border border-gray-100">
+    <div class="px-5 pt-4 pb-2 border-b border-gray-100">
+      <h3 class="text-base font-semibold text-primary flex items-center gap-2">
+        {{ latestVisit.tema || 'Kunjungan Terakhir' }}
+      </h3>
+    </div>
+
+    <div class="px-5 py-4">
+      <p class="text-sm text-gray-700 leading-relaxed">
+        {{ latestVisit.keterangan || 'Pasien menunjukkan perbaikan mood dan melanjutkan pengobatan yang sama.' }}
+      </p>
+      <div class="mt-3">
+        <span class="inline-block bg-accent text-white text-[11px] px-3 py-1 rounded-full shadow-sm font-medium">
+          {{ formatDate(latestVisit.tanggalKunjungan) }}
+        </span>
+      </div>
+    </div>
+
+    <div class="bg-gray-50 px-5 py-3 border-t border-gray-100 text-center">
+      <a href="/pengguna/kunjungan"
+        class="text-sm text-primary font-medium inline-flex items-center hover:underline transition">
+        Lihat Semua Kunjungan
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+            d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+            clip-rule="evenodd" />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+</div>
+@endif
+<!-- Today's Doctors - Horizontal Scrollable -->
+@if(todaysDoctors.length > 0)
+<div class="mb-6">
+  <div class="flex justify-between items-center mb-3">
+    <h3 class="text-lg font-semibold flex items-center text-primary">
+      <i class="fa-solid fa-user-nurse h-5 w-5 mr-2 text-accent"></i>
+      Dokter Hari Ini
+    </h3>
+    <span class="text-xs bg-primary text-white rounded-full px-2 py-1">{{ todaysDoctors.length }} Dokter</span>
+  </div>
+  <div class="overflow-x-auto doctor-scroll pb-2">
+    <div class="flex space-x-3" style="min-width: 100%">
+      @each(dokter in todaysDoctors)
+      <div class="card bg-white p-3 flex-shrink-0" style="width: 150px">
+        <div class="flex flex-col items-center">
+          <div class="relative mb-2 mt-1">
+            <div
+              class="doctor-avatar h-16 w-16 rounded-full bg-primary flex items-center justify-center border-2 border-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="absolute bottom-0 right-0 bg-green-500 h-3 w-3 rounded-full border-2 border-white">
+            </div>
+          </div>
+          <div class="relative text-center">
+            <h4 class="font-medium text-gray-800 text-sm cursor-pointer" onclick="toggleTooltip(this)"
+              data-nama="{{ dokter.nama }}">
+              {{ dokter.nama.substring(0, 12) }}{{ dokter.nama.length > 12 ? '...' : '' }}
+            </h4>
+            <div
+              class="hidden absolute left-1/2 transform -translate-x-1/2 mt-2 bg-white text-sm text-gray-800 shadow-lg rounded px-3 py-1 z-10 max-w-xs"
+              style="min-width: 100px;" data-tooltip>
+              {{ dokter.nama }}
+            </div>
+          </div>
+          <p class="text-xs text-gray-600 text-center mb-1">
+            {{ dokter.spesialist?.gelar || 'Dokter Umum' }}
+          </p>
+          <div class="bg-primary bg-opacity-10 w-full rounded-md px-2 py-1 text-xs text-center text-white mb-2">
+            {{ dokter.jamMulai }} - {{ dokter.jamSelesai }}
+          </div>
+          <a href="https://wa.me/{{ dokter.formattedWhatsapp }}?text={{ dokter.whatsappMessage }}"
+            class="w-full bg-accent hover:bg-secondary text-white rounded-md py-1 px-2 text-xs flex items-center justify-center transition-colors duration-300"
+            target="_blank" rel="noopener">
+            <i class="fab fa-whatsapp mr-1"></i> Konsultasi
+          </a>
+        </div>
+      </div>
+      @end
+    </div>
+  </div>
+</div>
+<script>
+  function toggleTooltip(el) {
+    const tooltip = el.nextElementSibling;
+    document.querySelectorAll('div[data-tooltip]').forEach(t => t.classList.add('hidden'));
+    tooltip.classList.toggle('hidden');
+  }
+  document.addEventListener('click', function (e) {
+    const isTooltip = e.target.closest('[onclick="toggleTooltip(this)"]');
+    if (!isTooltip) {
+      document.querySelectorAll('div[data-tooltip]').forEach(t => t.classList.add('hidden'));
+    }
+  });
+</script>
+@end
+@end
+@end
