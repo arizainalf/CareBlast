@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid'
 import Obat from '#models/obat'
 import { DateTime } from 'luxon'
 import Dokter from '#models/dokter'
-import Message from '#models/message'
 
 export default class KunjungansController {
   async index({ view, request }: HttpContext) {
@@ -17,11 +16,14 @@ export default class KunjungansController {
     const query = Pasien.query()
       .orderBy('createdAt', 'desc')
       .preload('kunjungans', (kunjunganQuery) => {
-        kunjunganQuery.orderBy('tanggalKunjungan', 'desc').preload('obatPasiens', (obatQuery) => {
-          obatQuery.preload('obat')
-        }).preload('dokter', (dokterQuery) => {
-          dokterQuery.preload('spesialist')
-        })
+        kunjunganQuery
+          .orderBy('tanggalKunjungan', 'desc')
+          .preload('obatPasiens', (obatQuery) => {
+            obatQuery.preload('obat')
+          })
+          .preload('dokter', (dokterQuery) => {
+            dokterQuery.preload('spesialist')
+          })
       })
 
     if (search) {
@@ -123,7 +125,8 @@ export default class KunjungansController {
         .preload('pasien')
         .preload('dokter', (dokter) => {
           dokter.preload('spesialist')
-        }).preload('obatPasiens', (query) => {
+        })
+        .preload('obatPasiens', (query) => {
           query.preload('obat')
         })
         .firstOrFail()
@@ -215,7 +218,7 @@ export default class KunjungansController {
       return response.json({
         success: true,
         message: 'Data kunjungan berhasil diperbarui',
-        redirectUrl: `/kunjungan/${uuid}`
+        redirectUrl: `/kunjungan/${uuid}`,
       })
     } catch (error) {
       console.error('Error updating kunjungan:', error)
@@ -237,7 +240,7 @@ export default class KunjungansController {
       return response.json({
         success: true,
         message: 'Data kunjungan berhasil dihapus',
-        redirectUrl: `/pasien/${pasien.uuid}`
+        redirectUrl: `/pasien/${pasien.uuid}`,
       })
     } catch (error) {
       console.error('Error deleting kunjungan:', error)
