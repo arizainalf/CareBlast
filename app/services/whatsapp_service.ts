@@ -45,7 +45,7 @@ export async function connectToWhatsApp() {
     const m = message.messages[0]
 
     if (sentFileMessages && m.key.id && sentFileMessages.has(m.key.id)) {
-      console.log('Skipping messages.update for file message:', m.key.id)
+      console.log('Skipping messages.upsert : ', m.key.id)
       // Remove from set after processing
       sentFileMessages.delete(m.key.id)
       return
@@ -170,6 +170,9 @@ export async function getStatus() {
 }
 
 export async function sendMsg(number: string, message: string) {
+  if (!socket) {
+    throw new Error('Socket not connected')
+  }
   let waId
   if (number.endsWith('@s.whatsapp.net')) {
     waId = number.split('@')[0]
@@ -177,10 +180,6 @@ export async function sendMsg(number: string, message: string) {
   }
   const NumberFormatted = NumberHelper(waId ? waId : number)
   const jid = `${NumberFormatted}@s.whatsapp.net`
-
-  if (!socket) {
-    throw new Error('Socket not connected')
-  }
 
   try {
     sendingFile = true
@@ -190,7 +189,6 @@ export async function sendMsg(number: string, message: string) {
     }
     sentFileMessages.add(sentMsg.key.id)
     console.log(sentMsg, 'ini adalah msg id', sentMsg.key.id)
-
     const contact = await Contact.findBy('wa_id', jid)
     const contactId = contact?.id
     const groupId = null
