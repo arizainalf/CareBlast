@@ -9,12 +9,12 @@
           <span class="nav-text">Dashboard</span>
         </a>
       </li>
+
       <li class="{{
         request.url().startsWith('/pasien/') ||
         request.url().startsWith('/data-pasien') ||
-        request.url().startsWith('/obat-penyakit') ||
-        request.url().startsWith('/data-kunjungan') ||
-        request.url().startsWith('/kunjungan/')
+        request.url().startsWith('/hasil-lab') ||
+        request.url().startsWith('/obat-penyakit')
         ? 'mm-active' : ''
       }}">
         <a href="javascript:void(0)" class="has-arrow" data-bs-toggle="collapse" data-bs-target="#menuPasien">
@@ -24,35 +24,48 @@
         <ul id="menuPasien" class="collapse {{
             request.url().startsWith('/pasien/') ||
             request.url().startsWith('/data-pasien') ||
-            request.url().startsWith('/obat-penyakit') ||
-            request.url().startsWith('/data-kunjungan') ||
-            request.url().startsWith('/detail-kunjungan') ||
-            request.url().startsWith('/kunjungan/')
+            request.url().startsWith('/hasil-lab') ||
+            request.url().startsWith('/obat-penyakit')
             ? 'show'
             : ''
         }}">
           <li><a href="/data-pasien">Data Pasien</a></li>
           <li><a href="/obat-penyakit">Obat & Penyakit</a></li>
-          <li><a href="/data-kunjungan">Data Kunjungan</a></li>
+          <li><a href="/hasil-lab">Hasil Laboratorium</a></li>
           <li><a class="d-none" href="/profile">Profile</a></li>
-          <li><a class="d-none" href="/detail-kunjungan">Detail</a></li>
         </ul>
       </li>
+
+      <li class="{{
+          request.url().startsWith('/data-kunjungan') ||
+          request.url().startsWith('/detail-kunjungan') ||
+          request.url().startsWith('/kunjungan/')
+          ? 'mm-active' : ''
+        }}">
+        <a href="/data-kunjungan">
+          <i class="fas fa-notes-medical"></i>
+          <span class="nav-text">Kunjungan & Notif</span>
+        </a>
+      </li>
+
       <li><a href="/dokter" class="" aria-expanded="false">
           <i class="fas fa-hospital"></i>
           <span class="nav-text">Data Dokter</span>
         </a>
       </li>
+
       <li><a href="/whatsapps" class="" aria-expanded="false">
           <i class="fab fa-whatsapp"></i>
           <span class="nav-text">Whatsapp</span>
         </a>
       </li>
-      <li><a href="/hasil-lab" class="" aria-expanded="false">
+
+      {{--  <li><a href="/hasil-lab" class="" aria-expanded="false">
           <i class="fas fa-file-medical-alt"></i>
           <span class="nav-text">Hasil Lab</span>
         </a>
-      </li>
+      </li>  --}}
+
       @if(auth.user.role == 'super_admin')
       <li
         class="{{ request.url().startsWith('/users') && !request.url().includes(route('edit-profile')) ? 'mm-active' : '' }}">
@@ -63,6 +76,7 @@
         </a>
       </li>
       @end
+
       <li class="{{ request.url().includes(route('edit-profile')) ? 'mm-active' : '' }}">
         <a href="{{ route('edit-profile')}}"
           class="{{ request.url().includes(route('edit-profile')) ? 'aria-expanded=true' : 'aria-expanded=false' }}">
@@ -70,30 +84,31 @@
           <span class="nav-text">Edit Profile</span>
         </a>
       </li>
+
       <li>
         <a href="#" id="logoutButton2" class="" aria-expanded="false">
           <i class="fas fa-sign-out-alt"></i>
           <span class="nav-text">Sign Out</span>
         </a>
       </li>
+
     </ul>
   </div>
 </div>
 <style>
-
   .dlabnav ul.metismenu li a i {
     min-width: 20px;
-    /* Pastikan ikon memiliki lebar tetap */
     text-align: center;
   }
-  .dlabnav ul.metismenu li a i {
-  width: 20px; /* Ukuran tetap untuk semua ikon */
-  height: 20px;
-  font-size: 16px; /* Pastikan ukuran font ikon seragam */
-  text-align: center;
-}
 
+  .dlabnav ul.metismenu li a i {
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    text-align: center;
+  }
 </style>
+
 <!--**********************************
             Sidebar end
 ***********************************-->

@@ -3,4 +3,180 @@
     <input type="text" id="searchPasien" class="form-control" placeholder="Cari pasien...">
     <span class="input-group-text"><a href="javascript:void(0)"><i class="flaticon-381-search-2"></i></a></span>
   </div>
+  <div class="mb-4">
+    <button type="button" class="btn btn-rounded fs-15 btn-primary" data-bs-toggle="modal"
+      data-bs-target="#tambahKunjunganManualModal">
+      <span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i></span>Kunjungan
+    </button>
+  </div>
 </div>
+<!-- Modal Tambah Kunjungan Manual -->
+<div class="modal fade" id="tambahKunjunganManualModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah Data Kunjungan Pasien (Manual)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-kunjungan-manual" method="POST">
+          <!-- Removed form action - will be set via JavaScript -->
+          <div class="row mb-2">
+            <div class="col-sm-12">
+              <label for="pasienSelect">Pilih Pasien (Nama - NIK):</label>
+              <select id="pasienSelect" name="pasien" class="form-control" required>
+                <option value="">-- Pilih Pasien --</option>
+                @each(pasien in allPasiens)
+                <option value="{{ pasien.uuid }}">{{ pasien.name }} - {{ pasien.nik }}</option>
+                @endeach
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="dokterManual">Dokter</label>
+            <select name="dokter" class="form-control" id="dokterManual" required>
+              <option value="">Pilih Dokter</option>
+              @if(dokters && dokters.length > 0)
+              @each(dokter in dokters)
+              <option value="{{ dokter.id }}">{{ dokter.nama }}.{{ dokter.spesialist.gelar }}</option>
+              @end
+              @end
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="obatManual">Pilih Jenis Obat:</label>
+            <select class="multi-select" name="obatList[]" multiple="multiple" id="obatManual">
+              @if(obats && obats.length > 0)
+              @each(obat in obats)
+              <option value="{{ obat.id }}">{{ obat.nama }} - {{ obat.dosis % 1 == 0 ? parseInt(obat.dosis) : obat.dosis
+                }} mg</option>
+              @end
+              @end
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="temaKunjunganManual">Tema Kunjungan:</label>
+            <input type="text" class="form-control" id="temaKunjunganManual" name="temaKunjungan"
+              placeholder="Tema kunjungan" required>
+          </div>
+
+          <div class="mb-2">
+            <label for="keteranganManual">Keterangan:</label>
+            <input type="text" class="form-control" id="keteranganManual" name="keterangan"
+              placeholder="Keterangan/keluhan pasien" required>
+          </div>
+
+          <div class="mb-2">
+            <label for="tanggalKunjunganManual">Tanggal Kunjungan:</label>
+            <input type="date" id="tanggalKunjunganManual" name="tanggalKunjungan" class="form-control"
+              value="{{ new Date().toISOString().split('T')[0] }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="kunjunganBerikutnyaManual">Kunjungan Berikutnya:</label>
+            <input type="date" id="kunjunganBerikutnyaManual" name="kunjunganBerikutnya" class="form-control">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Select2 JS init untuk pasien & obat dalam modal -->
+<script>
+  // Updated script for the manual form functionality
+  document.addEventListener('DOMContentLoaded', function () {
+    // Inisialisasi Select2 untuk obat
+    if ($('#obatManual').length > 0) {
+      $('#obatManual').select2({
+        dropdownParent: $('#tambahKunjunganManualModal'),
+        placeholder: 'Pilih Obat',
+        allowClear: true
+      });
+    }
+
+    // Inisialisasi Select2 untuk pasien SAAT modal ditampilkan
+    $('#tambahKunjunganManualModal').on('shown.bs.modal', function () {
+      $('#pasienSelect').select2({
+        dropdownParent: $('#tambahKunjunganManualModal'),
+        placeholder: 'Pilih nama pasien...',
+        allowClear: true,
+        width: '100%'
+      });
+    });
+
+    // Handle form submission with the patient UUID from dropdown
+    $('#form-kunjungan-manual').on('submit', function (e) {
+      e.preventDefault(); // Prevent default form submission
+
+      const selectedPatientUuid = $('#pasienSelect').val();
+      if (!selectedPatientUuid) {
+        alert('Silakan pilih pasien terlebih dahulu');
+        return false;
+      }
+
+      const formData = new FormData(this);
+
+      // Use AJAX to submit the form using the same route format as the main form
+      $.ajax({
+        url: `/pasien/${selectedPatientUuid}/kunjungan`,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if (response.success) {
+            // Show success message
+            const alertHTML = `
+            <div class="alert alert-success alert-dismissible fade show">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+              <strong>Berhasil!</strong> ${response.message}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          `;
+            $('.content-body').prepend(alertHTML);
+
+            // Close modal
+            $('#tambahKunjunganManualModal').modal('hide');
+
+            // Reset form
+            $('#form-kunjungan-manual').trigger('reset');
+            $('#pasienSelect').val('').trigger('change');
+            $('#obatManual').val('').trigger('change');
+
+            // Auto-dismiss alert after 5 seconds
+            setTimeout(function () {
+              $('.alert-dismissible').alert('close');
+            }, 5000);
+
+            // Reload page after a short delay
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error('Error:', error);
+          const errorMessage = xhr.responseJSON?.message || 'Terjadi kesalahan saat menyimpan data';
+
+          // Show error message
+          const alertHTML = `
+          <div class="alert alert-danger alert-dismissible fade show">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <strong>Error!</strong> ${errorMessage}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        `;
+          $('.content-body').prepend(alertHTML);
+        }
+      });
+    });
+  });
+</script>

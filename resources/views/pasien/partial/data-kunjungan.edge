@@ -1,4 +1,10 @@
 <div class="card-body">
+  <div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn btn-rounded fs-15 btn-primary" data-bs-toggle="modal"
+      data-bs-target="#tambahKunjunganModal">
+      <span class="btn-icon-start text-primary"><i class="fa fa-plus color-info"></i></span>Kunjungan
+    </button>
+  </div>
   <div id="DZ_W_TimeLine" class="widget-timeline dlab-scroll height370">
     <ul class="timeline">
       @each((kunjungan, index) in pasien.kunjungans)
