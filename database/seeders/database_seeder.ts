@@ -12,14 +12,6 @@ import { DateTime } from 'luxon'
 
 export default class extends BaseSeeder {
   private generateNIK(): string {
-    // Format: PPRRSSDDMMYYXXXX
-    // PP: Province code (2 digits)
-    // RR: Regency code (2 digits)
-    // SS: Sub-district code (2 digits)
-    // DD: Date of birth (2 digits)
-    // MM: Month of birth (2 digits)
-    // YY: Year of birth (2 digits)
-    // XXXX: Random number (4 digits)
 
     const provinceCode = Math.floor(Math.random() * 99)
       .toString()

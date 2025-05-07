@@ -66,6 +66,36 @@ export default class WhatsappsController {
     })
   }
 
+//   // AdonisJS Route Handler
+// public async allHasilLab({ request, response }) {
+//   const q = request.input('q') || '';
+//   const page = Number(request.input('page', 1));
+//   const limit = 10;
+
+//   const hasilLabQuery = HasilLab.query()
+//     .preload('contact')
+//     .if(q !== '', (query) => {
+//       query.whereHas('contact', (builder) => {
+//         builder.whereILike('name', `%${q}%`);
+//       });
+//     })
+//     .orderBy('timestamp', 'desc');
+
+//   const hasilLabPaginated = await hasilLabQuery.paginate(page, limit);
+
+//   return response.ok({
+//     success: true,
+//     hasil: hasilLabPaginated.toJSON().data,
+//     pagination: {
+//       total: hasilLabPaginated.total,
+//       per_page: hasilLabPaginated.perPage,
+//       current_page: hasilLabPaginated.currentPage,
+//       total_pages: hasilLabPaginated.lastPage,
+//     },
+//   });
+// }
+
+
   public async getChat({ response, params }: HttpContext) {
     const message = await Message.query()
       .where('contact_id', params.id)
