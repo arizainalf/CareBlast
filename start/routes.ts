@@ -11,7 +11,6 @@ const WhatsappsController = () => import('#controllers/whatsapps_controller')
 const KunjungansController = () => import('#controllers/kunjungans_controller')
 const ObatPenyakitController = () => import('#controllers/obat_penyakits_controller')
 const PasiensController = () => import('#controllers/pasiens_controller')
-const PasienController = () => import('#controllers/pasien/pasiens_controller')
 const DokterSpesialistsController = () => import('#controllers/dokter_spesialists_controller')
 
 router
@@ -29,7 +28,6 @@ router.get('/forgot', async ({ view }) => {
 // Route Patients
 router
   .group(() => {
-    router.get('/hihi', [PasienController, 'index']).as('pengguna.index')
     router.get('/', [HomeController, 'index']).as('pengguna.home')
     router.get('/kunjungan', [VisitsController, 'index']).as('pengguna.kunjungan')
     router.get('/profile', [ProfilesController, 'index']).as('pengguna.profile')

@@ -29,46 +29,60 @@
                     <h4 class="text-muted mb-0">{{ pasien.tempat }}, {{ formatDate(pasien.tanggal_lahir) }}</h4>
                     <p>{{ calculateAge(pasien.tanggal_lahir) }} tahun</p>
                   </div>
-                  <div class="dropdown ms-auto">
-                    <a href="#" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true"><svg
-                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px"
-                        height="18px" viewbox="0 0 24 24" version="1.1">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                          <rect x="0" y="0" width="24" height="24"></rect>
-                          <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-                          <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                          <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-                        </g>
-                      </svg>
+                  <div class="d-flex align-items-center ms-auto">
+                    <!-- Tombol Edit -->
+                    <a href="#" class="btn btn-warning light sharp me-2" data-bs-toggle="modal"
+                      data-bs-target="#EditPasienModal">
+                      <i class="fas fa-pen"></i>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded">
-                      <li>
-                        <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
-                          data-bs-target="#EditPasienModal">
-                          <i class="fas fa-pen text-warning" style="width: 20px; text-align: center;"></i> Edit Pasien
-                        </button>
-                      </li>
-                      <li>
-                        <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
-                          data-bs-target="#tambahObatModal">
-                          <i class="fas fa-capsules text-success" style="width: 20px; text-align: center;"></i> Tambah
-                          Obat
-                        </button>
-                      </li>
-                      <li>
-                        <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
-                          data-bs-target="#tambahKunjunganModal">
-                          <i class="fas fa-walking text-primary" style="width: 20px; text-align: center;"></i> Tambah
-                          Kunjungan
-                        </button>
-                      </li>
-                      <li>
-                        <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
-                          data-bs-target="#hapusModal">
-                          <i class="fas fa-ban text-danger" style="width: 20px; text-align: center;"></i> Hapus Pasien
-                        </button>
-                      </li>
-                    </ul>
+
+                    <!-- Tombol Hapus -->
+                    <a href="#" class="btn btn-danger light sharp me-2" data-bs-toggle="modal" data-bs-target="#hapusModal">
+                      <i class="fas fa-trash"></i>
+                    </a>
+
+                    <!-- Tombol Menu Dropdown -->
+                    <div class="dropdown">
+                      <a href="#" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px"
+                          height="18px" viewbox="0 0 24 24" version="1.1">
+                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"></rect>
+                            <circle fill="#000000" cx="5" cy="12" r="2"></circle>
+                            <circle fill="#000000" cx="12" cy="12" r="2"></circle>
+                            <circle fill="#000000" cx="19" cy="12" r="2"></circle>
+                          </g>
+                        </svg>
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded">
+                        <li>
+                          <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
+                            data-bs-target="#EditPasienModal">
+                            <i class="fas fa-pen text-warning" style="width: 20px; text-align: center;"></i> Edit Pasien
+                          </button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
+                            data-bs-target="#tambahObatModal">
+                            <i class="fas fa-capsules text-success" style="width: 20px; text-align: center;"></i> Tambah
+                            Obat
+                          </button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
+                            data-bs-target="#tambahKunjunganModal">
+                            <i class="fas fa-walking text-primary" style="width: 20px; text-align: center;"></i> Tambah
+                            Kunjungan
+                          </button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item d-flex align-items-center gap-2 py-2" data-bs-toggle="modal"
+                            data-bs-target="#hapusModal">
+                            <i class="fas fa-ban text-danger" style="width: 20px; text-align: center;"></i> Hapus Pasien
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -86,6 +100,10 @@
                     <h4 class="card-title">Data Obat</h4>
                   </div>
                   <div class="bootstrap-badge">
+                    <a href="javascript:void(0)" class="badge badge-rounded badge-outline-success badge-lg me-2"
+                      data-bs-toggle="modal" data-bs-target="#tambahObatModal">
+                      <i class="fas fa-plus"></i>
+                    </a>
                     <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-lg"
                       data-bs-toggle="modal" data-bs-target="#bulkDeleteObatModal">
                       <i class="far fa-trash-alt"></i>
