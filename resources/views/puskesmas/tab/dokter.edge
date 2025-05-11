@@ -18,6 +18,7 @@
         <th>Spesialis</th>
         <th>Jam Kerja</th>
         <th>Status</th>
+        <th>Foto</th>
         <th>Aksi</th>
       </tr>
     </thead>
@@ -43,6 +44,7 @@
               ? 'Aktif' : 'Tidak Aktif' }}</span>
           </div>
         </td>
+        <td><img src="{{ dokter.foto }}" style="width: 75px; height: 75px" alt=""></td>
         <td>
           <div class="d-flex">
             <a href="#" class="btn btn-primary shadow btn-xs sharp me-1 editDokter" data-id="{{ dokter.id }}"
@@ -74,7 +76,20 @@
       <form id="formDokter">
         {{ csrfField() }}
         <input type="hidden" name="jenis" id="jenis" value="dokter">
+        {{-- <input type="hidden" name="foto" id="foto"> --}}
         <div class="modal-body">
+          <div class="mb-3">
+            <input type="file" class="form-control mb-2" name="foto1" id="upload" accept="image/*" placeholder="Foto">
+            <img id="image-preview" style="max-width: 100%; display: none;">
+
+            <div id="cropped-image-container" style="display: none;">
+              <img id="cropped-image" style="max-width: 100%;">
+            </div>
+
+            <button type="button" class="btn btn-primary mt-2" id="crop-button" style="display: none;">Crop</button>
+            <button type="button" class="btn btn-primary mt-2" id="edit-button" style="display: none;">Edit</button>
+
+          </div>
           <div class="mb-2">
             <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Lengkap" required>
           </div>

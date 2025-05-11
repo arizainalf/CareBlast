@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import Obat from '#models/obat'
 import Kunjungan from '#models/kunjungan'
 import Dokter from '#models/dokter'
+import Contact from '#models/contact'
 import ObatPasien from '#models/obat_pasien'
 import { saveContact } from '#services/contact_service'
 
@@ -276,6 +277,8 @@ export default class PasiensController {
         'golongan_darah',
       ]) as Record<string, any>
 
+      const contact = await Contact.findByOrFail('wa_id', request.input('no_hp'))
+      
       console.log('Update data received:', data)
 
       if (data.nik !== pasien.nik) {

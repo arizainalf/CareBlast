@@ -20,15 +20,18 @@
     $inputs.on('input change', validateForm);
 
     validateForm(); // initial call
+
     $('#add-medicine-form').on('submit', function (e) {
       e.preventDefault();
 
       const formData = new FormData(this);
       const url = '/pasien/{{ pasien.uuid }}/obat'
       const method = 'POST';
+      console.log(formData)
 
-      ajaxRequest(url, method, formData)
+      // ajaxRequest(url, method, formData)
     });
+    
     $('.edit-pasien').on('submit', function (e) {
       e.preventDefault();
 

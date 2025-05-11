@@ -45,7 +45,7 @@ export async function connectToWhatsApp() {
     const m = message.messages[0]
 
     if (sentFileMessages && m.key.id && sentFileMessages.has(m.key.id)) {
-      console.log('Skipping messages.update for file message:', m.key.id)
+      console.log('Skipping messages.upsert : ', m.key.id)
       // Remove from set after processing
       sentFileMessages.delete(m.key.id)
       return
@@ -74,8 +74,8 @@ export async function connectToWhatsApp() {
     }
 
     console.log('message update')
-
-    saveMessages(m)
+    const save = await saveMessages(m)
+    console.log('message update',save)
     saveFile('./messages.json', m, 'messages')
   })
 
@@ -170,6 +170,9 @@ export async function getStatus() {
 }
 
 export async function sendMsg(number: string, message: string) {
+  if (!socket) {
+    throw new Error('Socket not connected')
+  }
   let waId
   if (number.endsWith('@s.whatsapp.net')) {
     waId = number.split('@')[0]
@@ -177,10 +180,6 @@ export async function sendMsg(number: string, message: string) {
   }
   const NumberFormatted = NumberHelper(waId ? waId : number)
   const jid = `${NumberFormatted}@s.whatsapp.net`
-
-  if (!socket) {
-    throw new Error('Socket not connected')
-  }
 
   try {
     sendingFile = true
@@ -190,7 +189,6 @@ export async function sendMsg(number: string, message: string) {
     }
     sentFileMessages.add(sentMsg.key.id)
     console.log(sentMsg, 'ini adalah msg id', sentMsg.key.id)
-
     const contact = await Contact.findBy('wa_id', jid)
     const contactId = contact?.id
     const groupId = null
@@ -210,9 +208,32 @@ export async function sendMsg(number: string, message: string) {
     sendingFile = false
     return msgCreate
   } catch (error) {
-    console.log('Error di service:', error)
+    console.log('Error di sendMsg:', error)
     sendingFile = false
   }
+}
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+export async function sendBulkMessage(numbers: string[], message: string) {
+  const results = []
+
+  for (const number of numbers) {
+    try {
+      const result = await sendMsg(number, message)
+      results.push({ number, success: true, data: result })
+    } catch (error) {
+      console.error(`Gagal mengirim ke ${number}:`, error)
+      results.push({ number, success: false, error: error.message })
+    }
+
+    // Tunggu sebelum kirim ke nomor berikutnya
+    await delay(2500)
+  }
+
+  return results
 }
 
 export async function sendFile(jid: string, file: any, caption: string, name: string) {
@@ -324,7 +345,7 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
   } catch (error) {
     // Clear the flag in case of error
     sendingFile = false
-    console.log('Error di service:', error)
+    console.log('Error di sendFile:', error)
     throw error // Re-throw to propagate error to the caller
   }
 }

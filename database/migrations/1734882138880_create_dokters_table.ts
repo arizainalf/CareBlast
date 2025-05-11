@@ -20,6 +20,7 @@ export default class extends BaseSchema {
       table.string('jam_mulai').notNullable()
       table.string('jam_selesai').notNullable()
       table.boolean('status').defaultTo(true)
+      table.string('foto').defaultTo('/images/dokters/user.png')
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

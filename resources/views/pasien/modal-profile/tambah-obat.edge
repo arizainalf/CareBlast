@@ -1,11 +1,11 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
+    <form id="add-medicine-form">
     <div class="modal-header">
       <h5 class="modal-title">Tambah Data Obat</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form id="add-medicine-form">
         {{ csrfField() }}
         <div class="mb-3">
           <label class="form-label">Nama Pasien</label>
@@ -38,6 +38,17 @@
           <select class="form-select" name="keteranganWaktu">
             <option value="Sesudah makan">Sesudah makan</option>
             <option value="Sebelum makan">Sebelum makan</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Batas Waktu</label>
+          <input type="date" class="form-control" name="batasWaktu">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select class="form-select" name="status" >
+            <option value="1">Aktif</option>
+            <option value="0">Tidak Aktif</option>
           </select>
         </div>
         <div class="modal-footer">

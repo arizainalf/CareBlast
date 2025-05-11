@@ -4,6 +4,10 @@ import Kunjungan from '#models/kunjungan'
 import { sendMsg } from '#services/whatsapp_service'
 import dayjs from 'dayjs'
 
+function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 cron.schedule('0 * * * *', async () => {
     console.log('Cron job started')
     try {
@@ -25,7 +29,8 @@ cron.schedule('0 * * * *', async () => {
                         kunjungan.pasien.no_hp,
                         `Selamat pagi ${kunjungan.pasien.name}, besok adalah jadwal kunjungan anda`
                     );
-                    console.log(`Message sent to ${kunjungan.pasien.no_hp}:`, response);
+                    console.log(`Kirim pesan kunjungan ${kunjungan.pasien.no_hp}:`, response);
+                    await delay(300)
                 } catch (error) {
                     console.error(`Failed to send message to ${kunjungan.pasien.no_hp}:`, error);
                 }
@@ -41,8 +46,10 @@ cron.schedule('0 * * * *', async () => {
                 const panggilan = jk == 'Laki-laki' ? 'Pak' : 'Bu'
                 if (waktu === now) {
                     try {
-                        const response = await sendMsg(obat.pasien.no_hp, `${panggilan} ${obat.pasien.name} saatnya minum obat : ${obat.obat.nama}`)
-                        console.log(`Message sent to ${obat.pasien.no_hp}:`, response)
+                        const response = await sendMsg(obat.pasien.no_hp, `${panggilan} ${obat.pasien.name} saatnya minum obat : ${obat.obat.nama}. Minum obat ini ${obat.keteranganWaktu}.`)
+                        console.log(`scheduler kirim pesan ke ${obat.pasien.no_hp}:`, response)
+
+                        await delay(3000)
                     } catch (error) {
                         console.error(`Failed to send message to ${obat.pasien.no_hp}:`, error)
                     }

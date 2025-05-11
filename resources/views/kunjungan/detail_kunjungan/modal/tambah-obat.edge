@@ -6,10 +6,10 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form id="add-medicine-form" method="POST" action="/pasien/{{ kunjungan.pasien.uuid }}/obat">
+      <form id="add-medicine-form" data-pasien-uuid="{{ kunjungan.pasien.uuid }}" data-pasien-id="{{ kunjungan.pasien.id}}" method="POST">
         {{ csrfField() }}
-        <input type="hidden" name="kunjunganId" value="{{ kunjungan.id }}">
 
+        <input type="hidden" name="kunjunganId" value="{{ kunjungan.id }}">
         <div class="mb-3">
           <label class="form-label">Nama Pasien</label>
           <input type="text" class="form-control input-default" value="{{ kunjungan.pasien.name }}" disabled>
@@ -45,6 +45,19 @@
           <select class="form-select" name="keteranganWaktu" required>
             <option value="Sesudah makan">Sesudah makan</option>
             <option value="Sebelum makan">Sebelum makan</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Batas Waktu <span class="text-danger">*</span></label>
+          <input type="date" name="batasWaktu" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Status <span class="text-danger">*</span></label>
+          <select class="form-select" name="status" required>
+            <option value="1">Aktif</option>
+            <option value="0">Tidak Aktif</option>
           </select>
         </div>
 
@@ -105,6 +118,20 @@
 
     customObatInput.addEventListener("input", validateForm);
     customObatInput.addEventListener("change", validateForm);
+
+    $('#add-medicine-form').on('submit', function (e) {
+      e.preventDefault()
+
+      console.log('tambah obat di submit')
+
+      const pasienUuid = $(this).data('pasien-uuid')
+      const url = `/pasien/${pasienUuid}/obat`
+      const method = $(this).attr('method')
+      const data = new FormData(this)
+
+      ajaxRequest(url, method, data)
+    })
+
 
     // Initial validation
     validateForm();

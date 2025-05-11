@@ -4,6 +4,7 @@ import Obat from '#models/obat'
 import { v4 as uuidv4 } from 'uuid'
 import Pasien from '#models/pasien'
 import Kunjungan from '#models/kunjungan'
+import { log } from 'console'
 
 export default class ObatPasiensController {
   async store(ctx: HttpContext) {
@@ -19,8 +20,11 @@ export default class ObatPasiensController {
         tanggalKunjungan,
         temaKunjungan,
         keterangan,
+        batasWaktu,
+        status
       } = request.body()
 
+      console.log(params.uuid)
       const pasien = await Pasien.query()
         .select('id', 'uuid')
         .where('uuid', pasienUuid)
@@ -50,6 +54,7 @@ export default class ObatPasiensController {
         })
         selectedKunjunganId = newKunjungan.id
       }
+      console.log(kunjunganId, keteranganWaktu)
 
       const obatPasien = await ObatPasien.create({
         uuid: uuidv4(),
@@ -59,6 +64,8 @@ export default class ObatPasiensController {
         frekuensi: 1,
         waktuKonsumsi: JSON.stringify(['08:00']),
         keteranganWaktu,
+        batasWaktu,
+        status
       })
 
       return response.json({ success: true, message: 'Obat berhasil ditambahkan', data: obatPasien, redirectUrl: `/pasien/${pasienUuid}` })
@@ -95,7 +102,7 @@ export default class ObatPasiensController {
       const referer = request.headers().referer || `/pasien/${params.pasienUuid}`
 
       return response.json({ success: true, message: 'Jadwal obat berhasil diperbarui', redirectUrl: referer })
-        
+
     } catch (error) {
       console.error('Error updating medication:', error)
       return response
