@@ -277,7 +277,7 @@ export default class PasiensController {
         'golongan_darah',
       ]) as Record<string, any>
 
-      const contact = await Contact.findByOrFail('wa_id', request.input('no_hp'))
+      // const contact = await Contact.findByOrFail('wa_id', request.input('no_hp'))
       
       console.log('Update data received:', data)
 
@@ -329,8 +329,6 @@ export default class PasiensController {
       try {
         await pasien.merge(data).save()
         console.log('Patient updated successfully')
-        // session.flash({ success: 'Data pasien berhasil diperbarui' })
-        // return response.redirect().toRoute('profile.pasien', { uuid: pasien.uuid })
         return response.json({
           success: true,
           message: 'Data pasien berhasil diperbarui',
@@ -342,12 +340,7 @@ export default class PasiensController {
           console.error('Error message:', saveError.message)
           console.error('Error stack:', saveError.stack)
         }
-        // session.flash({
-        //   error:
-        //     'Gagal menyimpan data pasien. Detail: ' +
-        //     (saveError instanceof Error ? saveError.message : 'Unknown error'),
-        // })
-        // return response.redirect().back()
+
         return response.json({
           success: false,
           message:
@@ -361,8 +354,7 @@ export default class PasiensController {
         console.error('Error message:', error.message)
         console.error('Error stack:', error.stack)
       }
-      // session.flash({ error: 'Gagal memperbarui data pasien. Silakan coba lagi.' })
-      // return response.redirect().back()
+
       return response.json({
         success: false,
         message: 'Gagal memperbarui data pasien. Silakan coba lagi.',

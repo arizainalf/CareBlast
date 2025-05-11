@@ -22,6 +22,14 @@
 </style>
 
 <script>
+
+  function formatDateToInput(date) {
+    const d = new Date(date);
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${month}-${day}`;
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     const frequencySelect = document.getElementById("frequency-select");
     const timeInputsContainer = document.getElementById("time-inputs");
@@ -75,12 +83,21 @@
     }
 
     editButtons.forEach(button => {
-      button.addEventListener("click", function () {
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+
         const obatUuid = this.getAttribute("data-uuid");
         const obatNama = this.getAttribute("data-nama");
         const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
         const waktuStr = this.getAttribute("data-waktu");
         const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
+        const batasWaktu = this.getAttribute("data-batas-waktu");
+        const batasWaktuStr = formatDateToInput(this.getAttribute("data-batas-waktu"));
+        const status = this.getAttribute("data-status");
+
+        console.log($(this).data('cek'))
+
+        console.log(batasWaktuStr, status, obatUuid)
 
         let waktuArray = [];
         if (typeof waktuStr === 'string') {
@@ -114,6 +131,9 @@
         if (frequencySelect) {
           updateTimeInputs(frekuensi, waktuArray);
         }
+
+        $('#status').val(status)
+        $('#batasWaktu').val(batasWaktuStr)
         currentObatUuid = obatUuid;
       });
     });
@@ -148,8 +168,12 @@
           return;
         }
 
+        const batasWaktu = $('#batasWaktu').val()
+        const status = $('#status').val()
         const waktuArray = Array.from(timeInputs).map(input => input.value);
         const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+        console.log(batasWaktu, status)
 
         fetch(`/obat-pasien/${obatUuid}`, {
           method: 'PATCH',
@@ -162,7 +186,9 @@
           body: JSON.stringify({
             frekuensi,
             keteranganWaktu,
-            waktu: waktuArray
+            waktu: waktuArray,
+            batasWaktu,
+            status
           })
         })
           .then(response => response.json())
@@ -170,13 +196,18 @@
             if (data.success) {
               const modal = bootstrap.Modal.getInstance(document.getElementById('basicModal'));
               modal.hide();
-              window.location.reload();
+              showSwal('success', 'Berhasil!', data.message)
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000); // jeda 2 detik
             } else {
               alert('Error: ' + data.message);
+              showSwal('error', 'Gagal!', data.message)
             }
           })
           .catch(error => {
             console.error('Error:', error);
+            showSwal('error', 'Gagal!', error)
             alert('Terjadi kesalahan saat menyimpan data');
           });
       });

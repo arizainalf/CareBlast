@@ -8,13 +8,15 @@ function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-cron.schedule('0 * * * *', async () => {
+cron.schedule('* * * * *', async () => {
     console.log('Cron job started')
     try {
         const obatPasiens = await ObatPasien.query().preload('pasien').preload('obat')
         const kunjungans = await Kunjungan.query().preload('pasien')
         const now = getCurrentTime()
         const dateNow = getTomorrowDate();
+
+        console.log(now, dateNow)
 
         for (const kunjungan of kunjungans) {
             // Lewati jika tidak ada tanggal kunjungan berikutnya
@@ -41,17 +43,19 @@ cron.schedule('0 * * * *', async () => {
         for (const obat of obatPasiens) {
             if (!Array.isArray(obat.waktuKonsumsi)) continue
 
-            for (const waktu of obat.waktuKonsumsi) {
-                const jk = obat.pasien.jenis_kelamin
-                const panggilan = jk == 'Laki-laki' ? 'Pak' : 'Bu'
-                if (waktu === now) {
-                    try {
-                        const response = await sendMsg(obat.pasien.no_hp, `${panggilan} ${obat.pasien.name} saatnya minum obat : ${obat.obat.nama}. Minum obat ini ${obat.keteranganWaktu}.`)
-                        console.log(`scheduler kirim pesan ke ${obat.pasien.no_hp}:`, response)
+            if (obat.status == true) {
+                for (const waktu of obat.waktuKonsumsi) {
+                    const jk = obat.pasien.jenis_kelamin
+                    const panggilan = jk == 'Laki-laki' ? 'Pak' : 'Bu'
+                    if (waktu === now) {
+                        try {
+                            const response = await sendMsg(obat.pasien.no_hp, `${panggilan} ${obat.pasien.name} saatnya minum obat : ${obat.obat.nama}. Minum obat ini ${obat.keteranganWaktu}.`)
+                            console.log(`scheduler kirim pesan ke ${obat.pasien.no_hp}:`, response)
 
-                        await delay(3000)
-                    } catch (error) {
-                        console.error(`Failed to send message to ${obat.pasien.no_hp}:`, error)
+                            await delay(3000)
+                        } catch (error) {
+                            console.error(`Failed to send message to ${obat.pasien.no_hp}:`, error)
+                        }
                     }
                 }
             }

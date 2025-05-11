@@ -17354,5 +17354,173 @@
         "messageSecret": "jFFUmaqam1f1ZSkusTL5rie+qPqc+FccWt66Ytdaads="
       }
     }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB01ADB382548689F4978",
+      "fromMe": true
+    },
+    "contactId": "3d22e7a1-bc0b-4f5c-b3fc-5a73dec2640f",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB01ADB382548689F4978",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB01ADB382548689F4978",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB01ADB382548689F4978",
+      "fromMe": true
+    },
+    "contactId": "3d22e7a1-bc0b-4f5c-b3fc-5a73dec2640f",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB01ADB382548689F4978",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB01ADB382548689F4978",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:64@s.whatsapp.net",
+      "id": "3EB01ADB382548689F4978",
+      "fromMe": true
+    },
+    "contactId": "3d22e7a1-bc0b-4f5c-b3fc-5a73dec2640f",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB01ADB382548689F4978",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:64@s.whatsapp.net",
+      "id": "3EB01ADB382548689F4978",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB01ADB382548689F4978",
+      "fromMe": true
+    },
+    "contactId": "3d22e7a1-bc0b-4f5c-b3fc-5a73dec2640f",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB01ADB382548689F4978",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB01ADB382548689F4978",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0A9951F280881082773",
+      "fromMe": true
+    },
+    "contactId": "3d22e7a1-bc0b-4f5c-b3fc-5a73dec2640f",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0A9951F280881082773",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0A9951F280881082773",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0A9951F280881082773",
+      "fromMe": true
+    },
+    "contactId": "3d22e7a1-bc0b-4f5c-b3fc-5a73dec2640f",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0A9951F280881082773",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0A9951F280881082773",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0A9951F280881082773",
+      "fromMe": true
+    },
+    "contactId": "3d22e7a1-bc0b-4f5c-b3fc-5a73dec2640f",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0A9951F280881082773",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0A9951F280881082773",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
   }
 ]

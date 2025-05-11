@@ -84,7 +84,7 @@ export default class ObatPasiensController {
 
     try {
       const obatPasienUuid = params.uuid
-      const { frekuensi, waktu, keteranganWaktu } = request.body()
+      const { frekuensi, waktu, keteranganWaktu, batasWaktu, status } = request.body()
       const waktuArray = Array.isArray(waktu) ? waktu : [waktu]
 
       const updated = await ObatPasien.query()
@@ -93,6 +93,8 @@ export default class ObatPasiensController {
           frekuensi: Number.parseInt(frekuensi, 10),
           waktuKonsumsi: JSON.stringify(waktuArray),
           keteranganWaktu,
+          batasWaktu,
+          status
         })
 
       if (!updated) {
@@ -100,6 +102,7 @@ export default class ObatPasiensController {
       }
 
       const referer = request.headers().referer || `/pasien/${params.pasienUuid}`
+      console.log(updated, batasWaktu, status)
 
       return response.json({ success: true, message: 'Jadwal obat berhasil diperbarui', redirectUrl: referer })
 
