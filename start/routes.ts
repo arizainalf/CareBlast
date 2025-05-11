@@ -109,6 +109,7 @@ router
     router.get('/get-all-contact/', [WhatsappsController, 'getAllContact']).as('get-all-contact')
     router.get('/get-chat/:id', [WhatsappsController, 'getChat']).as('get-chat')
     router.get('/get-contact/:id', [WhatsappsController, 'getContact']).as('get-contact')
+    router.put('/contact/:id/update', [WhatsappsController, 'updateContact']).as('update-contact')
     router.get('/chat/:id/new-messages', [WhatsappsController, 'getNewMessages'])
     router.get('/qrcode', [WhatsappsController, 'getQrCode']).as('qrcode')
     router.get('/status', [WhatsappsController, 'status']).as('status')
@@ -116,8 +117,10 @@ router
     router.get('/messages', [WhatsappsController, 'createMsg'])
     router.post('/send', [WhatsappsController, 'sendMsg'])
     router.post('/send-message', [WhatsappsController, 'sendMsg'])
+    router.post('/pengumuman', [WhatsappsController, 'sendbulkMessages'])
 
     router.get('/obat-penyakit', [ObatPenyakitController, 'index']).as('obat-penyakit')
+    router.get('/penyakit', [ObatPenyakitController, 'penyakit']).as('penyakit')
 
     router
       .post('/obat-penyakit/penyakit', [ObatPenyakitController, 'storePenyakit'])
@@ -146,7 +149,8 @@ router
     router.get('/hasil-lab', async ({ view }) => {
       return view.render('hasil-lab/index')
     })
-    router.get('/hasil-lab/all', [WhatsappsController, 'getAllHasilLab']).as('get-all-hasil-lab')
+    router.get('/hasil-lab/all', [WhatsappsController, 'allHasilLab']).as('get-all-hasil-lab')
+    // router.get('/hasil-lab/all', [WhatsappsController, 'getAllHasilLab']).as('get-all-hasil-lab')
     router.get('/hasil-lab/:uuid', [WhatsappsController, 'getHasilLab']).as('get-hasil-lab')
 
     // Error pages

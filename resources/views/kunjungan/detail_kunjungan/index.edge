@@ -11,17 +11,7 @@
   </div>
 
   <div class="content-wrapper">
-    @if(flashMessages.has('success'))
-    <div class="alert alert-success">
-      {{ flashMessages.get('success') }}
-    </div>
-    @endif
 
-    @if(flashMessages.has('error'))
-    <div class="alert alert-danger">
-      {{ flashMessages.get('error') }}
-    </div>
-    @endif
     <div class="container-xxl flex-grow-1 container-p-y">
       <div class="row">
         <div class="col-lg-4 equal-height">
@@ -179,14 +169,15 @@
   </div>
 </div>
 
+<div class="modal fade" id="tambahObat">
+  @include('kunjungan/detail_kunjungan/modal/tambah-obat')
+</div>
+
 @each(obatPasien in kunjungan.obatPasiens)
 <div class="modal fade" id="hapusModal{{ obatPasien.uuid }}">
   @include('kunjungan/detail_kunjungan/modal/hapus-obat')
 </div>
 
-<div class="modal fade" id="tambahObat">
-  @include('kunjungan/detail_kunjungan/modal/tambah-obat')
-</div>
 <div class="modal fade" id="editKunjunganModal">
   @include('kunjungan/detail_kunjungan/modal/edit-kunjungan')
 </div>
@@ -199,6 +190,7 @@
 
 @include('kunjungan/detail_kunjungan/style/css')
 @include('kunjungan/detail_kunjungan/style/js')
+
 @end
 @end
 @end

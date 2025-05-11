@@ -6,9 +6,7 @@ export default class ObatPasiens extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
-
       table.uuid('uuid').notNullable().unique()
-
       table
         .integer('pasien_id')
         .unsigned()
@@ -17,7 +15,6 @@ export default class ObatPasiens extends BaseSchema {
         .inTable('pasiens')
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
-
       table
         .integer('obat_id')
         .unsigned()
@@ -26,7 +23,6 @@ export default class ObatPasiens extends BaseSchema {
         .inTable('obats')
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
-
       table
         .integer('kunjungan_id')
         .unsigned()
@@ -35,15 +31,14 @@ export default class ObatPasiens extends BaseSchema {
         .inTable('kunjungans')
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
-
       table.integer('frekuensi').notNullable().comment('Berapa kali sehari minum obat')
-
       table
         .json('waktu_konsumsi')
         .notNullable()
         .comment('JSON daftar waktu konsumsi, ex: ["08:00", "14:00", "20:00"]')
-
       table.enum('keterangan_waktu', ['Sebelum makan', 'Sesudah makan']).notNullable()
+      table.date('batas_waktu')
+      table.boolean('status')
 
       table.timestamp('created_at', { useTz: true }).defaultTo(this.now())
       table.timestamp('updated_at', { useTz: true }).defaultTo(this.now())

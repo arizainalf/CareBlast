@@ -58,14 +58,23 @@
 
 @slot('styles')
 @include('puskesmas/style/switch')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+<style>
+  #image-preview {
+    max-width: 100%;
+    margin-top: 20px;
+    /* display: block !important; */
+  }
+
+  #cropped-image {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+</style>
 @end
 
 @slot('scripts')
 @include('puskesmas/style/script')
-<script>
-  $(document).ready(function () {
-
-  })
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 @end
 @end

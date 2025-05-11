@@ -1,6 +1,9 @@
 import Dokter from '#models/dokter'
 import Spesialist from '#models/spesialist'
 import type { HttpContext } from '@adonisjs/core/http'
+import { join } from 'path'
+import { createId } from '@paralleldrive/cuid2'
+import fs from 'node:fs'
 
 export default class DokterSpesialistsController {
   /**
@@ -26,7 +29,25 @@ export default class DokterSpesialistsController {
   async store({ request, response }: HttpContext) {
     if (request.input('jenis') === 'dokter') {
       const { nip, nama, spesialist_id, jam_mulai, jam_selesai, status, no_whatsapp } = request.all()
-      console.log(no_whatsapp)
+      const foto = request.file('foto')
+
+      let fotoName = null
+
+      if (foto) {
+        fotoName = `${createId()}.${foto.extname}`
+
+        // Path absolut dari root project ke public/images/dokters
+        const targetPath = join('public', 'images', 'dokters')
+
+        await foto.move(targetPath, {
+          name: fotoName,
+          overwrite: true,
+        })
+
+        fotoName = `images/dokters/${fotoName}`
+
+      }
+
       const dokter = await Dokter.create({
         nip,
         nama,
@@ -35,19 +56,20 @@ export default class DokterSpesialistsController {
         jamMulai: jam_mulai,
         jamSelesai: jam_selesai,
         status,
+        foto: fotoName,
       })
-      return response.json({ success: true, message: 'Dokter berhasil disimpan!', dokter });
 
-    } else if (request.input('jenis') === 'spesialist') {
+      return response.json({ success: true, message: 'Dokter berhasil disimpan!', dokter })
+    }
+
+    // untuk spesialist
+    if (request.input('jenis') === 'spesialist') {
       const { nama, gelar } = request.all()
-      const spesialist = await Spesialist.create({
-        nama,
-        gelar,
-      })
-      return response.json({ success: true, message: 'Spesialis berhasil disimpan!', spesialist });
-
+      const spesialist = await Spesialist.create({ nama, gelar })
+      return response.json({ success: true, message: 'Spesialis berhasil disimpan!', spesialist })
     }
   }
+
 
   /**
    * Show individual record
@@ -67,22 +89,54 @@ export default class DokterSpesialistsController {
    */
   async update({ params, request, response }: HttpContext) {
     if (params.id_spesialist) {
-      console.log('be update spesialist')
+      // Update spesialist tanpa foto
       const spesialist = await Spesialist.findOrFail(params.id_spesialist)
       const data = request.only(['nama', 'gelar'])
       spesialist.merge(data)
       await spesialist.save()
-      return response.json({ success: true, message: 'Pengguna berhasil diperbarui!', spesialist });
+      return response.json({ success: true, message: 'Spesialis berhasil diperbarui!', spesialist })
+
     } else if (params.id_dokter) {
-      console.log('be update spesialist')
+      // Update dokter dengan pengecekan foto baru
       const dokter = await Dokter.findOrFail(params.id_dokter)
       const data = request.only(['nama', 'nip', 'spesialist_id', 'jam_mulai', 'jam_selesai', 'status', 'no_whatsapp'])
+
+      // Cek apakah ada foto baru
+      const foto = request.file('foto')
+      if (foto) {
+        // Hapus foto lama jika ada
+        const oldFotoPath = dokter.foto
+        
+        if (oldFotoPath && !oldFotoPath?.includes('user.png') ) {
+          const oldFotoFullPath = join('public', oldFotoPath) // Mendapatkan path lengkap dari foto lama
+          try {
+            fs.unlinkSync(oldFotoFullPath) // Menghapus file lama
+          } catch (err) {
+            console.log('Error saat menghapus foto lama:', err)
+          }
+        }
+
+        // Menyimpan foto baru
+        const fotoName = `${createId()}.${foto.extname}`
+        const targetPath = join('public', 'images', 'dokters')
+
+        await foto.move(targetPath, {
+          name: fotoName,
+          overwrite: true,
+        })
+
+        // Memperbarui foto path
+        dokter.foto = `images/dokters/${fotoName}`
+      }
+
+      // Update data dokter tanpa mengubah foto jika tidak ada foto baru
       dokter.merge(data)
       await dokter.save()
-      return response.json({ success: true, message: 'Pengguna berhasil diperbarui!', dokter });
-    }
 
+      return response.json({ success: true, message: 'Dokter berhasil diperbarui!', dokter })
+    }
   }
+
 
   async updateStatus({ params, request, response }: HttpContext) {
     const dokter = await Dokter.findOrFail(params.id)

@@ -89,163 +89,165 @@
 </style>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-      const editFrequencySelect = document.getElementById("edit-frequency-select");
-      const editTimeInputsContainer = document.getElementById("edit-time-inputs");
-      const editButtons = document.querySelectorAll(".edit-obat");
-      const editModalTitle = document.querySelector("#editObatModal .modal-title");
-      const saveEditButton = document.getElementById("save-edit-obat");
-      const editObatUuidInput = document.getElementById("edit-obat-uuid");
-      const editKeteranganWaktu = document.getElementById("edit-keterangan-waktu");
-      let currentObatUuid = null;
+    const editFrequencySelect = document.getElementById("edit-frequency-select");
+    const editTimeInputsContainer = document.getElementById("edit-time-inputs");
+    const editButtons = document.querySelectorAll(".edit-obat");
+    const editModalTitle = document.querySelector("#editObatModal .modal-title");
+    const saveEditButton = document.getElementById("save-edit-obat");
+    const editObatUuidInput = document.getElementById("edit-obat-uuid");
+    const editKeteranganWaktu = document.getElementById("edit-keterangan-waktu");
+    let currentObatUuid = null;
 
-      if (editFrequencySelect) {
-        editFrequencySelect.addEventListener("change", function () {
-          updateEditTimeInputs(parseInt(this.value, 10));
-        });
-      }
+    if (editFrequencySelect) {
+      editFrequencySelect.addEventListener("change", function () {
+        updateEditTimeInputs(parseInt(this.value, 10));
+      });
+    }
 
-      function updateEditTimeInputs(frequency, times = []) {
-        editTimeInputsContainer.innerHTML = "";
+    function updateEditTimeInputs(frequency, times = []) {
+      editTimeInputsContainer.innerHTML = "";
 
-        const label = document.createElement("label");
-        label.classList.add("form-label");
-        label.textContent = "Pada jam berapa?";
-        editTimeInputsContainer.appendChild(label);
+      const label = document.createElement("label");
+      label.classList.add("form-label");
+      label.textContent = "Pada jam berapa?";
+      editTimeInputsContainer.appendChild(label);
 
-        const defaultTimes = {
-          1: ["08:00"],
-          2: ["08:00", "20:00"],
-          3: ["08:00", "14:00", "20:00"],
-          4: ["08:00", "12:00", "16:00", "20:00"]
-        };
+      const defaultTimes = {
+        1: ["08:00"],
+        2: ["08:00", "20:00"],
+        3: ["08:00", "14:00", "20:00"],
+        4: ["08:00", "12:00", "16:00", "20:00"]
+      };
 
-        const timesToUse = times.length > 0 ? times : defaultTimes[frequency];
+      const timesToUse = times.length > 0 ? times : defaultTimes[frequency];
 
-        for (let i = 0; i < frequency; i++) {
-          const defaultTime = timesToUse[i] || "08:00";
+      for (let i = 0; i < frequency; i++) {
+        const defaultTime = timesToUse[i] || "08:00";
 
-          const inputGroup = document.createElement("div");
-          inputGroup.classList.add("input-group", "clockpicker", "mb-2");
-          inputGroup.setAttribute("data-autoclose", "true");
+        const inputGroup = document.createElement("div");
+        inputGroup.classList.add("input-group", "clockpicker", "mb-2");
+        inputGroup.setAttribute("data-autoclose", "true");
 
-          inputGroup.innerHTML = `
+        inputGroup.innerHTML = `
           <input type="text" class="form-control clockpicker-input" value="${defaultTime}" name="waktu[]" required>
           <span class="input-group-text"><i class="far fa-clock"></i></span>
           <div class="invalid-feedback">Waktu tidak boleh kosong</div>
         `;
 
-          editTimeInputsContainer.appendChild(inputGroup);
+        editTimeInputsContainer.appendChild(inputGroup);
+      }
+
+      setTimeout(() => {
+        $(".clockpicker").clockpicker({
+          autoclose: true
+        });
+      }, 100);
+    }
+
+    editButtons.forEach(button => {
+      button.addEventListener("click", function () {
+        const obatUuid = this.getAttribute("data-uuid");
+        const obatNama = this.getAttribute("data-nama");
+        const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
+        const waktuStr = this.getAttribute("data-waktu");
+        const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
+
+        let waktuArray = [];
+        try {
+          waktuArray = JSON.parse(waktuStr || '[]');
+        } catch (e) {
+          waktuArray = waktuStr ? waktuStr.split(',') : [];
         }
 
-        setTimeout(() => {
-          $(".clockpicker").clockpicker({
-            autoclose: true
-          });
-        }, 100);
-      }
+        if (editModalTitle) editModalTitle.textContent = `Edit Obat ${obatNama}`;
+        if (editObatUuidInput) editObatUuidInput.value = obatUuid;
+        if (editKeteranganWaktu) {
+          editKeteranganWaktu.value = keteranganWaktu;
+        }
 
-      editButtons.forEach(button => {
-        button.addEventListener("click", function () {
-          const obatUuid = this.getAttribute("data-uuid");
-          const obatNama = this.getAttribute("data-nama");
-          const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
-          const waktuStr = this.getAttribute("data-waktu");
-          const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
-
-          let waktuArray = [];
-          try {
-            waktuArray = JSON.parse(waktuStr || '[]');
-          } catch (e) {
-            waktuArray = waktuStr ? waktuStr.split(',') : [];
-          }
-
-          if (editModalTitle) editModalTitle.textContent = `Edit Obat ${obatNama}`;
-          if (editObatUuidInput) editObatUuidInput.value = obatUuid;
-          if (editKeteranganWaktu) {
-            editKeteranganWaktu.value = keteranganWaktu;
-          }
-
-          currentObatUuid = obatUuid;
-          if (editFrequencySelect) {
-            editFrequencySelect.value = frekuensi;
-            updateEditTimeInputs(frekuensi, waktuArray);
-          }
-        });
+        currentObatUuid = obatUuid;
+        if (editFrequencySelect) {
+          editFrequencySelect.value = frekuensi;
+          updateEditTimeInputs(frekuensi, waktuArray);
+        }
       });
-
-      if (saveEditButton) {
-        saveEditButton.addEventListener("click", function () {
-          const obatUuid = editObatUuidInput ? editObatUuidInput.value : currentObatUuid;
-
-          if (!obatUuid) {
-            alert('Error: ID obat tidak ditemukan');
-            return;
-          }
-
-          const frekuensi = editFrequencySelect.value;
-          const keteranganWaktu = editKeteranganWaktu.value;
-          const timeInputs = document.querySelectorAll("input[name='waktu[]']");
-
-          let isValid = true;
-          timeInputs.forEach((input) => {
-            if (!input.value.trim()) {
-              input.classList.add('is-invalid');
-              isValid = false;
-            } else {
-              input.classList.remove('is-invalid');
-            }
-          });
-
-          if (!isValid) {
-            alert('Harap isi semua waktu konsumsi');
-            return;
-          }
-
-          const waktuArray = Array.from(timeInputs)
-            .slice(0, parseInt(frekuensi, 10))
-            .map(input => input.value);
-
-          const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
-
-          if (!csrfToken) {
-            console.error('CSRF token not found');
-            alert('Error: CSRF token not found');
-            return;
-          }
-
-          fetch(`/obat-pasien/${obatUuid}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest',
-              'X-CSRF-TOKEN': csrfToken
-            },
-            body: JSON.stringify({
-              frekuensi,
-              keteranganWaktu,
-              waktu: waktuArray
-            })
-          })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('editObatModal'));
-                modal.hide();
-                window.location.reload();
-              } else {
-                alert('Error: ' + data.message);
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              alert('Terjadi kesalahan saat menyimpan data');
-            });
-        });
-      }
-
-      if (editFrequencySelect) {
-        updateEditTimeInputs(parseInt(editFrequencySelect.value, 10));
-      }
     });
+
+    if (saveEditButton) {
+      saveEditButton.addEventListener("click", function () {
+        const obatUuid = editObatUuidInput ? editObatUuidInput.value : currentObatUuid;
+
+        if (!obatUuid) {
+          alert('Error: ID obat tidak ditemukan');
+          return;
+        }
+
+        const frekuensi = editFrequencySelect.value;
+        const keteranganWaktu = editKeteranganWaktu.value;
+        const timeInputs = document.querySelectorAll("input[name='waktu[]']");
+
+        let isValid = true;
+        timeInputs.forEach((input) => {
+          if (!input.value.trim()) {
+            input.classList.add('is-invalid');
+            isValid = false;
+          } else {
+            input.classList.remove('is-invalid');
+          }
+        });
+
+        if (!isValid) {
+          alert('Harap isi semua waktu konsumsi');
+          return;
+        }
+
+        const waktuArray = Array.from(timeInputs)
+          .slice(0, parseInt(frekuensi, 10))
+          .map(input => input.value);
+
+        const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
+
+        if (!csrfToken) {
+          console.error('CSRF token not found');
+          alert('Error: CSRF token not found');
+          return;
+        }
+
+        fetch(`/obat-pasien/${obatUuid}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({
+            frekuensi,
+            keteranganWaktu,
+            waktu: waktuArray
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const modal = bootstrap.Modal.getInstance(document.getElementById('editObatModal'));
+              modal.hide();
+              showSwal("success", "Sukses!", data.message,)
+              window.location.reload();
+            } else {
+              showSwal("error", "Gagal!", data.message,)
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showSwal("error", "Gagal!", error)
+
+          });
+      });
+    }
+
+    if (editFrequencySelect) {
+      updateEditTimeInputs(parseInt(editFrequencySelect.value, 10));
+    }
+  });
 </script>

@@ -29,6 +29,9 @@ export default class Dokter extends BaseModel {
   @column()
   declare status: boolean
 
+  @column()
+  declare foto: string | null
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

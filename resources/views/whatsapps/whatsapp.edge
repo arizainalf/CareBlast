@@ -7,50 +7,37 @@
       <!-- Group List Card -->
       <div class="h-100 d-flex flex-column">
         <div class="card-header bg-white py-3">
-          <h5 class="mb-3">Group / Patient</h5>
+          <h5 class="mb-3">Kontak Pasien</h5>
           <div class="d-flex gap-2">
 
-            <button class="btn btn-primary btn-sm flex-grow-1" data-bs-toggle="modal"
-              data-bs-target="#createGroupModal">
-              <i class="fas fa-plus me-1"></i> New Group
+            <button class="btn btn-primary btn-sm flex-grow-1" data-bs-toggle="modal" data-bs-target="#pengumumanModal">
+              <i class="fas fa-plus me-1"></i> Pengumuman
             </button>
           </div>
         </div>
-
         <div class="flex-grow-1 overflow-auto" id="contact-list">
-
-          <div class="list-group list-group-flush">
-            <label class="list-group-item d-flex align-items-center py-1 border-bottom">
-              <input class="form-check-input me-3" type="checkbox" value="">
-              <div class="d-flex justify-content-between align-items-center w-100">
-                <div>
-                  <h6 class="mb-0">Diabetes Group</h6>
-                  <small class="text-muted">Active Members</small>
-                </div>
-                <span class="badge bg-primary rounded-pill">120</span>
-              </div>
-            </label>
-          </div>
-
         </div>
       </div>
     </div>
 
     <!-- Right Side - Broadcast Messages -->
-    <div class="col-lg-8 col-md-7 d-none d-md-block h-100">
+    <div class="col-lg-8 col-md-7 d-none d-md-block h-100 ">
 
       <div class="d-flex flex-column h-100">
         <!-- Header -->
-        <div class="card-header bg-white py-3">
-          <div class="row align-items-center my-2">
+        <div class="card-header d-flex bg-white py-3">
+
+          <div class="p-2 w-90">
             <div class="col d-flex align-items-center gap-2">
               <img id="pp" src="{{ asset('images/users/user.png') }}" style="width: 50px;">
               <h5 class="mb-0" id="chat-head">Kontak</h5>
-              <button class="btn btn-primary btn-sm flex-grow-1" data-bs-toggle="modal" data-bs-target="#editKontak"
-                id="buttonEditKontak">
-                <i class="fas fa-plus me-1"></i>Edit
-              </button>
             </div>
+          </div>
+          <div class="p-2 flex-shrink-1">
+            <button class="btn btn-primary btn-sm flex-grow-1" data-bs-toggle="modal" data-bs-target="#editKontak"
+              id="buttonEditKontak">
+              <i class="fas fa-plus me-1"></i>Edit
+            </button>
           </div>
         </div>
 
@@ -98,38 +85,30 @@
 </div>
 
 <!-- Create Group Modal -->
-<div class="modal fade" id="createGroupModal" tabindex="-1">
+<div class="modal fade" id="pengumumanModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Create New Group</h5>
+        <h5 class="modal-title">Kirim Pengumuman</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
-        <form>
+      <form id="pengumumanForm">
+        <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Group Name</label>
-            <input type="text" class="form-control" placeholder="Enter group name">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea class="form-control" rows="3" placeholder="Enter group description"></textarea>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Category</label>
-            <select class="form-select">
-              <option selected disabled>Select category</option>
-              <option>Disease Management</option>
-              <option>Support Group</option>
-              <option>Treatment Group</option>
+            <label class="form-label">Nama Group</label>
+            <select name="penyakit" id="penyakit" class="form-control">
             </select>
           </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary">Create Group</button>
-      </div>
+          <div class="mb-3">
+            <label class="form-label">Isi pengumuman</label>
+            <textarea class="form-control" name="message" rows="3" placeholder="Masukan pengumuman anda."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Kirim</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -165,57 +144,77 @@
 
 <script>
 
-  async function getContact(id) {
-    $.get('/get-contact/' + id, function (data) {
-      $('#editNama').val(data.contact.username || data.contact.name)
-      const nomor = formatPhoneNumber(data.contact.waId)
-      $('#editNomor').val(nomor)
-      console.log(data.contact)
-    })
-  }
-
-  function getChat(id, nama) {
-    $.get('/get-chat/' + id, function (data) {
-      console.log('chat +', data)
-      $('#contactName').val(nama);
-      $('#WaId').val(data.contact.waId);
-      const messages = data.message
-      const pp = data.contact.profilePicture;
-      console.log(pp)
-
-      $('#chat-body').html('');
-
-      $('#send-messages').attr('data-id', id);
-
-      $('#chat-head').text(nama);
-
-      $('#pp').attr('src', pp).css('width', '50px').css('border-radius', '50%');
-
-      messages.forEach(message => {
-        $('#chat-body').append(`
-        <!-- Text Message -->
-        <div class="d-flex ${message.fromMe ? 'justify-content-end' : 'justify-content-start'}">
-            <div class="bg-white rounded-3 p-3 mb-3 shadow-sm" style="max-width: 75%;">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="badge ${message.fromMe ? 'bg-success' : 'bg-primary'}">
-                        ${message.fromMe ? 'Saya' : message.contact.name ? message.contact.name : message.contac.username}
-                    </span>
-                </div>
-                <p class="mb-2 ${message.fromMe ? 'text-end' : 'text-start'}">${message.content}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-muted"></small>
-                    <small class="text-muted">${formatTimestamp(message.timestamp)}</small>
-                </div>
-            </div>
-        </div>
-    `);
-        $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
-      });
-
-    });
-  }
 
   $(document).ready(function () {
+
+    async function getContact(id) {
+      const nama = $('#editNama');
+      const nowa = $('#editNomor');
+
+      nama.val('');
+      nowa.val('');
+
+      $.get('/get-contact/' + id, function (data) {
+        nama.val(data.contact.username || data.contact.name);
+        const nomor = formatPhoneNumber(data.contact.waId);
+        nowa.val(nomor);
+        console.log(data.contact);
+      });
+    }
+
+    function getChat(id, nama) {
+      $.get('/get-chat/' + id, function (data) {
+        console.log('chat +', data)
+        $('#contactName').val(nama);
+        $('#WaId').val(data.contact.waId);
+        const messages = data.message
+        const pp = data.contact.profilePicture;
+        console.log(pp)
+
+        $('#chat-body').html('');
+
+        $('#send-messages').attr('data-id', id);
+
+        $('#chat-head').text(nama);
+
+        $('#pp').attr('src', pp).css('width', '50px').css('border-radius', '50%');
+
+        messages.forEach(message => {
+          $('#chat-body').append(`
+          <!-- Text Message -->
+          <div class="d-flex ${message.fromMe ? 'justify-content-end' : 'justify-content-start'}">
+              <div class="bg-white rounded-3 p-3 mb-3 shadow-sm" style="max-width: 75%;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="badge ${message.fromMe ? 'bg-success' : 'bg-primary'}">
+                          ${message.fromMe ? 'Saya' : message.contact.name ? message.contact.name : message.contac.username}
+                      </span>
+                  </div>
+                  <p class="mb-2 ${message.fromMe ? 'text-end' : 'text-start'}">${message.content}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted"></small>
+                      <small class="text-muted">${formatTimestamp(message.timestamp)}</small>
+                  </div>
+              </div>
+          </div>
+      `);
+          $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
+        });
+
+      });
+    }
+
+    $('#pengumumanForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const url = '/pengumuman';
+      const method = 'POST';
+      const data = new FormData(this);
+
+      ajaxRequest(url, method, data);
+    }
+    )
+
+
     $('#send-messages').on('submit', function (e) {
       e.preventDefault();
 
@@ -244,33 +243,34 @@
         }
       });
     });
-  });
 
-  $(document).on('click', '.send-file', function () {
-    $('#fileInput').click(); // Trigger input file saat tombol diklik
-  });
+    $(document).on('click', '.send-file', function () {
+      $('#fileInput').click(); // Trigger input file saat tombol diklik
+    });
 
-  $('#fileInput').on('change', function () {
-    let file = this.files[0];
+    select2ToJson('#penyakit', '/penyakit');
 
-    if (file) {
-      $('#fileText').text(file.name); // Set nama file
-      $('#fileNameDisplay').removeClass('d-none'); // Tampilkan badge
-    }
-  });
+    $('#fileInput').on('change', function () {
+      let file = this.files[0];
 
-  $(document).on('click', '#removeFile', function () {
-    $('#fileInput').val(''); // Reset input file
-    $('#fileNameDisplay').addClass('d-none'); // Sembunyikan badge
-  });
+      if (file) {
+        $('#fileText').text(file.name); // Set nama file
+        $('#fileNameDisplay').removeClass('d-none'); // Tampilkan badge
+      }
+    });
 
-  $.get('/get-all-contact/', function (data) {
-    console.log(data);
+    $(document).on('click', '#removeFile', function () {
+      $('#fileInput').val(''); // Reset input file
+      $('#fileNameDisplay').addClass('d-none'); // Sembunyikan badge
+    });
 
-    const contactList = data.contact;
+    $.get('/get-all-contact/', function (data) {
+      console.log(data);
 
-    contactList.forEach(contact => {
-      $('#contact-list').append(`
+      const contactList = data.contact;
+
+      contactList.forEach(contact => {
+        $('#contact-list').append(`
           <div class="list-group list-group-flush">
             <label class="list-group-item d-flex align-items-center py-1 border-bottom">
               <div class="d-flex justify-content-between align-items-center w-100">
@@ -283,40 +283,50 @@
             </label>
           </div>
       `)
-    });
-
-    $(document).on('click', '.contact', function (e) {
-      e.preventDefault();
-      const id = $(this).data('id');
-      const nama = $(this).data('nama');
-      const pp = $(this).data('pp');
-      const number = $(this).data('number');
-
-      $('#contactName').val(nama);
-      $('#WaId').val(number);
-      $('#editKontak').attr('data-id', id);
-      $('#kontakEdit').attr('data-id', id);
-
-
-
-      console.log('ditekan', id)
-      getChat(id, nama);
-    });
-
-    $(document).ready(function () {
-      $('#buttonEditKontak').on('click', function (e) {
-        e.preventDefault();
-        const id = $('#editKontak').data('id');
-        getContact(id)
       });
 
-      $('#kontakEdit').on('submit', function (e) {
+      $(document).on('click', '.contact', function (e) {
         e.preventDefault();
+        const id = $(this).data('id');
+        const nama = $(this).data('nama');
+        const pp = $(this).data('pp');
+        const number = $(this).data('number');
+        const editKontak = $('#editKontak');
+        const kontakEdit = $('#kontakEdit')
 
-        const id = $('#kontakEdit').data('id');
-        console.log(id)
+        editKontak.val('')
+        kontakEdit.val('')
+
+        $('#contactName').val(nama);
+        $('#WaId').val(number);
+
+        editKontak.attr('data-id', id);
+        kontakEdit.attr('data-id', id);
+
+        console.log('ditekan', id)
+        getChat(id, nama, kontakEdit, editKontak);
+
+        $('#buttonEditKontak').on('click', function () {
+          const getcontact = getContact(id)
+          console.log(id, '#buttonEditKontak');
+        });
+
+        $('#kontakEdit').on('submit', function (e) {
+          e.preventDefault()
+
+          const id = $(this).data('id')
+          const url = `/contact/${id}/update`
+          const method = 'PUT'
+          const data = new FormData(this)
+
+          ajaxRequest(url, method, data);
+
+        });
+
       });
     });
+
+
 
 
   });

@@ -5,6 +5,7 @@ import Obat from '#models/obat'
 import Spesialist from '#models/spesialist'
 import Dokter from '#models/dokter'
 import { v4 as uuid } from 'uuid'
+import Pasien from '#models/pasien'
 
 export default class extends BaseSeeder {
 
@@ -105,7 +106,7 @@ export default class extends BaseSeeder {
       { nama: 'Amoxicillin', dosis: 500 },
     ]
 
-    const obats = await Obat.createMany(
+    await Obat.createMany(
       obatData.map((data) => ({
         uuid: uuid(),
         nama: data.nama,
@@ -149,5 +150,17 @@ export default class extends BaseSeeder {
         deskripsi: data.deskripsi,
       }))
     )
+
+    await Pasien.create(
+      {
+        uuid: uuid(),
+        name: 'Jodi Maulana',
+        nik: '123445667890',
+        jenisPenyakitId: 1,
+        tempat: 'Tasikmalaya',
+         
+      }
+    )
+
   }
 }

@@ -74,8 +74,8 @@ export async function connectToWhatsApp() {
     }
 
     console.log('message update')
-
-    saveMessages(m)
+    const save = await saveMessages(m)
+    console.log('message update',save)
     saveFile('./messages.json', m, 'messages')
   })
 
@@ -208,9 +208,32 @@ export async function sendMsg(number: string, message: string) {
     sendingFile = false
     return msgCreate
   } catch (error) {
-    console.log('Error di service:', error)
+    console.log('Error di sendMsg:', error)
     sendingFile = false
   }
+}
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+export async function sendBulkMessage(numbers: string[], message: string) {
+  const results = []
+
+  for (const number of numbers) {
+    try {
+      const result = await sendMsg(number, message)
+      results.push({ number, success: true, data: result })
+    } catch (error) {
+      console.error(`Gagal mengirim ke ${number}:`, error)
+      results.push({ number, success: false, error: error.message })
+    }
+
+    // Tunggu sebelum kirim ke nomor berikutnya
+    await delay(2500)
+  }
+
+  return results
 }
 
 export async function sendFile(jid: string, file: any, caption: string, name: string) {
@@ -322,7 +345,7 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
   } catch (error) {
     // Clear the flag in case of error
     sendingFile = false
-    console.log('Error di service:', error)
+    console.log('Error di sendFile:', error)
     throw error // Re-throw to propagate error to the caller
   }
 }

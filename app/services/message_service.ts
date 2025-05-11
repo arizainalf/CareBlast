@@ -13,7 +13,7 @@ export async function saveMessages(message: any) {
   let groupId: string | null = null
 
   if (key.remoteJid === 'status@broadcast') {
-    console.log('skipping status@broadcast')
+    console.log('Message service: skipping status@broadcast')
     return
   }
 
@@ -58,10 +58,10 @@ export async function saveMessages(message: any) {
         messageType, content: text,
         timestamp: DateTime.fromSeconds(Number(messageTimestamp)),
       })
-      console.log(`Message saved: ${key.id}`)
+      console.log(`Message service: Message saved: ${key.id}`)
     } catch (error) {
-      console.error('Error saving message:', error)
-      console.log('message sudah ada')
+      console.error('Message service Error saving message:', error)
+      console.log('Message service: message sudah ada')
     }
   }
 

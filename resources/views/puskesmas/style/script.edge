@@ -1,10 +1,73 @@
 <script>
+
+  let cropper;
+  let imgBlob;
+
   document.addEventListener('DOMContentLoaded', function () {
     const toggleSwitches = document.querySelectorAll('.status-toggle');
 
+
+    $('#upload').change(function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#image-preview').attr('src', e.target.result).show();
+          if (cropper) {
+            cropper.destroy();
+          }
+          cropper = new Cropper($('#image-preview')[0], {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 0.8,
+            responsive: true,
+            cropBoxResizable: false,
+          });
+          $('#crop-button').show();
+          $('#edit-button').hide();
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    $('#crop-button').click(function () {
+      if (cropper) {
+        const canvas = cropper.getCroppedCanvas();
+        canvas.toBlob(function (blob) {
+          imgBlob = blob;
+          const croppedImage = URL.createObjectURL(blob);
+          $('#cropped-image').attr('src', croppedImage);
+          $('#cropped-image-container').show();
+          $('#image-preview').hide();
+          $('.cropper-container.cropper-bg').hide();
+          $('#crop-button').hide();
+          $('#edit-button').show();
+        }, 'image/jpeg');
+      }
+    });
+
+    $('#edit-button').click(function () {
+      $('#cropped-image-container').hide();
+      $('#image-preview').show();
+      $('#crop-button').show();
+      $('#edit-button').hide();
+      if (cropper) {
+        cropper.destroy();
+      }
+      cropper = new Cropper($('#image-preview')[0], {
+        aspectRatio: 1,
+        viewMode: 1,
+        autoCropArea: 0.8,
+        responsive: true,
+        cropBoxResizable: false,
+      });
+    });
+
     toggleSwitches.forEach(toggle => {
       toggle.addEventListener('change', function () {
-        
+
         const doctorId = this.getAttribute('data-id');
         const statusWrapper = this.closest('.status-wrapper');
         const statusBadge = statusWrapper.querySelector('.status-badge');
@@ -24,7 +87,7 @@
       });
     });
 
-    function checkStatus(dokterId){
+    function checkStatus(dokterId) {
       $.get(`/dokter/${dokterId}/status`, function (response) {
         if (response.success) {
           const status = response.status;
@@ -117,7 +180,7 @@
       let spesialisId = $(this).data('id');
       let spesialisName = $(this).data('nama');
       let spesialisGelar = $(this).data('gelar');
-      
+
       $('#formSpesialist').attr('data-id', spesialisId);
       $('#nama_spesialis').val(spesialisName);
       $('#gelar').val(spesialisGelar);
@@ -240,26 +303,10 @@
       let url = dokterId ? `/dokter/${dokterId}/update` : '/dokter';
       let method = dokterId ? 'PUT' : 'POST';
 
-      $.ajax({
-        url: url,
-        type: method,
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          if (response.success) {
-            showSwal("success", "Sukses", response.message, function () {
-              modalHapusDokter.hide();
-              location.reload();
-            });
-          } else {
-            showSwal("error", "Error", response.message);
-          }
-        },
-        error: function (error) {
-          showSwal("error", "Gagal", "Terjadi kesalahan dalam menyimpan data!");
-        }
-      });
+      if (imgBlob) {
+        formData.append('foto', imgBlob, 'cropped.jpg');
+      }
+      ajaxRequest(url, method, formData)
 
     })
 

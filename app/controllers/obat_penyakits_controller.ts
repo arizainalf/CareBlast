@@ -4,6 +4,7 @@ import Obat from '#models/obat'
 import { inject } from '@adonisjs/core'
 import type { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
 import { hash } from 'crypto'
+import Message from '#models/message'
 
 interface FlashMessage {
   type: 'penyakit' | 'obat'
@@ -26,6 +27,16 @@ export default class ObatPenyakitController {
       penyakits,
       obats,
       activeTab: request.input('tab', 'dataObat'),
+    })
+  }
+
+  async penyakit({ response }: HttpContext) {
+    const data = await JenisPenyakit.all();
+    // console.log(data)
+    return response.json({
+      success: true,
+      message: 'data penyakit berhasil ditemukan.',
+      data
     })
   }
 
