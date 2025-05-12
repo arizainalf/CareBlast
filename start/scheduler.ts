@@ -14,7 +14,10 @@ cron.schedule('0 * * * *', async () => {
         const obatPasiens = await ObatPasien.query().preload('pasien').preload('obat')
         const kunjungans = await Kunjungan.query().preload('pasien')
         const now = getCurrentTime()
-        const dateNow = getTomorrowDate();
+        const tomorrowDate = getTomorrowDate();
+        const dateNow = getCurrentDate();
+
+        console.log(now, tomorrowDate)
 
         for (const kunjungan of kunjungans) {
             // Lewati jika tidak ada tanggal kunjungan berikutnya
@@ -23,7 +26,7 @@ cron.schedule('0 * * * *', async () => {
             // Pastikan bentuknya bisa di-parse oleh dayjs
             const kunjunganDate = dayjs(kunjungan.kunjunganBerikutnya.toString()).format('YYYY-MM-DD');
 
-            if (kunjunganDate === dateNow) {
+            if (kunjunganDate === tomorrowDate) {
                 try {
                     const response = await sendMsg(
                         kunjungan.pasien.no_hp,
@@ -41,19 +44,27 @@ cron.schedule('0 * * * *', async () => {
         for (const obat of obatPasiens) {
             if (!Array.isArray(obat.waktuKonsumsi)) continue
 
-            for (const waktu of obat.waktuKonsumsi) {
-                const jk = obat.pasien.jenis_kelamin
-                const panggilan = jk == 'Laki-laki' ? 'Pak' : 'Bu'
-                if (waktu === now) {
-                    try {
-                        const response = await sendMsg(obat.pasien.no_hp, `${panggilan} ${obat.pasien.name} saatnya minum obat : ${obat.obat.nama}. Minum obat ini ${obat.keteranganWaktu}.`)
-                        console.log(`scheduler kirim pesan ke ${obat.pasien.no_hp}:`, response)
+            if (obat.status == true) {
+                for (const waktu of obat.waktuKonsumsi) {
+                    const jk = obat.pasien.jenis_kelamin
+                    const panggilan = jk == 'Laki-laki' ? 'Pak' : 'Bu'
+                    if (waktu === now) {
+                        try {
+                            const response = await sendMsg(obat.pasien.no_hp, `${panggilan} ${obat.pasien.name} saatnya minum obat : ${obat.obat.nama}. Minum obat ini ${obat.keteranganWaktu}.`)
+                            console.log(`scheduler kirim pesan ke ${obat.pasien.no_hp}:`, response)
 
-                        await delay(3000)
-                    } catch (error) {
-                        console.error(`Failed to send message to ${obat.pasien.no_hp}:`, error)
+                            await delay(3000)
+                        } catch (error) {
+                            console.error(`Failed to send message to ${obat.pasien.no_hp}:`, error)
+                        }
                     }
                 }
+            }
+
+            if (dayjs(obat.batasWaktu).format('YYYY-MM-DD') === dateNow) {
+                obat.merge({
+                    status: false
+                }).save()
             }
         }
     } catch (error) {
@@ -70,8 +81,13 @@ function getTomorrowDate() {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-
     // Format YYYY-MM-DD
     return tomorrow.toISOString().split('T')[0];
 }
+
+function getCurrentDate() {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+}
+
 

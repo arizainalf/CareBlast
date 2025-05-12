@@ -10,6 +10,9 @@
       "#services/*": [
         "./app/Services/*"
       ],
+      "#utils/*": [
+        "./app/utils/*"
+      ],
       "#controllers/pasien/*": [
         "./app/Controllers/pasien/*"
       ],

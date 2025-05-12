@@ -67,6 +67,11 @@
       </li>  --}}
 
       @if(auth.user.role == 'super_admin')
+      <li><a href="/laporan" class="" aria-expanded="false">
+        <i class="fas fa-book"></i>
+        <span class="nav-text">Laporan</span>
+      </a>
+    </li>
       <li
         class="{{ request.url().startsWith('/users') && !request.url().includes(route('edit-profile')) ? 'mm-active' : '' }}">
         <a href="/users"

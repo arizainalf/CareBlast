@@ -1,5 +1,6 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+
 const ProfilesController = () => import('#controllers/pasien/profiles_controller')
 const VisitsController = () => import('#controllers/pasien/visits_controller')
 const HomeController = () => import('#controllers/pasien/home_controller')
@@ -11,6 +12,7 @@ const WhatsappsController = () => import('#controllers/whatsapps_controller')
 const KunjungansController = () => import('#controllers/kunjungans_controller')
 const ObatPenyakitController = () => import('#controllers/obat_penyakits_controller')
 const PasiensController = () => import('#controllers/pasiens_controller')
+const LaporansController = () => import('#controllers/laporans_controller')
 const DokterSpesialistsController = () => import('#controllers/dokter_spesialists_controller')
 
 router
@@ -39,6 +41,8 @@ router
 // Route Admin/Super admin
 router
   .group(() => {
+    router.get('/laporan', [LaporansController, 'index']).as('laporan.index')
+
     router.get('/users', [UsersController, 'index']).as('users.index')
     router.post('/users', [UsersController, 'store']).as('users.create')
     router.get('/users/:id/show', [UsersController, 'show']).as('users.show')

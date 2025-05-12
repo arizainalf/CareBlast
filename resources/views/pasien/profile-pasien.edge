@@ -37,7 +37,8 @@
                     </a>
 
                     <!-- Tombol Hapus -->
-                    <a href="#" class="btn btn-danger light sharp me-2" data-bs-toggle="modal" data-bs-target="#hapusModal">
+                    <a href="#" class="btn btn-danger light sharp me-2" data-bs-toggle="modal"
+                      data-bs-target="#hapusModal">
                       <i class="fas fa-trash"></i>
                     </a>
 
@@ -172,7 +173,8 @@
                           <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3"
                             data-bs-toggle="modal" data-bs-target="#basicModal" data-uuid="{{ item.uuid }}"
                             data-nama="{{ item.obat.nama }}" data-frekuensi="{{ item.frekuensi }}"
-                            data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                            data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}"
+                            data-batas-waktu="{{ item.batasWaktu }}" data-status="{{ item.status }}">
                             <i class="fas fa-pencil-alt" style="cursor: pointer; user-select: none;"></i>
                           </span>
                           <span class="badge badge-primary badge-pill" style="cursor: default; user-select: none;">{{
@@ -194,7 +196,7 @@
                           data-bs-target="#medicationDetailModal" data-uuid="{{ item.uuid }}"
                           style="cursor: pointer; user-select: none;">
                           <span class="text-truncate d-inline-block" style="max-width: 150px; vertical-align: middle;">
-                            {{ item.obat.nama.length > 10 ? item.obat.nama.slice(0, 10) + '...' : item.obat.nama }}
+                            {{ item.obat.nama.length > 10 ? item.obat.nama.slice(0, 10) + '...' : item.obat.nama }},
                           </span>
                           {{ item.obat.dosis % 1 == 0 ? parseInt(item.obat.dosis) : item.obat.dosis }} mg
                         </span>
@@ -202,7 +204,8 @@
                           <span class="badge badge-rounded badge-outline-warning badge-lg edit-obat mx-3"
                             data-bs-toggle="modal" data-bs-target="#basicModal" data-uuid="{{ item.uuid }}"
                             data-nama="{{ item.obat.nama }}" data-frekuensi="{{ item.frekuensi }}"
-                            data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}">
+                            data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}"
+                            data-batas-waktu="{{ item.batasWaktu }}" data-status="{{ item.status }}">
                             <i class="fas fa-pencil-alt" style="cursor: pointer; user-select: none;"></i>
                           </span>
                           <span class="badge badge-secondary badge-pill" style="cursor: default; user-select: none;">{{
@@ -318,5 +321,4 @@
   });
 </script>
 @end
-
 @end

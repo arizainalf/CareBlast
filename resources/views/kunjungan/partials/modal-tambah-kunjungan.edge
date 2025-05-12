@@ -21,7 +21,7 @@
 
           <div class="mb-3">
             <label for="dokter">Dokter</label>
-            <select name="dokter" class="form-control" id="dokter">
+            <select name="dokter" class="form-control" id="dokter" required>
               <option value="">Pilih Dokter</option>
               @if(dokters && dokters.length > 0)
               @each(dokter in dokters)
