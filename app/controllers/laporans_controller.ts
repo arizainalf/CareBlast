@@ -148,7 +148,7 @@ export default class LaporanController {
       { pasien_count: 0 }
     )
 
-    const monthlyData = await this.getMonthlyPenyakitTrend(jenisPenyakitChartData, tahun!, bulan!)
+    const monthlyData = await this.getMonthlyPenyakitTrend(jenisPenyakitChartData)
 
     if (aksi === 'download') {
       const html = await view.render('pdf/laporan', {
@@ -200,7 +200,7 @@ export default class LaporanController {
     })
   }
 
-  private async getMonthlyPenyakitTrend(jenisPenyakitList: any[], tahun: any, bulan: any) {
+  private async getMonthlyPenyakitTrend(jenisPenyakitList: any[]) {
     const result = []
 
     for (let i = 5; i >= 0; i--) {
