@@ -8,15 +8,16 @@ function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 * * * *', async () => {
     console.log('Cron job started')
     try {
         const obatPasiens = await ObatPasien.query().preload('pasien').preload('obat')
         const kunjungans = await Kunjungan.query().preload('pasien')
         const now = getCurrentTime()
-        const dateNow = getTomorrowDate();
+        const tomorrowDate = getTomorrowDate();
+        const dateNow = getCurrentDate();
 
-        console.log(now, dateNow)
+        console.log(now, tomorrowDate)
 
         for (const kunjungan of kunjungans) {
             // Lewati jika tidak ada tanggal kunjungan berikutnya
@@ -25,7 +26,7 @@ cron.schedule('* * * * *', async () => {
             // Pastikan bentuknya bisa di-parse oleh dayjs
             const kunjunganDate = dayjs(kunjungan.kunjunganBerikutnya.toString()).format('YYYY-MM-DD');
 
-            if (kunjunganDate === dateNow) {
+            if (kunjunganDate === tomorrowDate) {
                 try {
                     const response = await sendMsg(
                         kunjungan.pasien.no_hp,
@@ -59,6 +60,12 @@ cron.schedule('* * * * *', async () => {
                     }
                 }
             }
+
+            if (dayjs(obat.batasWaktu).format('YYYY-MM-DD') === dateNow) {
+                obat.merge({
+                    status: false
+                }).save()
+            }
         }
     } catch (error) {
         console.error('Error fetching ObatPasien data:', error)
@@ -74,8 +81,13 @@ function getTomorrowDate() {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-
     // Format YYYY-MM-DD
     return tomorrow.toISOString().split('T')[0];
 }
+
+function getCurrentDate() {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+}
+
 

@@ -1,0 +1,54 @@
+<script>
+    function animateCounter(elementId, endValue, duration = 2000) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        const startValue = 0;
+        const frameDuration = 1000 / 60;
+        const totalFrames = Math.round(duration / frameDuration);
+        const valueIncrement = endValue / totalFrames;
+
+        let currentValue = startValue;
+        let frame = 0;
+
+        function easeOutQuad(t) {
+            return t * (2 - t);
+        }
+
+        const counter = setInterval(() => {
+            frame++;
+            const progress = easeOutQuad(frame / totalFrames);
+            currentValue = startValue + (endValue * progress);
+
+            if (frame === totalFrames) {
+                clearInterval(counter);
+                element.textContent = endValue.toLocaleString('id-ID');
+                element.classList.add('counter-finished');
+
+                setTimeout(() => {
+                    element.classList.remove('counter-finished');
+                }, 500);
+            } else {
+                element.textContent = Math.floor(currentValue).toLocaleString('id-ID');
+            }
+        }, frameDuration);
+    }
+
+    function initCounters() {
+        const counters = [
+    { id: 'totalPasienSekarang', value: {{ totalPasienSekarang }}, duration: 2000 },
+    { id: 'totalPasien', value: {{ totalPasien }}, duration: 2000 },
+    { id: 'totalKunjunganCounter', value: {{ totalKunjunganSekarang }}, duration: 1700 },
+    { id: 'totalPesanTerkirim', value: {{ totalPesanTerkirimSekarang }}, duration: 1700 },
+    { id: 'penyakitCounter', value: {{ penyakitTerbanyak.pasien_count || 0 }}, duration: 1600 }
+    ];
+
+    console.log({{ tahunDipilih }})
+
+    counters.forEach((counter, index) => {
+        setTimeout(() => {
+            animateCounter(counter.id, counter.value, counter.duration);
+        }, index * 100); // Delay 100ms antar counter
+    });
+  }
+</script>

@@ -9,6 +9,7 @@ import Dokter from '#models/dokter'
 import Contact from '#models/contact'
 import ObatPasien from '#models/obat_pasien'
 import { saveContact } from '#services/contact_service'
+import NumberHelper from '#services/number_service'
 
 export default class PasiensController {
   async index({ view, request }: HttpContext) {
@@ -264,7 +265,12 @@ export default class PasiensController {
   async update({ params, request, response, session }: HttpContext) {
     try {
       const pasien = await Pasien.findByOrFail('uuid', params.uuid)
-      console.log('Found patient:', pasien.uuid)
+      const kontakPasien = NumberHelper(pasien.no_hp) +'@s.whatsapp.net'
+
+      const contact = await Contact.findBy('wa_id', kontakPasien)
+
+
+      console.log('Found patient:', pasien.uuid, NumberHelper(pasien.no_hp), contact?.waId, kontakPasien)
 
       const data = request.only([
         'nik',
@@ -277,8 +283,19 @@ export default class PasiensController {
         'golongan_darah',
       ]) as Record<string, any>
 
-      // const contact = await Contact.findByOrFail('wa_id', request.input('no_hp'))
-      
+      console.log(kontakPasien !== contact?.waId)
+
+      if (kontakPasien !== contact?.waId) {
+        contact?.merge({
+          waId: data.no_hp,
+          name: pasien.name
+        }).save()
+      } else {
+        contact?.merge({
+          name: pasien.name
+        }).save()
+      }
+
       console.log('Update data received:', data)
 
       if (data.nik !== pasien.nik) {
@@ -288,9 +305,7 @@ export default class PasiensController {
           .first()
         if (existingPatient) {
           console.error('NIK already registered:', data.nik)
-          // session.flash({
-          //   error: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.',
-          // })
+
           return response.json({
             success: false,
             message: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.',
@@ -306,8 +321,6 @@ export default class PasiensController {
       const jenisPenyakit = await JenisPenyakit.find(data.jenisPenyakitId)
       if (!jenisPenyakit) {
         console.error('Invalid jenis penyakit selected:', data.jenisPenyakitId)
-        // session.flash({ error: 'Jenis penyakit tidak valid' })
-        // return response.redirect().back()
         return response.json({
           success: false,
           message: 'Jenis penyakit tidak valid'
@@ -329,6 +342,7 @@ export default class PasiensController {
       try {
         await pasien.merge(data).save()
         console.log('Patient updated successfully')
+
         return response.json({
           success: true,
           message: 'Data pasien berhasil diperbarui',

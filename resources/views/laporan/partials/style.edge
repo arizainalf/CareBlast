@@ -1,0 +1,422 @@
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .py-4 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .g-4 {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 1.5rem;
+  }
+
+  .card {
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .icon-box {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.5rem;
+  }
+
+  .bg-soft-primary {
+    background-color: rgba(13, 110, 253, 0.1);
+  }
+
+  .bg-soft-success {
+    background-color: rgba(25, 135, 84, 0.1);
+  }
+
+  .bg-soft-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+  }
+
+  .bg-soft-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  .bg-soft-info {
+    background-color: rgba(13, 202, 240, 0.1);
+  }
+
+  .nav-tabs {
+    border-bottom: none;
+  }
+
+  .nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .nav-tabs .nav-link.active {
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-bottom: 2px solid #0d6efd;
+  }
+
+  .nav-tabs .nav-link:hover {
+    color: #0d6efd;
+  }
+
+  .disease-card {
+    border-radius: 10px;
+  }
+
+  .disease-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .qr-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .qr-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+  }
+
+  .qr-container:hover .qr-overlay {
+    visibility: visible;
+  }
+
+  .qr-image {
+    border-radius: 12px;
+    border: 2px solid #f1f1f1;
+    padding: 10px;
+    background-color: white;
+  }
+
+  .connection-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+    color: #6c757d;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ffc107;
+    margin-right: 8px;
+    position: relative;
+  }
+
+  .status-dot::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(255, 193, 7, 0.5);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+
+  .activity-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+
+  .list-group-item {
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    margin-bottom: 2px;
+  }
+
+  .list-group-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(3px);
+  }
+
+  .progress {
+    overflow: visible;
+    height: 5px;
+    border-radius: 3px;
+    background-color: #f1f1f1;
+  }
+
+  .progress-bar {
+    position: relative;
+    border-radius: 3px;
+  }
+
+  .progress-bar::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -2.5px;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: inherit;
+  }
+
+  .badge {
+    padding: 0.4rem 0.6rem;
+    font-weight: 500;
+    border-radius: 6px;
+  }
+
+  .penyakitChart {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 768px) {
+    .icon-box {
+      width: 40px;
+      height: 40px;
+      font-size: 1.2rem;
+    }
+
+    .activity-icon {
+      width: 35px;
+      height: 35px;
+    }
+
+    .card-body {
+      padding: 1rem;
+    }
+  }
+
+  .btn {
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+  }
+
+  .btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0b5ed7;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.2);
+  }
+
+  .btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
+  }
+
+  /* Disease trend indicators */
+  .disease-trend {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+
+  .disease-trend i {
+    margin-right: 3px;
+  }
+
+  /* Card header styles */
+  .card-header {
+    padding: 1.2rem 1.5rem;
+    background-color: transparent;
+    border-bottom: 0;
+  }
+
+  .card-header h5 {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+
+  /* Utility classes */
+  .fw-semibold {
+    font-weight: 600 !important;
+  }
+
+  .small {
+    font-size: 85%;
+  }
+
+  .text-truncate {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Tooltip enhancements */
+  [title] {
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .card {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  /* Scrollbar customization */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+
+  /* Custom chart tooltips */
+  .apexcharts-tooltip {
+    border-radius: 8px !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    border: none !important;
+  }
+
+  /* Fix for card spacing */
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  /* Custom checkboxes and radio buttons */
+  .form-check-input {
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+  }
+
+  .form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+
+  /* Add these styles to your existing CSS */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 20px, 0);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .card {
+    animation: fadeIn 0.5s ease-in-out, fadeInUp 0.7s ease-out;
+  }
+
+  .col-xl-3:nth-child(1) .card {
+    animation-delay: 0.1s;
+  }
+
+  .col-xl-3:nth-child(2) .card {
+    animation-delay: 0.2s;
+  }
+
+  .col-xl-3:nth-child(3) .card {
+    animation-delay: 0.3s;
+  }
+
+  .col-xl-3:nth-child(4) .card {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .fw-bold span {
+    display: inline-block;
+    animation: pulse 1s ease-in-out 1;
+    animation-delay: 2s;
+  }
+</style>

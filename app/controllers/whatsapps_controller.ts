@@ -129,7 +129,6 @@ export default class WhatsappsController {
     });
   }
 
-
   public async getChat({ response, params }: HttpContext) {
     const message = await Message.query()
       .where('contact_id', params.id)
@@ -201,8 +200,9 @@ export default class WhatsappsController {
       return response.badRequest({ message: 'Nomor WA, file, dan nama wajib diisi' })
     }
 
-    // Validasi jenis file
-    if (!['image/jpeg', 'image/png', 'application/pdf'].includes(file.type || '')) {
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf']
+
+    if (!allowedMimeTypes.includes(file.headers['content-type'])) {
       return response.badRequest({ message: 'Tipe file tidak diizinkan' })
     }
 
