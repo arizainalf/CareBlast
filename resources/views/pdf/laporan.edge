@@ -42,15 +42,27 @@
 </head>
 
 <body>
-    <h1>Laporan {{ status }}</h1>
-    <h2>{{ bulanDipilih ? 'Bulan ' + bulanDipilih : 'Tahun ' + tahunDipilih}}</h2>
-
+    <h1>Laporan {{ status?.charAt(0).toUpperCase() + status?.slice(1) }}</h1>
+    <h2>
+        {{ bulanDipilih 
+            ? (tahunDipilih 
+                ? 'Bulan ' + formatMonth(bulanDipilih) + ' Tahun ' + tahunDipilih 
+                : 'Bulan ' + formatMonth(bulanDipilih)) 
+            : (tahunDipilih 
+                ? 'Tahun ' + tahunDipilih 
+                : 'Semua Data') 
+        }}
+      </h2>
     <div class="summary">
         <p><strong>Total pasien:</strong> {{ totalPasienSekarang }}</p>
         <p><strong>Total kunjungan </strong> {{ totalKunjunganSekarang }}</p>
         <p><strong>Total pengingat yang dikirim ke Pasien:</strong> {{ totalPesanTerkirimSekarang }}</p>
+        @if(status == 'semua')         
+        @else
         <p><strong>Pertumbuhan pasien:</strong> {{ pertumbuhanPasien }}%</p>
-       
+        <p><strong>Pertumbuhan kunjungan:</strong> {{ pertumbuhanKunjungan }}%</p>
+        <p><strong>Pertumbuhan pengingat yang dikirim:</strong> {{ pertumbuhanPesan }}%</p>
+        @end
     </div>
 
     <h3>Data Pasien</h3>
@@ -58,7 +70,7 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Nik</th>
+                <th>NIK</th>
                 <th>Nama</th>
                 <th>Jenis Penyakit</th>
             </tr>
@@ -67,6 +79,7 @@
             @each((pasien, index) in dataPasien)
             <tr>
                 <td>{{ index+1 }}</td>
+                <td>{{ pasien.nik}} </td>
                 <td>{{ pasien.name}} </td>
                 <td>{{ pasien.jenisPenyakit.nama }}</td>
             </tr>
@@ -97,7 +110,7 @@
     </table>
 
     <footer style="text-align: center; margin-top: 2rem;">
-        <p>Generated on {{ DateTime.now().toFormat('dd LLL yyyy HH:mm') }}</p>
+        <p>Dibuat di {{ DateTime.now().setLocale('id').toFormat('dd LLL yyyy HH:mm') }}</p>
     </footer>
 </body>
 

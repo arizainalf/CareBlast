@@ -94,7 +94,11 @@
     </div>
 
     <!-- Chart and WhatsApp Section -->
+    @if(auth.user.role == 'super_admin')
     <div class="col-xl-8">
+      @else
+      <div class="col-xl-12">
+    @end
       <div class="card border-0 bg-white">
         <div class="card-header bg-transparent border-0 pb-0">
           <div class="d-flex align-items-center justify-content-between">
@@ -138,6 +142,7 @@
       </div>
     </div>
 
+    @if(auth.user.role == 'super_admin')    
     <!-- WhatsApp Connection -->
     <div class="col-xl-4">
       <div class="card border-0 bg-white" style="max-height: 400px; overflow-y: auto;">
@@ -169,6 +174,7 @@
         </div>
       </div>
     </div>
+    @end
   </div>
 </div>
 @include('dashboard/partials/style')

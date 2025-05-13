@@ -17,8 +17,21 @@ export default class LaporanController {
     const rawBulanTahun = qs.bulan
     const rawTahun = Number(qs.tahun)
 
+    let pagePasien = 1
+    let perPagePasien = 20
+    let pageKunjungan = 1
+    let perPageKunjungan = 20
+
     let bulan: number | null = null
     let tahun: number | null = null
+
+    if (qs.pagePasien){
+      pagePasien = qs.pagePasien;
+    }
+
+    if (qs.pageKunjungan){
+      pageKunjungan = qs.pageKunjungan;
+    }
 
     if (rawBulanTahun) {
       const [tahunInput, bulanInput] = rawBulanTahun.split('-').map(Number)
@@ -89,7 +102,9 @@ export default class LaporanController {
 
     const [
       dataPasien,
+      dataPasienPaginate,
       dataKunjungan,
+      dataKunjunganPaginate,
       totalPasienSekarang,
       totalPasienSebelumnya,
       totalPasien,
@@ -100,7 +115,9 @@ export default class LaporanController {
       totalPesanTerkirimSebelumnya,
     ] = await Promise.all([
       pasienSekarangQuery.clone().preload('jenisPenyakit'),
+      pasienSekarangQuery.clone().preload('jenisPenyakit').paginate(pagePasien, perPagePasien),
       kunjunganSekarangQuery.clone().preload('pasien').preload('dokter'),
+      kunjunganSekarangQuery.clone().preload('pasien').preload('dokter').paginate(pageKunjungan, perPageKunjungan),
       pasienSekarangQuery.clone().count('* as total') || [{ $extras: { total: 0 } }],
       pasienSebelumnyaQuery.clone().count('* as total') || [{ $extras: { total: 0 } }],
       Pasien.query().count('* as total'),
@@ -179,8 +196,10 @@ export default class LaporanController {
     return view.render('laporan/index', {
       status,
       DateTime,
-      dataKunjungan,
-      dataPasien,
+      // dataKunjungan,
+      dataKunjunganPaginate,
+      // dataPasien,
+      dataPasienPaginate,
       totalPasienSekarang: Number(totalPasienSekarang[0].$extras.total),
       totalKunjunganSekarang: Number(totalKunjunganSekarang[0].$extras.total),
       totalPesanTerkirimSekarang: Number(totalPesanTerkirimSekarang[0].$extras.total),
