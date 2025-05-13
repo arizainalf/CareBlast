@@ -67,7 +67,7 @@
       </li>  --}}
 
       @if(auth.user.role == 'super_admin')
-      <li><a href="/laporan" class="" aria-expanded="false">
+      <li class="{{ request.url().includes(route('laporan.index')) ? 'mm-active' : '' }}" ><a href="/laporan" class="" aria-expanded="false">
         <i class="fas fa-book"></i>
         <span class="nav-text">Laporan</span>
       </a>

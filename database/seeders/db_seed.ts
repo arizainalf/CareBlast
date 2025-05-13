@@ -158,7 +158,6 @@ export default class extends BaseSeeder {
         nik: '123445667890',
         jenisPenyakitId: 1,
         tempat: 'Tasikmalaya',
-         
       }
     )
 

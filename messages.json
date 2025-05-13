@@ -17925,5 +17925,81 @@
     "messageStubParameters": [
       "6282116064819@s.whatsapp.net"
     ]
+  },
+  {
+    "key": {
+      "remoteJid": "628551000185@s.whatsapp.net",
+      "fromMe": false,
+      "id": "648F2BB04C2083E8AC"
+    },
+    "contactId": "3b715a73-accb-45d1-8e52-54088e240725",
+    "groupId": null,
+    "pushName": "628551000185",
+    "messageId": "648F2BB04C2083E8AC",
+    "messageType": "templateMessage",
+    "content": {
+      "templateMessage": {
+        "hydratedTemplate": {
+          "hydratedContentText": "🔄 *Reminder: Cek paket sebelum berakhir*\n\nUntuk menjaga koneksi tetap aktif, silakan cek status paketmu sebelum berakhir. Informasi paket dapat kamu akses langsung di IM3 WhatsApp. \n\nKlik *Cek Paket*.",
+          "hydratedButtons": [
+            {
+              "quickReplyButton": {
+                "displayText": "Cek Paket",
+                "id": "Mau hot promo"
+              },
+              "index": 0
+            }
+          ],
+          "templateId": "3181390205333619"
+        },
+        "templateId": "3181390205333619"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "recipientKeyHash": "ISYUqy2Qh3CTzg==",
+          "recipientTimestamp": "1746590348"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "timestamp": 1747139120,
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "628551000185@s.whatsapp.net",
+      "fromMe": false,
+      "id": "648F2BB04C2083E8AC"
+    },
+    "messageTimestamp": 1747139120,
+    "pushName": "628551000185",
+    "broadcast": false,
+    "message": {
+      "templateMessage": {
+        "hydratedTemplate": {
+          "hydratedContentText": "🔄 *Reminder: Cek paket sebelum berakhir*\n\nUntuk menjaga koneksi tetap aktif, silakan cek status paketmu sebelum berakhir. Informasi paket dapat kamu akses langsung di IM3 WhatsApp. \n\nKlik *Cek Paket*.",
+          "hydratedButtons": [
+            {
+              "quickReplyButton": {
+                "displayText": "Cek Paket",
+                "id": "Mau hot promo"
+              },
+              "index": 0
+            }
+          ],
+          "templateId": "3181390205333619"
+        },
+        "templateId": "3181390205333619"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "recipientKeyHash": "ISYUqy2Qh3CTzg==",
+          "recipientTimestamp": "1746590348"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "IM3"
   }
 ]
