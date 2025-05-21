@@ -180,25 +180,46 @@
         $('#pp').attr('src', pp).css('width', '50px').css('border-radius', '50%');
 
         messages.forEach(message => {
+          const baseUrl = `{{ baseUrl() }}`
+          const fromMe = message.fromMe
+          const sender = fromMe ? 'Saya' : (message.contact.name || message.contact.username)
+          const isDocument = message.messageType === 'documentMessage'
+          const fileUrl = message.filePath ? `${baseUrl}${message.filePath}` : null
+
+          let contentHtml = ''
+
+          if (isDocument && fileUrl) {
+            contentHtml = `
+      <p class="mb-2 ${fromMe ? 'text-end' : 'text-start'}">
+        <a href="${message.filePath}" class="btn btn-sm btn-outline-primary mt-1" target="_blank">${message.fileName}</a>
+      </p>
+      <p class="mb-2 ${fromMe ? 'text-end' : 'text-start'}">${message.content}</p>
+
+    `
+          } else {
+            contentHtml = `
+      <p class="mb-2 ${fromMe ? 'text-end' : 'text-start'}">${message.content}</p>
+    `
+          }
+
           $('#chat-body').append(`
-          <!-- Text Message -->
-          <div class="d-flex ${message.fromMe ? 'justify-content-end' : 'justify-content-start'}">
-              <div class="bg-white rounded-3 p-3 mb-3 shadow-sm" style="max-width: 75%;">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                      <span class="badge ${message.fromMe ? 'bg-success' : 'bg-primary'}">
-                          ${message.fromMe ? 'Saya' : message.contact.name ? message.contact.name : message.contac.username}
-                      </span>
-                  </div>
-                  <p class="mb-2 ${message.fromMe ? 'text-end' : 'text-start'}">${message.content}</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                      <small class="text-muted"></small>
-                      <small class="text-muted">${formatTimestamp(message.timestamp)}</small>
-                  </div>
-              </div>
-          </div>
-      `);
+    <div class="d-flex ${fromMe ? 'justify-content-end' : 'justify-content-start'}">
+      <div class="bg-white rounded-3 p-3 mb-3 shadow-sm" style="max-width: 75%;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge ${fromMe ? 'bg-success' : 'bg-primary'}">${sender}</span>
+        </div>
+        ${contentHtml}
+        <div class="d-flex justify-content-between align-items-center">
+          <small class="text-muted"></small>
+          <small class="text-muted">${formatTimestamp(message.timestamp)}</small>
+        </div>
+      </div>
+    </div>
+  `);
+
           $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
         });
+
 
       });
     }

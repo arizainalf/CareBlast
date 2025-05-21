@@ -1,12 +1,12 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 
-import { getQrCode, logoutWhatsapp, getStatus, sendMsg, sendFile, sendBulkMessage } from '#services/whatsapp_service'
+import { getQrCode, logoutWhatsapp, getStatus, sendMsg, sendFile, sendBulkMessage, getProfilePicture } from '#services/whatsapp_service'
 import { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import Message from '#models/message'
 import Contact from '#models/contact'
 import Pasien from '#models/pasien'
-import NumberHelper from '#services/number_service'
+import drive from '@adonisjs/drive/services/main'
 
 @inject()
 export default class WhatsappsController {
@@ -193,7 +193,6 @@ export default class WhatsappsController {
     const file = request.file('file')
     const caption = request.input('caption', '')
     const name = request.input('nama')
-    const waId = NumberHelper(jid)
 
     // Validasi wajib isi
     if (!jid || !file || !name) {
@@ -204,18 +203,6 @@ export default class WhatsappsController {
 
     if (!allowedMimeTypes.includes(file.headers['content-type'])) {
       return response.badRequest({ message: 'Tipe file tidak diizinkan' })
-    }
-
-    // Simpan/update contact
-    const existingContact = await Contact.query().where('waId', waId).first()
-
-    if (existingContact) {
-      if (existingContact.name !== name) {
-        existingContact.merge({ name })
-        await existingContact.save()
-      }
-    } else {
-      await Contact.create({ waId, name })
     }
 
     try {
@@ -237,7 +224,24 @@ export default class WhatsappsController {
     }
   }
 
+// public async downloadFile({ response, params }: HttpContext) {
+//   const message = await Message.findOrFail(params.id)
 
+//   const fileName = message.fileName
+
+//     // Cek apakah file ada
+//     const exists = await drive.exists(fileName)
+//     if (!exists) {
+//       return response.status(404).send('File tidak ditemukan')
+//     }
+
+//     // Ambil stream file
+//     const fileStream = await drive.getStream(fileName)
+
+//     // Kirim file sebagai attachment agar browser download
+//     response.header('Content-Disposition', `attachment; filename="${fileName}"`)
+//     return response.stream(fileStream)
+// }
   public async sendMsg({ request, response }: HttpContext) {
     const number = request.input('number')
     const message = request.input('message')

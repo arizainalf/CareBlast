@@ -6,7 +6,8 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form id="add-medicine-form" data-pasien-uuid="{{ kunjungan.pasien.uuid }}" data-pasien-id="{{ kunjungan.pasien.id}}" method="POST">
+      <form id="add-medicine-form" data-pasien-uuid="{{ kunjungan.pasien.uuid }}"
+        data-pasien-id="{{ kunjungan.pasien.id}}" method="POST">
         {{ csrfField() }}
 
         <input type="hidden" name="kunjunganId" value="{{ kunjungan.id }}">
@@ -48,10 +49,10 @@
           </select>
         </div>
 
-        <div class="mb-3">
+        {{-- <div class="mb-3">
           <label class="form-label">Batas Waktu <span class="text-danger">*</span></label>
           <input type="date" name="batasWaktu" class="form-control" required>
-        </div>
+        </div> --}}
 
         <div class="mb-3">
           <label class="form-label">Status <span class="text-danger">*</span></label>

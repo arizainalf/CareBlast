@@ -1,4 +1,14 @@
 @layout.app({ title: `Profile ${pasien.name}` })
+@slot('styles')
+<style>
+    .dropdown:hover .dropdown-menu {
+      display: block;
+      margin-top: 0;
+      right: 0;
+      left: auto;
+    }
+</style>
+@end
 @slot('content')
 <div class="container-fluid">
   <div class="row page-titles">
@@ -32,13 +42,13 @@
                   <div class="d-flex align-items-center ms-auto">
                     <!-- Tombol Edit -->
                     <a href="#" class="btn btn-warning light sharp me-2" data-bs-toggle="modal"
-                      data-bs-target="#EditPasienModal">
+                      data-bs-target="#EditPasienModal" title="Edit Pasien">
                       <i class="fas fa-pen"></i>
                     </a>
 
                     <!-- Tombol Hapus -->
                     <a href="#" class="btn btn-danger light sharp me-2" data-bs-toggle="modal"
-                      data-bs-target="#hapusModal">
+                      data-bs-target="#hapusModal" title="Hapus Pasien">
                       <i class="fas fa-trash"></i>
                     </a>
 
@@ -102,11 +112,11 @@
                   </div>
                   <div class="bootstrap-badge">
                     <a href="javascript:void(0)" class="badge badge-rounded badge-outline-success badge-lg me-2"
-                      data-bs-toggle="modal" data-bs-target="#tambahObatModal">
+                      data-bs-toggle="modal" data-bs-target="#tambahObatModal" title="Tambah Obat">
                       <i class="fas fa-plus"></i>
                     </a>
                     <a href="javascript:void(0)" class="badge badge-rounded badge-outline-danger badge-lg"
-                      data-bs-toggle="modal" data-bs-target="#bulkDeleteObatModal">
+                      data-bs-toggle="modal" data-bs-target="#bulkDeleteObatModal" title="Hapus Obat">
                       <i class="far fa-trash-alt"></i>
                     </a>
                   </div>
@@ -305,6 +315,20 @@
 <script>
   $(document).ready(function () {
     console.log('ready')
+
+    $('#form-kunjungan').on('submit', function (e) {
+      e.preventDefault();
+
+      const form = $(this);
+      const uuid = $('#pasien_id').val()
+      const url = '/pasien/' + uuid + '/kunjungan'
+      const method = 'POST'
+      const formData = new FormData(this)
+
+      console.log(form, uuid, url, method, formData)
+
+      ajaxRequest(url, method, formData)
+    })
 
     $('#formHasilLab').on('submit', function (e) {
       e.preventDefault();

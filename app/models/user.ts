@@ -1,10 +1,12 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, beforeCreate } from '@adonisjs/lucid/orm'
+import { BaseModel, column, beforeCreate, hasMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { v4 as uuidv4 } from 'uuid'
 import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
+import ResetToken from '#models/reset_token'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -46,6 +48,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
   public static async generateUuid(user: User) {
     user.uuid = uuidv4()
   }
+
+  @hasMany(() => ResetToken, {
+    foreignKey: 'userId',
+    localKey: 'id',
+  })
+  declare resetTokens: HasMany<typeof ResetToken>
 
   static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)
 }

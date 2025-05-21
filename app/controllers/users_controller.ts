@@ -3,6 +3,9 @@ import User from '#models/user'
 import { createUserValidator } from '#validators/user'
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 // import { dd } from '@adonisjs/core/services/dumper'
+import Contact from '#models/contact'
+import { formatWhatsappNumber } from '#services/number_service'
+import { getProfilePicture } from '#services/whatsapp_service'
 
 
 export default class UsersController {
@@ -54,6 +57,25 @@ export default class UsersController {
         phoneNumber: payload.phoneNumber,
       })
 
+      const waId = formatWhatsappNumber(payload.phoneNumber)
+      let profilePicture
+      try {
+        profilePicture = await getProfilePicture(waId)
+      } catch (error) {
+        console.error('Gagal mengambil foto profil:', error.message)
+        profilePicture = 'images/users/user.png'
+      }
+
+      if (payload.phoneNumber) {
+        await Contact.create({
+          userId: user.uuid,
+          waId,
+          name: payload.fullName,
+          username: payload.fullName,
+          profilePicture,
+        })
+      }
+
       session.flash({ 'success': 'User ' + user.fullName + ' ditambahkan!' })
       return response.redirect().back()
     } catch (error) {
@@ -85,6 +107,42 @@ export default class UsersController {
 
     try {
       user.merge({ ...data });
+
+      const contact = await Contact.findBy('user_id', user.uuid)
+
+      const newNoHp = data.phoneNumber || ''
+      const newWaId = formatWhatsappNumber(newNoHp)
+      if (!contact && newNoHp) {
+        let profilePicture
+        try {
+          profilePicture = await getProfilePicture(newWaId)
+        } catch (error) {
+          console.error('Gagal mengambil foto profil:', error.message)
+          profilePicture = 'images/users/user.png'
+        }
+
+        await Contact.create({
+          userId: user.uuid,
+          waId: newWaId,
+          name: data.fullName,
+          username: data.fullName,
+          profilePicture,
+        })
+
+      } else if (contact) {
+
+        const contactNeedsUpdate =
+          contact.waId !== newWaId || contact.name !== data.fullName
+        if (contactNeedsUpdate) {
+          contact.merge({
+            waId: newWaId,
+            name: data.fullName,
+            username: data.fullName,
+          })
+          await contact.save()
+        }
+
+      }
       await user.save();
       return response.json({ success: true, message: 'Pengguna berhasil diperbarui!', user });
     } catch (error) {

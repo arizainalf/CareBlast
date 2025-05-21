@@ -1,4 +1,4 @@
-import { Redirect, type HttpContext } from '@adonisjs/core/http'
+import { type HttpContext } from '@adonisjs/core/http'
 import Pasien from '#models/pasien'
 import JenisPenyakit from '#models/jenis_penyakit'
 import { DateTime } from 'luxon'
@@ -8,8 +8,8 @@ import Kunjungan from '#models/kunjungan'
 import Dokter from '#models/dokter'
 import Contact from '#models/contact'
 import ObatPasien from '#models/obat_pasien'
-import { saveContact } from '#services/contact_service'
 import NumberHelper from '#services/number_service'
+import { getProfilePicture } from '#services/whatsapp_service'
 
 export default class PasiensController {
   async index({ view, request }: HttpContext) {
@@ -27,18 +27,21 @@ export default class PasiensController {
           'tanggal_lahir',
           'jenis_kelamin',
           'jenisPenyakitId',
-          'no_hp',
           'alamat',
           'golongan_darah'
         )
         .preload('jenisPenyakit', (query) => {
           query.select('id', 'nama', 'deskripsi')
+        }).preload('contact', (query) => {
+          query.select('id', 'pasien_id', 'wa_id', 'name', 'profile_picture')
         })
         .orderBy('created_at', 'desc')
         .paginate(page, limit),
 
       JenisPenyakit.query().select('id', 'nama').orderBy('nama', 'asc'),
     ])
+
+    console.log('data pasien:', pasienData)
 
     const helpers = {
       calculateAge: (birthDate: string | null): number => {
@@ -65,6 +68,8 @@ export default class PasiensController {
       },
     }
 
+    console.log('data pasien:', pasienData)
+
     return view.render('pasien/data-pasien', {
       pasien: pasienData,
       jenisPenyakits,
@@ -72,23 +77,21 @@ export default class PasiensController {
     })
   }
 
-  async store({ request, response, session }: HttpContext) {
+  async store({ request, response }: HttpContext) {
     try {
       const data = request.only([
         'nik',
         'jenisPenyakitId',
         'tempat',
         'tanggal_lahir',
-        'no_hp',
         'alamat',
         'jenis_kelamin',
         'golongan_darah',
+        'no_hp',
       ]) as Record<string, any>
 
       const existingPatient = await Pasien.query().where('nik', data.nik).first()
       if (existingPatient) {
-        // session.flash({ error: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.' })
-        // return response.redirect().back()
         return response.json({
           success: false,
           message: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.',
@@ -102,36 +105,52 @@ export default class PasiensController {
         data.uuid = uuidv4()
 
         const jenisPenyakit = await JenisPenyakit.find(data.jenisPenyakitId)
-        if (!jenisPenyakit) {
-          throw new Error('Invalid jenis penyakit selected')
-        }
+        if (!jenisPenyakit) throw new Error('Invalid jenis penyakit selected')
 
         const validGolonganDarah = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-']
         if (data.golongan_darah && !validGolonganDarah.includes(data.golongan_darah)) {
           throw new Error('Golongan darah tidak valid')
         }
 
-        saveContact(data.no_hp, data.name)
+        const pasien = await Pasien.create(data, { client: trx })
 
-        await Pasien.create(data, { client: trx })
+        // Buat contact baru jika no_hp disediakan
+        const noHp = request.input('no_hp')
+        if (noHp) {
+          let profilePicture;
+          const waId = NumberHelper(noHp) + '@s.whatsapp.net'
+          try {
+            profilePicture = await getProfilePicture(waId)
+          } catch (error) {
+            profilePicture = 'images/users/user.png'
+          }
+
+          await Contact.create({
+            pasienId: pasien.uuid,
+            waId,
+            name: data.name,
+            username: data.name,
+            profilePicture
+          }, { client: trx })
+        }
       })
 
-      // session.flash({ success: 'Data pasien berhasil ditambahkan' })
-      // return response.redirect().toRoute('pasien.index')
+      const path = request.url()
+
       return response.json({
         success: true,
         message: 'Data pasien berhasil ditambahkan',
+        redirectUrl: path,
       })
     } catch (error) {
       console.error('Error storing patient:', error)
-      // session.flash({ error: 'Gagal menambahkan data pasien. Silakan coba lagi.' })
-      // return response.redirect().back()
       return response.json({
         success: false,
         message: 'Gagal menambahkan data pasien. Silakan coba lagi.',
       })
     }
   }
+
 
   async search({ request, response }: HttpContext) {
     const searchQuery = request.input('q', '').trim()
@@ -191,6 +210,7 @@ export default class PasiensController {
         .preload('jenisPenyakit', (query) => {
           query.select('id', 'nama', 'deskripsi')
         })
+        .preload('contact')
         .preload('kunjungans', (query) => {
           query.preload('obatPasiens', (obatQuery) => {
             obatQuery.preload('obat')
@@ -262,41 +282,57 @@ export default class PasiensController {
     }
   }
 
-  async update({ params, request, response, session }: HttpContext) {
+  async update({ params, request, response }: HttpContext) {
     try {
       const pasien = await Pasien.findByOrFail('uuid', params.uuid)
-      const kontakPasien = NumberHelper(pasien.no_hp) +'@s.whatsapp.net'
-
-      const contact = await Contact.findBy('wa_id', kontakPasien)
-
-
-      console.log('Found patient:', pasien.uuid, NumberHelper(pasien.no_hp), contact?.waId, kontakPasien)
 
       const data = request.only([
         'nik',
         'jenisPenyakitId',
         'tempat',
         'tanggal_lahir',
-        'no_hp',
         'alamat',
         'jenis_kelamin',
         'golongan_darah',
+        'no_hp',
       ]) as Record<string, any>
 
-      console.log(kontakPasien !== contact?.waId)
+      const contact = await Contact.findBy('pasien_id', pasien.uuid)
 
-      if (kontakPasien !== contact?.waId) {
-        contact?.merge({
-          waId: data.no_hp,
-          name: pasien.name
-        }).save()
-      } else {
-        contact?.merge({
-          name: pasien.name
-        }).save()
+      const newNoHp = data.no_hp || ''
+      const newWaId = NumberHelper(newNoHp) + '@s.whatsapp.net'
+
+      const firstName = request.input('first_name', '')
+      const lastName = request.input('last_name', '')
+      data.name = `${firstName} ${lastName}`.trim()
+
+      if (!contact && newNoHp) {
+        let profilePicture
+        try {
+          profilePicture = await getProfilePicture(newWaId)
+        } catch (error) {
+          console.error('Gagal mengambil foto profil:', error.message)
+          profilePicture = 'images/users/user.png'
+        }
+
+        await Contact.create({
+          pasienId: pasien.uuid,
+          waId: newWaId,
+          name: data.name,
+          username: data.name,
+          profilePicture,
+        })
+      } else if (contact) {
+        const contactNeedsUpdate = contact.waId !== newWaId || contact.name !== data.name
+        if (contactNeedsUpdate) {
+          contact.merge({
+            waId: newWaId,
+            name: data.name,
+            username: data.name, // kalau mau update username juga
+          })
+          await contact.save()
+        }
       }
-
-      console.log('Update data received:', data)
 
       if (data.nik !== pasien.nik) {
         const existingPatient = await Pasien.query()
@@ -304,76 +340,42 @@ export default class PasiensController {
           .whereNot('id', pasien.id)
           .first()
         if (existingPatient) {
-          console.error('NIK already registered:', data.nik)
-
           return response.json({
             success: false,
-            message: 'NIK sudah terdaftar dalam sistem. Silakan gunakan NIK yang lain.',
+            message: 'NIK sudah terdaftar dalam sistem.',
           })
         }
       }
 
-      const firstName = request.input('first_name', '')
-      const lastName = request.input('last_name', '')
-      data.name = `${firstName} ${lastName}`.trim()
-      console.log('Name constructed:', data.name)
-
       const jenisPenyakit = await JenisPenyakit.find(data.jenisPenyakitId)
       if (!jenisPenyakit) {
-        console.error('Invalid jenis penyakit selected:', data.jenisPenyakitId)
         return response.json({
           success: false,
-          message: 'Jenis penyakit tidak valid'
+          message: 'Jenis penyakit tidak valid',
         })
       }
 
       const validGolonganDarah = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-']
       if (data.golongan_darah && !validGolonganDarah.includes(data.golongan_darah)) {
-        console.error('Invalid golongan darah:', data.golongan_darah)
-        // session.flash({ error: 'Golongan darah tidak valid' })
-        // return response.redirect().back()
         return response.json({
           success: false,
-          message: 'Golongan darah tidak valid'
-        })
-
-      }
-
-      try {
-        await pasien.merge(data).save()
-        console.log('Patient updated successfully')
-
-        return response.json({
-          success: true,
-          message: 'Data pasien berhasil diperbarui',
-          redirectUrl: `/pasien/${pasien.uuid}`,
-        })
-      } catch (saveError) {
-        console.error('Error saving patient:', saveError)
-        if (saveError instanceof Error) {
-          console.error('Error message:', saveError.message)
-          console.error('Error stack:', saveError.stack)
-        }
-
-        return response.json({
-          success: false,
-          message:
-            'Gagal menyimpan data pasien. Detail: ' +
-            (saveError instanceof Error ? saveError.message : 'Unknown error'),
+          message: 'Golongan darah tidak valid',
         })
       }
+
+      await pasien.merge(data).save()
+
+      return response.json({
+        success: true,
+        message: 'Data pasien berhasil diperbarui',
+        redirectUrl: `/pasien/${pasien.uuid}`,
+      })
     } catch (error) {
-      console.error('Error in update function:', error)
-      if (error instanceof Error) {
-        console.error('Error message:', error.message)
-        console.error('Error stack:', error.stack)
-      }
-
+      console.error('Error saat update data pasien:', error.message)
       return response.json({
         success: false,
         message: 'Gagal memperbarui data pasien. Silakan coba lagi.',
       })
-
     }
   }
 

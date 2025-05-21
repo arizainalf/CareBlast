@@ -89,6 +89,7 @@ export default class KunjungansController {
           obatId,
           frekuensi: 1,
           waktuKonsumsi: JSON.stringify(['08:00']),
+          batasWaktu: kunjunganBerikutnya,
           keteranganWaktu: 'Sesudah makan',
         }))
         await ObatPasien.createMany(obatPasienData)
@@ -100,14 +101,19 @@ export default class KunjungansController {
           obatId: undefined,
           frekuensi: 1,
           waktuKonsumsi: JSON.stringify(['08:00']),
+          batasWaktu: kunjunganBerikutnya,
           keteranganWaktu: 'Sesudah makan',
         })
       }
 
+      console.log('Kunjungan berhasil ditambahkan:', kunjungan)
+
       return response.json({
         success: true,
         message: 'Data kunjungan berhasil ditambahkan',
+        redirectUrl: `/data-kunjungan`,
       })
+      
     } catch (error) {
       console.error('Error menambahkan kunjungan:', error)
       return response
@@ -119,7 +125,6 @@ export default class KunjungansController {
   async show({ view, params }: HttpContext) {
     try {
       const { uuid } = params
-
       const kunjungan = await Kunjungan.query()
         .where('uuid', uuid)
         .preload('pasien')
@@ -132,7 +137,6 @@ export default class KunjungansController {
         .firstOrFail()
 
       const dokters = await Dokter.query().where('status', true).preload('spesialist')
-
       const allKunjunganPasien = await Kunjungan.query()
         .where('pasienId', kunjungan.pasienId)
         .orderBy('tanggalKunjungan', 'desc')

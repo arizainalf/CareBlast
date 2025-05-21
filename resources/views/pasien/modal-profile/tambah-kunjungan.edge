@@ -5,9 +5,8 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <form id="form-kunjungan">
+      <form id="form-kunjungan" method="POST">
         {{ csrfField() }}
-
         <div class="row mb-2">
           <div class="col-sm-6">
             <input type="hidden" name="id" id="pasien_id" value="{{pasien.uuid}}">

@@ -26,7 +26,7 @@
       @each( (dokter, index) in dokters)
       <tr>
         <th>{{ index + 1 }}</th>
-        <td>{{ dokter.nama }}.{{ dokter.spesialist.gelar }}</td>
+        <td>dr. {{ dokter.nama }}, {{ dokter.spesialist.gelar }}</td>
         <td class="color-primary">{{ dokter.nip }}</td>
         <td>{{ dokter.noWhatsapp }}</td>
         <td>{{ dokter.spesialist.nama }}</td>
@@ -91,7 +91,10 @@
 
           </div>
           <div class="mb-2">
-            <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Lengkap" required>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">dr. </span>
+              <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama Lengkap" required>
+            </div>
           </div>
           <div class="mb-2">
             <input type="text" class="form-control" name="nip" id="nip" placeholder="NIP" required>

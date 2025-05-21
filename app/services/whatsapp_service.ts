@@ -3,9 +3,9 @@ import { makeWASocket, useMultiFileAuthState, Browsers } from 'baileys'
 import fs from 'node:fs'
 import qrImage from 'qr-image'
 import { Boom } from '@hapi/boom'
-import { NumberHelper } from '#services/number_service'
+import { formatWhatsappNumber, NumberHelper } from '#services/number_service'
 import Contact from '#models/contact'
-import path from 'node:path'
+import path, { format } from 'node:path'
 import HasilLab from '#models/hasil_lab'
 import Message from '#models/message'
 import { DateTime } from 'luxon'
@@ -13,6 +13,7 @@ import { saveFile } from '#services/json_service'
 import { saveMessages } from '#services/message_service'
 import { fileURLToPath } from 'node:url'
 import { cuid } from '@adonisjs/core/helpers'
+import { checkContact } from './contact_service.js'
 
 let socket: any
 let sendingFile = false
@@ -52,8 +53,15 @@ export async function connectToWhatsApp() {
     }
 
     console.log('message upsert')
-    await saveMessages(m)
-    saveFile('./messages.json', m, 'messages')
+
+    const check = checkContact(m.key.remoteJid)
+    if (!check) {
+      console.log('messages.upsert : No contact found')
+      return
+    } else {
+      await saveMessages(m)
+      saveFile('./messages.json', m, 'messages')
+    }
   })
 
   if (!sentFileMessages) {
@@ -74,8 +82,14 @@ export async function connectToWhatsApp() {
     }
 
     console.log('message update')
-    const save = await saveMessages(m)
-    console.log('message update',save)
+    const check = checkContact(m.key.remoteJid)
+    if (!check) {
+      console.log('messages.update : No contact found')
+      return
+    } else {
+      const save = await saveMessages(m)
+      console.log('message update', save)
+    }
     saveFile('./messages.json', m, 'messages')
   })
 
@@ -230,7 +244,7 @@ export async function sendBulkMessage(numbers: string[], message: string) {
     }
 
     // Tunggu sebelum kirim ke nomor berikutnya
-    await delay(2500)
+    await delay(3000)
   }
 
   return results
@@ -238,7 +252,7 @@ export async function sendBulkMessage(numbers: string[], message: string) {
 
 export async function sendFile(jid: string, file: any, caption: string, name: string) {
   const NumberFormatted = NumberHelper(jid)
-  const no = `${NumberFormatted}@s.whatsapp.net`
+  const no = formatWhatsappNumber(NumberFormatted)
   console.log('function sendFile Nomor:', no)
 
   if (!socket) {
@@ -247,24 +261,10 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
 
   const isRegistered = await isRegisteredWhatsapp(jid)
   if (!isRegistered.isRegistered) {
-    throw new Error('isRegistered Nomor tidak terdaftar di WhatsApp')
+    throw new Error('Nomor tidak terdaftar di WhatsApp')
   }
   if (!file) {
-    throw new Error('isRegistered No file uploaded')
-  }
-
-  // Check if contact exists and create if needed
-  const existingContact = await Contact.findBy('wa_id', no)
-
-  if (!existingContact) {
-    const pp = await getProfilePicture(no)
-
-    await Contact.create({
-      waId: no,
-      username: isRegistered.username ?? '',
-      name,
-      profilePicture: pp,
-    })
+    throw new Error('Tidak ada file yang di upload')
   }
 
   // Sanitize filename: replace spaces with underscores
@@ -292,8 +292,7 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
   const fileBuffer = fs.readFileSync(uploadPath)
 
   try {
-    // Set a flag to indicate this is a file being sent
-    // We'll use this flag in the messages.update event handler
+
     sendingFile = true
 
     console.log(no)
@@ -325,7 +324,7 @@ export async function sendFile(jid: string, file: any, caption: string, name: st
       timestamp: DateTime.now(),
       isHasilLab: true,
       fileName: sanitizedFileName, // Store sanitized filename
-      filePath: uploadPath,
+      filePath: `storage/uploads/${sanitizedFileName}`,
     })
 
     // After sending, clear the flag

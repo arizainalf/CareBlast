@@ -21,7 +21,11 @@
         </div>
         <div class="col-sm-6 mb-3">
           <h6 class="text-muted mb-1">No. Telepon</h6>
-          <h5>{{ pasien.no_hp }}</h5>
+          @if(pasien.contact)
+          <p>{{ formatPhoneNumber(pasien.contact.waId) }}</p>
+          @else
+          <p>Tidak ada No Telp</p>
+          @endif
         </div>
         <div class="col-sm-6 mb-3">
           <h6 class="text-muted mb-1">Golongan Darah</h6>

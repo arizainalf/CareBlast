@@ -67,7 +67,7 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label">No. HP</label>
-            <input type="text" class="form-control" name="no_hp" required value="{{ pasien.no_hp }}">
+            <input type="text" class="form-control" name="no_hp" required value="{{ formatPhoneNumber(pasien.contact.waId) }}">
           </div>
         </div>
         <div class="mb-3">

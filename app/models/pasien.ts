@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import { v4 as uuidv4 } from 'uuid'
 import JenisPenyakit from '#models/jenis_penyakit'
-import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
-import ObatPasien from './obat_pasien.js'
+import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+import ObatPasien from '#models/obat_pasien'
 import Kunjungan from '#models/kunjungan'
+import Contact from '#models/contact'
 
 export default class Pasien extends BaseModel {
   @column({ isPrimary: true })
@@ -54,6 +55,11 @@ export default class Pasien extends BaseModel {
 
   @hasMany(() => ObatPasien)
   declare obatPasiens: HasMany<typeof ObatPasien>
+
+  @hasOne(() => Contact, {
+    localKey: 'uuid' // Kunci lokal yang digunakan untuk relasi
+  })
+  declare contact: HasOne<typeof Contact>
 
   public static async generateUuid(pasien: Pasien) {
     pasien.uuid = uuidv4()

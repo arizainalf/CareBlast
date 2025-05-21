@@ -7,7 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('uuid').notNullable().unique()
-      table.index(['name', 'tempat', 'no_hp'])
+      table.index(['name', 'tempat'])
       table.string('nik').unique()
       table
         .integer('jenis_penyakit_id')
@@ -20,7 +20,6 @@ export default class extends BaseSchema {
       table.enum('jenis_kelamin', ['Laki-laki', 'Perempuan'])
       table.string('tempat')
       table.date('tanggal_lahir')
-      table.string('no_hp')
       table.string('alamat')
       table.enum('golongan_darah', ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-']).nullable()
       table.enum('role', ['Pasien']).defaultTo('Pasien')

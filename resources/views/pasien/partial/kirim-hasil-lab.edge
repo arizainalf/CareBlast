@@ -14,7 +14,7 @@
         </div>
         <div class="mb-3 col-md-6">
           <label class="form-label">No Whatsapp Aktif</label>
-          <input type="text" inputmode="numeric" name="nomor" placeholder="08586166****" class="form-control" value="{{ pasien.no_hp }}">
+          <input type="text" inputmode="numeric" name="nomor" placeholder="08586166****" class="form-control" value="{{ formatPhoneNumber(pasien.contact.waId) }}">
         </div>
         <label class="form-label">Kirim hasil lab</label>
         <div class="input-group mb-3">

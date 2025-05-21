@@ -100,10 +100,6 @@
       return date.toLocaleString('id-ID');
     }
 
-    function formatPhoneNumber(phone) {
-      return phone.replace(/(\d{4})(\d{4,})(\d+)/, '$1-$2-$3');
-    }
-
     function renderPagination(pagination) {
       let html = '';
       if (pagination.total_pages <= 1) return $('#pagination').html('');
@@ -168,18 +164,18 @@
 
         const previewContainer = document.getElementById('previewFile');
         previewContainer.innerHTML = '';
-        const filePath = 'http://localhost:3333/storage/uploads/';
-        const fileUrl = filePath + hasil.fileName;
+        const baseUrl = `{{ baseUrl() }}`
+        const filePath = `${baseUrl}/storage/uploads/${hasil.fileName}`
 
         if (hasil.fileName.endsWith('.pdf')) {
           const iframe = document.createElement('iframe');
-          iframe.src = fileUrl;
+          iframe.src = filePath;
           iframe.width = '100%';
           iframe.height = '400px';
           previewContainer.appendChild(iframe);
         } else {
           const img = document.createElement('img');
-          img.src = fileUrl;
+          img.src = filePath;
           img.alt = 'Hasil Lab';
           img.className = 'img-fluid w-100';
           img.style.maxHeight = '400px';

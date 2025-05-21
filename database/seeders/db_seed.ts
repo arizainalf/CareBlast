@@ -6,6 +6,8 @@ import Spesialist from '#models/spesialist'
 import Dokter from '#models/dokter'
 import { v4 as uuid } from 'uuid'
 import Pasien from '#models/pasien'
+import { DateTime } from 'luxon'
+import Contact from '#models/contact'
 
 export default class extends BaseSeeder {
 
@@ -151,15 +153,26 @@ export default class extends BaseSeeder {
       }))
     )
 
-    await Pasien.create(
+    const pasien = await Pasien.create(
       {
         uuid: uuid(),
         name: 'Jodi Maulana',
         nik: '123445667890',
         jenisPenyakitId: 1,
         tempat: 'Tasikmalaya',
+        tanggal_lahir: DateTime.fromISO('1990-01-01'),
+        alamat: 'Jl. Raya No. 123, Tasikmalaya',
+        golongan_darah: 'A+',
+        jenis_kelamin: 'Laki-laki',
+
       }
     )
 
+    await Contact.create({
+      pasien_id: pasien.uuid,
+      name: 'Jodi Maulana',
+      username: 'jodimaulana',
+      waId: '6281930865458@s.whatsapp',
+    })
   }
 }
