@@ -8,7 +8,7 @@ function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-cron.schedule('0 * * * *', async () => {
+cron.schedule('20 * * * *', async () => {
     console.log('Cron job started')
     try {
         const obatPasiens = await ObatPasien.query().preload('pasien').preload('obat')
@@ -42,13 +42,21 @@ cron.schedule('0 * * * *', async () => {
 
 
         for (const obat of obatPasiens) {
+            console.log('Obat Pasien', obat.id, 'ditemukan')
             if (!Array.isArray(obat.waktuKonsumsi)) continue
 
             if (obat.status == true) {
+                console.log('Obat Pasien', obat.id, 'aktif')
+                console.log('Waktu Konsumsi', obat.waktuKonsumsi)
+                console.log(now)
                 for (const waktu of obat.waktuKonsumsi) {
                     const jk = obat.pasien.jenis_kelamin
                     const panggilan = jk == 'Laki-laki' ? 'Pak' : 'Bu'
+                    console.log('apakah waktu sama dengan now', waktu === now)
+                    console.log(' ini waktu ',waktu)
+                    console.log(' ini now ',now)
                     if (waktu === now) {
+                        console.log('Mengirim pesan ke', obat.pasien.no_hp)
                         try {
                             const response = await sendMsg(obat.pasien.no_hp, `${panggilan} ${obat.pasien.name} saatnya minum obat : ${obat.obat.nama}. Minum obat ini ${obat.keteranganWaktu}.`)
                             console.log(`scheduler kirim pesan ke ${obat.pasien.no_hp}:`, response)
@@ -74,7 +82,9 @@ cron.schedule('0 * * * *', async () => {
 
 function getCurrentTime() {
     const now = new Date()
-    return `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`
+    let hours = now.getHours()
+    let hoursStr = hours < 10 ? `0${hours}` : `${hours}`
+    return `${hoursStr}:${String(now.getMinutes()).padStart(2, '0')}`
 }
 
 function getTomorrowDate() {

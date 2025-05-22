@@ -1,6 +1,6 @@
 import Dokter from '#models/dokter'
 import Spesialist from '#models/spesialist'
-import type { HttpContext } from '@adonisjs/core/http'
+import { Redirect, type HttpContext } from '@adonisjs/core/http'
 import { join } from 'path'
 import { createId } from '@paralleldrive/cuid2'
 import fs from 'node:fs'
@@ -59,14 +59,14 @@ export default class DokterSpesialistsController {
         foto: fotoName,
       })
 
-      return response.json({ success: true, message: 'Dokter berhasil disimpan!', dokter })
+      return response.json({ success: true, message: 'Dokter berhasil disimpan!', dokter , redirectUrl: '/dokter' })
     }
 
     // untuk spesialist
     if (request.input('jenis') === 'spesialist') {
       const { nama, gelar } = request.all()
       const spesialist = await Spesialist.create({ nama, gelar })
-      return response.json({ success: true, message: 'Spesialis berhasil disimpan!', spesialist })
+      return response.json({ success: true, message: 'Spesialis berhasil disimpan!', spesialist , redirectUrl: '/dokter' })
     }
   }
 
@@ -94,7 +94,7 @@ export default class DokterSpesialistsController {
       const data = request.only(['nama', 'gelar'])
       spesialist.merge(data)
       await spesialist.save()
-      return response.json({ success: true, message: 'Spesialis berhasil diperbarui!', spesialist })
+      return response.json({ success: true, message: 'Spesialis berhasil diperbarui!', spesialist, redirectUrl: '/dokter' })
 
     } else if (params.id_dokter) {
       // Update dokter dengan pengecekan foto baru
@@ -133,7 +133,7 @@ export default class DokterSpesialistsController {
       dokter.merge(data)
       await dokter.save()
 
-      return response.json({ success: true, message: 'Dokter berhasil diperbarui!', dokter })
+      return response.json({ success: true, message: 'Dokter berhasil diperbarui!', dokter, redirectUrl: '/dokter' })
     }
   }
 
@@ -153,11 +153,11 @@ export default class DokterSpesialistsController {
     if (params.id_spesialist) {
       const spesialist = await Spesialist.findOrFail(params.id_spesialist)
       await spesialist.delete()
-      return response.json({ success: true, message: 'Pengguna berhasil dihapus!', spesialist });
+      return response.json({ success: true, message: 'Pengguna berhasil dihapus!', spesialist, redirectUrl: '/dokter' });
     } else if (params.id_dokter) {
       const dokter = await Dokter.findOrFail(params.id_dokter)
       await dokter.delete()
-      return response.json({ success: true, message: 'Pengguna berhasil dihapus!', dokter });
+      return response.json({ success: true, message: 'Pengguna berhasil dihapus!', dokter, redirectUrl: '/dokter' });
     }
   }
 }

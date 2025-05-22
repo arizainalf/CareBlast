@@ -77,11 +77,18 @@
         const doseElement = detailModal.querySelector('.modal-medication-dose');
         const frequencyElement = detailModal.querySelector('.modal-medication-frequency');
         const scheduleElement = detailModal.querySelector('.modal-medication-schedule');
+        const batasElement = detailModal.querySelector('.modal-medication-batas');
+        const statusElement = detailModal.querySelector('.modal-medication-status');
 
         if (nameElement) nameElement.textContent = data.obat.nama || 'N/A';
         if (categoryBadge) categoryBadge.textContent = data.keteranganWaktu || 'N/A';
         if (doseElement) doseElement.textContent = data.obat.dosis ? `${data.obat.dosis} mg` : 'N/A';
         if (frequencyElement) frequencyElement.textContent = data.frekuensi ? `${data.frekuensi}x sehari` : 'N/A';
+        if (statusElement) statusElement.textContent = data.status ? 'Aktif' : 'Tidak Aktif';
+        if (batasElement) batasElement.textContent = data.batasWaktu ? formatTimestamp(data.batasWaktu) : '';
+
+        console.log(data.batasWaktu, data.status, scheduleElement, statusElement, batasElement);
+
 
         if (scheduleElement) {
           scheduleElement.innerHTML = '';
@@ -97,12 +104,39 @@
                 timeTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
                 timeTag.innerHTML = `<i class="far fa-clock me-2"></i>${waktu}`;
 
-                console.log('Menambahkan elemen waktu:', waktu);
+                console.log('Menambahkan elemen waktu:', data);
                 timeCol.appendChild(timeTag);
                 scheduleElement.appendChild(timeCol);
               }
+
             });
+            if (data.batasWaktu) {
+              const batasWaktuCol = document.createElement('div');
+              batasWaktuCol.className = 'col-auto mb-2';
+
+              const batasWaktuTag = document.createElement('div');
+              batasWaktuTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
+              batasWaktuTag.innerHTML = `<i class="far fa-calendar me-2"></i>${formatTimestamp(data.batasWaktu)}`;
+
+              console.log('Menambahkan elemen batas waktu:', data.batasWaktu);
+              batasWaktuCol.appendChild(batasWaktuTag);
+              scheduleElement.appendChild(batasWaktuCol);
+            }
+            if (data.status) {
+              const batasWaktuCol = document.createElement('div');
+              batasWaktuCol.className = 'col-auto mb-2';
+
+              const batasWaktuTag = document.createElement('div');
+              batasWaktuTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
+              batasWaktuTag.innerHTML = `<i class="far fa-${data.status == true ? 'check' : 'times'}-circle me-2"></i>${data.status == true ? 'Aktif' : 'Tidak Aktif'}`;
+
+              console.log('Menambahkan elemen batas waktu:', data.batasWaktu);
+              batasWaktuCol.appendChild(batasWaktuTag);
+              scheduleElement.appendChild(batasWaktuCol);
+            }
           }
+
+
 
           if (scheduleElement.children.length === 0) {
             console.log('Tidak ada waktu yang valid, menambahkan placeholder');

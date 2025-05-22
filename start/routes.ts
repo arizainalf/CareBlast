@@ -14,6 +14,7 @@ const ObatPenyakitController = () => import('#controllers/obat_penyakits_control
 const PasiensController = () => import('#controllers/pasiens_controller')
 const LaporansController = () => import('#controllers/laporans_controller')
 const DokterSpesialistsController = () => import('#controllers/dokter_spesialists_controller')
+const PasswordResetsController = () => import('#controllers/password_resets_controller')
 
 router
   .get('/login', async ({ view }) => {
@@ -26,6 +27,10 @@ router.post('/login', [SessionController, 'store']).as('loginPost')
 router.get('/forgot', async ({ view }) => {
   return view.render('auth/forgot-pw')
 })
+
+router.post('/forgot', [PasswordResetsController, 'forgot']).as('forgotPost')
+router.get('/reset-password/:uuid', [PasswordResetsController, 'show']).as('reset-password')
+router.post('/reset-password', [PasswordResetsController, 'resetPassword']).as('reset-password.post')
 
 // Route Patients
 router

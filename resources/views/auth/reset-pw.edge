@@ -1,0 +1,82 @@
+@layout.auth()
+@slot('auth')
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <!-- Reset Password Form -->
+        <div class="card p-4" id="resetPasswordForm">
+            <div class="card-body">
+                <div class="reset-icon">
+                    <i class="fas fa-lock-open text-white fa-2x"></i>
+                </div>
+                <h4 class="text-center mb-4 fw-bold">Reset Password</h4>
+                <p class="text-muted text-center mb-4">Create a new strong password</p>
+
+                <form onsubmit="handleResetPassword(event)">
+                    <div class="mb-4">
+                        <label class="form-label text-muted">New Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-lock text-muted"></i>
+                            </span>
+                            <input type="password" name="password" class="form-control border-start-0" placeholder="Enter new password"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-muted">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-lock text-muted"></i>
+                            </span>
+                            <input type="password" name="password_confirmation" class="form-control border-start-0"
+                                placeholder="Confirm new password" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save me-2"></i>Reset Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-4"></div>
+</div>
+@end
+
+@slot('script')
+<script>
+    $(document).ready(function () {
+        const pathSegments = window.location.pathname.split('/')
+        const token = pathSegments[pathSegments.length - 1]
+
+        $('#resetPasswordForm').on('submit', function (event) {
+            event.preventDefault();
+            // Handle the reset password logic here
+            const newPassword = $(this).find('input[name="password"]').val();
+            const confirmPassword = $(this).find('input[name="password_confirmation"]').val();
+
+            if (newPassword !== confirmPassword) {
+                showSwal('error', 'Passwords do not match', 'Please make sure both passwords are the same.');
+                return;
+            }
+
+            const url = '/reset-password/' + token;
+            const method = 'POST';
+            const data = {
+                new_password: newPassword,
+                confirm_password: confirmPassword,
+                reset_token: token,
+                _token: '{{ csrf_token() }}'
+            };
+
+            ajaxRequest(url, method, data)
+        });
+    });
+
+</script>
+@end
+
+@end

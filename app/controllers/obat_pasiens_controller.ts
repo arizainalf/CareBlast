@@ -4,7 +4,6 @@ import Obat from '#models/obat'
 import { v4 as uuidv4 } from 'uuid'
 import Pasien from '#models/pasien'
 import Kunjungan from '#models/kunjungan'
-import { log } from 'console'
 
 export default class ObatPasiensController {
   async store(ctx: HttpContext) {
@@ -34,7 +33,10 @@ export default class ObatPasiensController {
       if (!actualObatName) {
         return response
           .status(400)
-          .json({ success: false, message: 'Nama obat tidak boleh kosong' })
+          .json({
+            success: false,
+            message: 'Nama obat tidak boleh kosong'
+          })
       }
 
       const obat = await Obat.firstOrCreate(
@@ -54,7 +56,9 @@ export default class ObatPasiensController {
         })
         selectedKunjunganId = newKunjungan.id
       }
-      console.log(kunjunganId, keteranganWaktu)
+      
+      const kunjungan = await Kunjungan.query().where('id', selectedKunjunganId)
+        .where('pasienId', pasien.id)
 
       const obatPasien = await ObatPasien.create({
         uuid: uuidv4(),
@@ -64,11 +68,16 @@ export default class ObatPasiensController {
         frekuensi: 1,
         waktuKonsumsi: JSON.stringify(['08:00']),
         keteranganWaktu,
-        batasWaktu,
+        batasWaktu: batasWaktu? batasWaktu : kunjungan[0]?.kunjunganBerikutnya?.toJSDate?.() ?? kunjungan[0]?.kunjunganBerikutnya ?? null,
         status
       })
 
-      return response.json({ success: true, message: 'Obat berhasil ditambahkan', data: obatPasien, redirectUrl: `/pasien/${pasienUuid}` })
+      return response.json({
+        success: true,
+        message: 'Obat berhasil ditambahkan',
+        data: obatPasien,
+        redirectUrl: `/pasien/${pasienUuid}`
+      })
     } catch (error) {
       console.error('Error adding medication:', error)
       return response.status(500).json({
@@ -104,7 +113,11 @@ export default class ObatPasiensController {
       const referer = request.headers().referer || `/pasien/${params.pasienUuid}`
       console.log(updated, batasWaktu, status)
 
-      return response.json({ success: true, message: 'Jadwal obat berhasil diperbarui', redirectUrl: referer })
+      return response.json({
+        success: true,
+        message: 'Jadwal obat berhasil diperbarui',
+        redirectUrl: referer
+      })
 
     } catch (error) {
       console.error('Error updating medication:', error)
@@ -127,13 +140,21 @@ export default class ObatPasiensController {
       await obatPasien.delete()
 
       return request.accepts(['html', 'json']) === 'json'
-        ? response.json({ success: true, message: 'Obat berhasil dihapus' })
+        ? response.json({
+          success: true,
+          message: 'Obat berhasil dihapus',
+          redirectUrl: `/pasien/${params.pasienUuid}`
+        })
         : response.redirect().back()
     } catch (error) {
       console.error('Error deleting medication:', error)
       return response
         .status(500)
-        .json({ success: false, message: 'Error menghapus obat', error: error.message })
+        .json({
+          success: false,
+          message: 'Error menghapus obat',
+          error: error.message
+        })
     }
   }
 
@@ -155,7 +176,11 @@ export default class ObatPasiensController {
           .first()
 
         if (!latestKunjungan) {
-          return response.status(404).json({ success: false, message: 'Tidak ditemukan kunjungan' })
+          return response.status(404).json({
+            success: false,
+            message: 'Tidak ditemukan kunjungan',
+            redirectUrl: `/pasien/${pasienUuid}`,
+          })
         }
         kunjunganId = latestKunjungan.id
       }
@@ -168,7 +193,10 @@ export default class ObatPasiensController {
       if (!deleted) {
         return response
           .status(404)
-          .json({ success: false, message: 'Tidak ada data obat untuk kunjungan ini' })
+          .json({
+            success: false,
+            message: 'Tidak ada data obat untuk kunjungan ini'
+          })
       }
 
       return response.json({
@@ -238,9 +266,11 @@ export default class ObatPasiensController {
           nama: obatPasien.obat.nama,
           dosis: obatPasien.obat.dosis,
         },
+        status: obatPasien.status,
         frekuensi: obatPasien.frekuensi,
         keteranganWaktu: obatPasien.keteranganWaktu,
         waktuKonsumsi: waktuKonsumsi,
+        batasWaktu: obatPasien.batasWaktu,
         isBeforeMeal: obatPasien.keteranganWaktu.toLowerCase().includes('sebelum'),
       }
 

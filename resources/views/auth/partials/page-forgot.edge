@@ -2,26 +2,35 @@
   <div class="reset-icon">
     <i class="fas fa-key text-white fa-2x"></i>
   </div>
-  <h4 class="text-center mb-4 fw-bold">Forgot Password</h4>
-  <p class="text-muted text-center mb-4">Enter your email address and we'll send you a verification code</p>
+  <h4 class="text-center mb-4 fw-bold">Lupa password</h4>
+  <p class="text-muted text-center mb-4">Masukan alamat email dan no whatsapp untuk reset password</p>
 
-  <form onsubmit="showVerificationForm(event)">
+  <form id="forgotPasswordForm">
     <div class="mb-4">
       <label class="form-label text-muted">Email</label>
       <div class="input-group">
         <span class="input-group-text bg-light border-end-0">
           <i class="fas fa-envelope text-muted"></i>
         </span>
-        <input type="email" class="form-control border-start-0" placeholder="Enter your email" required>
+        <input type="email" name="email" class="form-control border-start-0" placeholder="Masukan alamat email" required>
+      </div>
+    </div>
+    <div class="mb-4">
+      <label class="form-label text-muted">No Whatsapp</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light border-end-0">
+          <i class="fas fa-envelope text-muted"></i>
+        </span>
+        <input type="text" name="no_hp" class="form-control border-start-0" placeholder="Masukan nomor whatsapp" required>
       </div>
     </div>
 
     <button type="submit" class="btn btn-primary w-100 mb-3">
-      <i class="fas fa-paper-plane me-2"></i>Send Verification Code
+      <i class="fas fa-paper-plane me-2"></i>Kirim Kode Verifikasi
     </button>
 
     <a href="/login" class="btn btn-secondary w-100">
-      <i class="fas fa-arrow-left me-2"></i>Back to Login
+      <i class="fas fa-arrow-left me-2"></i>Kembali ke Login
     </a>
   </form>
 </div>

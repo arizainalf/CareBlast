@@ -43,19 +43,5 @@
 
       ajaxRequest(url, method, formData)
     });
-
-    $(document).on('submit', '#form-kunjungan', function (e) {
-      e.preventDefault
-
-      const form = $(this);
-      const uuid = $('#pasien_id').val()
-      const url = '/pasien/' + uuid + '/kunjungan'
-      const method = 'POST'
-      const formData = new FormData(this)
-
-      ajaxRequest(url, method, formData)
-    })
-
-
   });
 </script>

@@ -60,7 +60,9 @@ export default class LaporanController {
     const kunjunganSekarangQuery = Kunjungan.query()
     const kunjunganSebelumnyaQuery = Kunjungan.query()
     const pesanSekarangQuery = Message.query().where('from_me', true).where('is_hasil_lab', false)
+    const hasilLabSekarangQuery = Message.query().where('from_me', true).where('is_hasil_lab', true)
     const pesanSebelumnyaQuery = Message.query().where('from_me', true).where('is_hasil_lab', false)
+    const hasilLabSebelumnyaQuery = Message.query().where('from_me', true).where('is_hasil_lab', true)
 
     if (filterBulan && bulanIni && bulanSebelumnya) {
       jenisPenyakitQuery
@@ -87,7 +89,15 @@ export default class LaporanController {
         .whereRaw('EXTRACT(MONTH FROM created_at) = ?', [bulanIni.month])
         .whereRaw('EXTRACT(YEAR FROM created_at) = ?', [bulanIni.year])
 
+      hasilLabSekarangQuery
+        .whereRaw('EXTRACT(MONTH FROM created_at) = ?', [bulanIni.month])
+        .whereRaw('EXTRACT(YEAR FROM created_at) = ?', [bulanIni.year])
+
       pesanSebelumnyaQuery
+        .whereRaw('EXTRACT(MONTH FROM created_at) = ?', [bulanSebelumnya.month])
+        .whereRaw('EXTRACT(YEAR FROM created_at) = ?', [bulanSebelumnya.year])
+
+      hasilLabSebelumnyaQuery
         .whereRaw('EXTRACT(MONTH FROM created_at) = ?', [bulanSebelumnya.month])
         .whereRaw('EXTRACT(YEAR FROM created_at) = ?', [bulanSebelumnya.year])
     } else if (filterTahun) {
@@ -97,7 +107,9 @@ export default class LaporanController {
       kunjunganSekarangQuery.whereRaw('EXTRACT(YEAR FROM created_at) = ?', [tahun!])
       kunjunganSebelumnyaQuery.whereRaw('EXTRACT(YEAR FROM created_at) = ?', [tahunSebelumnya!])
       pesanSekarangQuery.whereRaw('EXTRACT(YEAR FROM created_at) = ?', [tahun!])
+      hasilLabSekarangQuery.whereRaw('EXTRACT(YEAR FROM created_at) = ?', [tahun!])
       pesanSebelumnyaQuery.whereRaw('EXTRACT(YEAR FROM created_at) = ?', [tahunSebelumnya!])
+      hasilLabSebelumnyaQuery.whereRaw('EXTRACT(YEAR FROM created_at) = ?', [tahunSebelumnya!])
     }
 
     const [
@@ -113,6 +125,8 @@ export default class LaporanController {
       totalKunjunganSebelumnya,
       totalPesanTerkirimSekarang,
       totalPesanTerkirimSebelumnya,
+      totalHasilLabTerkirimSekarang,
+      totalHasilLabTerkirimSebelumnya,
     ] = await Promise.all([
       pasienSekarangQuery.clone().preload('jenisPenyakit'),
       pasienSekarangQuery.clone().preload('jenisPenyakit').paginate(pagePasien, perPagePasien),
@@ -126,6 +140,8 @@ export default class LaporanController {
       kunjunganSebelumnyaQuery.count('* as total') || [{ $extras: { total: 0 } }],
       pesanSekarangQuery.count('* as total') || [{ $extras: { total: 0 } }],
       pesanSebelumnyaQuery.count('* as total') || [{ $extras: { total: 0 } }],
+      hasilLabSekarangQuery.count('* as total') || [{ $extras: { total: 0 } }],
+      hasilLabSebelumnyaQuery.count('* as total') || [{ $extras: { total: 0 } }],
     ])
 
     const jumlahPasienSekarang = Number(totalPasienSekarang[0].$extras.total)
@@ -145,6 +161,12 @@ export default class LaporanController {
     const pertumbuhanPesan = jumlahPesanSebelumnya > 0
       ? ((jumlahPesanSekarang - jumlahPesanSebelumnya) / jumlahPesanSebelumnya) * 100
       : jumlahPesanSekarang > 0 ? 100 : 0
+
+    const jumlahHasilLabSekarang = Number(totalHasilLabTerkirimSekarang[0].$extras.total)
+    const jumlahHasilLabSebelumnya = Number(totalHasilLabTerkirimSebelumnya[0].$extras.total)
+    const pertumbuhanHasilLab = jumlahHasilLabSebelumnya > 0
+      ? ((jumlahHasilLabSekarang - jumlahHasilLabSebelumnya) / jumlahHasilLabSebelumnya) * 100
+      : jumlahHasilLabSekarang > 0 ? 100 : 0
 
 
     const jenisPenyakitData = await JenisPenyakit.query()
@@ -176,6 +198,9 @@ export default class LaporanController {
         totalPasienSekarang: Number(totalPasienSekarang[0].$extras.total),
         totalKunjunganSekarang: Number(totalKunjunganSekarang[0].$extras.total),
         totalPesanTerkirimSekarang: Number(totalPesanTerkirimSekarang[0].$extras.total),
+        totalHasilLabTerkirimSekarang: Number(totalHasilLabTerkirimSekarang[0].$extras.total),
+        totalHasilLabTerkirimSebelumnya: Number(totalHasilLabTerkirimSebelumnya[0].$extras.total),
+        pertumbuhanHasilLab: pertumbuhanHasilLab.toFixed(1),
         totalPasienSebelumnya: Number(totalPasienSekarang[0].$extras.total),
         pasienBaruCount: jumlahPasienSekarang,
         pertumbuhanPasien: pertumbuhanPasien.toFixed(1),
@@ -200,6 +225,9 @@ export default class LaporanController {
       dataKunjunganPaginate,
       // dataPasien,
       dataPasienPaginate,
+      totalHasilLabTerkirimSekarang: Number(totalHasilLabTerkirimSekarang[0].$extras.total),
+      totalHasilLabTerkirimSebelumnya: Number(totalHasilLabTerkirimSebelumnya[0].$extras.total),
+      pertumbuhanHasilLab: pertumbuhanHasilLab.toFixed(1),
       totalPasienSekarang: Number(totalPasienSekarang[0].$extras.total),
       totalKunjunganSekarang: Number(totalKunjunganSekarang[0].$extras.total),
       totalPesanTerkirimSekarang: Number(totalPesanTerkirimSekarang[0].$extras.total),
