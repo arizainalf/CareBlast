@@ -1,4 +1,4 @@
-import { HttpContext, Redirect } from '@adonisjs/core/http'
+import { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 // import { createUserValidator } from '#validators/user'
 // import { MultipartFile } from '@adonisjs/core/bodyparser'

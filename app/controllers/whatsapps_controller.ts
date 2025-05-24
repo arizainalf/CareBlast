@@ -1,6 +1,6 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 
-import { getQrCode, logoutWhatsapp, getStatus, sendMsg, sendFile, sendBulkMessage, getProfilePicture } from '#services/whatsapp_service'
+import { getQrCode, logoutWhatsapp, getStatus, sendMsg, sendFile, sendBulkMessage } from '#services/whatsapp_service'
 import { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import Message from '#models/message'
