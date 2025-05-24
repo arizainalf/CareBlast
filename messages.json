@@ -21806,5 +21806,19 @@
         "messageSecret": "LTkHEW4WerfujUXpxR/yGRtfrPaLAjcXskSmGAQqgJw="
       }
     }
+  },
+  {
+    "key": {
+      "remoteJid": "120363318728384033@g.us",
+      "fromMe": false,
+      "id": "2963520095",
+      "participant": "6282333076615@s.whatsapp.net"
+    },
+    "messageTimestamp": "1748083939",
+    "participant": "6282333076615@s.whatsapp.net",
+    "messageStubType": "GROUP_PARTICIPANT_LEAVE",
+    "messageStubParameters": [
+      "6282333076615@s.whatsapp.net"
+    ]
   }
 ]
