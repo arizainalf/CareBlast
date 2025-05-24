@@ -36,6 +36,7 @@ export default class ObatPasiens extends BaseSchema {
         .json('waktu_konsumsi')
         .notNullable()
         .comment('JSON daftar waktu konsumsi, ex: ["08:00", "14:00", "20:00"]')
+      table.json('hari_konsumsi').notNullable()
       table.enum('keterangan_waktu', ['Sebelum makan', 'Sesudah makan']).notNullable()
       table.date('batas_waktu')
       table.boolean('status').defaultTo(true).comment('Status obat aktif atau tidak')

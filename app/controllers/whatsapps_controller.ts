@@ -6,7 +6,6 @@ import { inject } from '@adonisjs/core'
 import Message from '#models/message'
 import Contact from '#models/contact'
 import Pasien from '#models/pasien'
-import drive from '@adonisjs/drive/services/main'
 
 @inject()
 export default class WhatsappsController {
@@ -224,24 +223,6 @@ export default class WhatsappsController {
     }
   }
 
-// public async downloadFile({ response, params }: HttpContext) {
-//   const message = await Message.findOrFail(params.id)
-
-//   const fileName = message.fileName
-
-//     // Cek apakah file ada
-//     const exists = await drive.exists(fileName)
-//     if (!exists) {
-//       return response.status(404).send('File tidak ditemukan')
-//     }
-
-//     // Ambil stream file
-//     const fileStream = await drive.getStream(fileName)
-
-//     // Kirim file sebagai attachment agar browser download
-//     response.header('Content-Disposition', `attachment; filename="${fileName}"`)
-//     return response.stream(fileStream)
-// }
   public async sendMsg({ request, response }: HttpContext) {
     const number = request.input('number')
     const message = request.input('message')

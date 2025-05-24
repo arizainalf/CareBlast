@@ -35,6 +35,13 @@ const loadDataToModal = (url, modalId, callback) => {
     .fail(() => showSwal("error", "Gagal", "Gagal mengambil data!"));
 };
 
+function formatDateToInput(date) {
+  const d = new Date(date);
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${month}-${day}`;
+}
+
 // 💬 SweetAlert Wrapper
 const showSwal = (type, title, message, callback = null, redirectUrl = null, hash = null) => {
   Swal.fire({
@@ -45,18 +52,19 @@ const showSwal = (type, title, message, callback = null, redirectUrl = null, has
     showConfirmButton: true,
   }).then((result) => {
     if (callback && result.isConfirmed) callback();
-    setTimeout(() => (redirectUrl ? window.location.href = redirectUrl : null ), 1000);
+    setTimeout(() => (redirectUrl ? window.location.href = redirectUrl : null), 1000);
   });
 };
 // 🔄 AJAX Request (dengan showSwal & optional callback)
 const ajaxRequest = (url, method, formData = null, callback = null) => {
+  const isFormData = formData instanceof FormData;
+
   $.ajax({
     url: url,
-    enctype: "multipart/form-data",
     type: method,
-    data: formData,
-    processData: false,
-    contentType: false,
+    data: isFormData ? formData : JSON.stringify(formData),
+    processData: !isFormData,
+    contentType: isFormData ? false : "application/json",
     headers: {
       "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
       Accept: "application/json",

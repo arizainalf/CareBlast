@@ -68,6 +68,7 @@
     "@vinejs/vine": "^3.0.1",
     "@whiskeysockets/baileys": "^6.7.9",
     "baileys": "^6.7.16",
+    "dayjs": "^1.11.13",
     "edge.js": "^6.2.0",
     "export-xlsx": "^0.1.4",
     "luxon": "^3.5.0",

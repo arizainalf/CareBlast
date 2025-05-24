@@ -34,7 +34,7 @@ export async function saveMessages(message: any, isFrom: boolean = false) {
   }
 
   const existingMessage = await Message.findBy('message_id', key.id)
-  // console.log('existingMessage', DateTime.fromSeconds(Number(messageTimestamp)))
+
 
   if (!existingMessage) {
     try {
@@ -47,6 +47,7 @@ export async function saveMessages(message: any, isFrom: boolean = false) {
         timestamp: DateTime.fromSeconds(Number(messageTimestamp)),
       })
       console.log(`Message service: Message saved: ${key.id}`)
+      return 
     } catch (error) {
       console.error('Message service: Error saving message:', error)
       console.log('Message service: message sudah ada')
@@ -54,4 +55,5 @@ export async function saveMessages(message: any, isFrom: boolean = false) {
   }
 
   await saveFile(MESSAGES_FILE, data, 'messages')
+  return
 }

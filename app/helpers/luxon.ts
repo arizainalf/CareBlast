@@ -23,3 +23,7 @@ export function formatPhoneNumber(phoneNumber: string): string {
 export function baseUrl(): string {
   return process.env.APP_URL || 'http://localhost:3333/';
 }
+
+export function toDateInputValue(isoString: string): string {
+  return DateTime.fromISO(isoString).toFormat('yyyy-MM-dd')
+}

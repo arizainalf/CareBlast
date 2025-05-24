@@ -76,7 +76,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded">
                   <li>
-                    <button class="dropdown-item d-flex align-items-center" data-bs-toggle="modal"
+                    <button class="dropdown-item d-flex align-items-center editKunjunganModal" data-bs-toggle="modal"
                       data-bs-target="#editKunjunganModal">
                       <i class="fas fa-pen text-warning me-2"></i> Edit Kunjungan
                     </button>
@@ -95,7 +95,8 @@
               <p><strong>Jenis Pemeriksaan :</strong> {{ kunjungan.tema }}</p>
               <p><strong>Dokter :</strong> {{ kunjungan.dokter.nama }}.{{ kunjungan.dokter.spesialist.gelar }}</p>
               <p><strong>Catatan :</strong> {{ kunjungan.keterangan }}</p>
-              <p><strong>Kunjungan Berikutnya :</strong> {{ kunjungan.kunjunganBerikutnya ? formatDate(kunjungan.kunjunganBerikutnya) : 'tidak ada' }}</p>
+              <p><strong>Kunjungan Berikutnya :</strong> {{ kunjungan.kunjunganBerikutnya ?
+                formatDate(kunjungan.kunjunganBerikutnya) : 'tidak ada' }}</p>
               <hr style="margin-top: -1px;">
               <div class="mt-2">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -138,9 +139,10 @@
                             <!-- Tombol Edit -->
                             <button class="btn btn-primary shadow btn-xs sharp me-1 edit-obat" data-bs-toggle="modal"
                               data-bs-target="#editObatModal" data-uuid="{{ obatPasien.uuid }}"
+                              data-hari="{{obatPasien.hariKonsumsi}}"
                               data-nama="{{ obatPasien.obat ? obatPasien.obat.nama : 'Obat' }}"
                               data-frekuensi="{{ obatPasien.frekuensi }}" data-waktu="{{ obatPasien.waktuKonsumsi }}"
-                              data-keterangan-waktu="{{ obatPasien.keteranganWaktu }}">
+                              data-keterangan-waktu="{{ obatPasien.keteranganWaktu }}" data-batas="{{ obatPasien.batasWaktu }}">
                               <i class="fas fa-pencil-alt"></i>
                             </button>
                             <!-- Tombol Hapus -->
@@ -178,19 +180,24 @@
   @include('kunjungan/detail_kunjungan/modal/hapus-obat')
 </div>
 
+<div class="modal fade" id="editObatModal">
+  @include('kunjungan/detail_kunjungan/modal/edit-obat')
+</div>
+
+@end
+
 <div class="modal fade" id="editKunjunganModal">
   @include('kunjungan/detail_kunjungan/modal/edit-kunjungan')
 </div>
+
 <div class="modal fade" id="deleteKunjunganModal">
   @include('kunjungan/detail_kunjungan/modal/hapus-kunjungan')
-</div>
-<div class="modal fade" id="editObatModal">
-  @include('kunjungan/detail_kunjungan/modal/edit-obat')
 </div>
 
 @include('kunjungan/detail_kunjungan/style/css')
 @include('kunjungan/detail_kunjungan/style/js')
 
+{{-- close tag content --}}
 @end
-@end
+{{-- close tag app --}}
 @end

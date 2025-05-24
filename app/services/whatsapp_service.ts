@@ -5,7 +5,7 @@ import qrImage from 'qr-image'
 import { Boom } from '@hapi/boom'
 import { formatWhatsappNumber, NumberHelper } from '#services/number_service'
 import Contact from '#models/contact'
-import path, { format } from 'node:path'
+import path from 'node:path'
 import HasilLab from '#models/hasil_lab'
 import Message from '#models/message'
 import { DateTime } from 'luxon'
@@ -35,70 +35,97 @@ export async function connectToWhatsApp() {
   socket.ev.on('creds.update', saveCreds)
 
   socket.ev.on('connection.update', (update: any) => {
+
     const { connection, lastDisconnect } = update
+
     if (connection === 'close') {
+
       const shouldReconnect = (lastDisconnect.error as Boom)?.output?.statusCode !== 401
+
       if (shouldReconnect) connectToWhatsApp()
+
     }
   })
 
   socket.ev.on('messages.upsert', async (message: { messages: any[] }) => {
+
     const m = message.messages[0]
 
     if (sentFileMessages && m.key.id && sentFileMessages.has(m.key.id)) {
+
       console.log('Skipping messages.upsert : ', m.key.id)
-      // Remove from set after processing
+
       sentFileMessages.delete(m.key.id)
+
       return
+
     }
 
     console.log('message upsert')
 
     const check = checkContact(m.key.remoteJid)
+
     if (!check) {
+
       console.log('messages.upsert : No contact found')
+
       return
     } else {
+
       await saveMessages(m)
+
       saveFile('./messages.json', m, 'messages')
+
     }
   })
 
   if (!sentFileMessages) {
+
     sentFileMessages = new Set()
+
   }
+
   sendingFile = false
 
-  // Event untuk menangkap pesan yang kita kirim
-  socket.ev.on('messages.update', async (message: any[]) => {
-    const m = message[0]
+  socket.ev.on('messages.update', async (messages: any[]) => {
+    for (const m of messages) {
+      if (!m.update) continue;
 
-    // Skip processing if this is a file message we just sent
-    if (sentFileMessages && m.key.id && sentFileMessages.has(m.key.id)) {
-      console.log('Skipping messages.update for file message:', m.key.id)
-      // Remove from set after processing
-      sentFileMessages.delete(m.key.id)
-      return
-    }
+      const key = m.key?.id
+      if (!key) continue
 
-    console.log('message update')
-    const check = checkContact(m.key.remoteJid)
-    if (!check) {
-      console.log('messages.update : No contact found')
-      return
-    } else {
+      if (sentFileMessages && sentFileMessages.has(key)) {
+        console.log('Skipping messages.update for file message:', key)
+        sentFileMessages.delete(key)
+        continue
+      }
+
+      const contactExists = checkContact(m.key.remoteJid)
+      if (!contactExists) {
+        console.log('message update : No contact found')
+        continue
+      }
+
+      console.log('message update:', m.update)
+
       const save = await saveMessages(m)
-      console.log('message update', save)
+      console.log('message update saved', save)
+
+      saveFile('./messages.json', m, 'messages')
     }
-    saveFile('./messages.json', m, 'messages')
   })
 
+
   socket.ev.on('messaging-history.set', (history: any) => {
+
     console.log('History set:', history)
+
     saveFile('./history.json', history, 'messages')
+
   })
 
   return socket
+
 }
 
 export async function getQrCode(): Promise<string> {
@@ -183,11 +210,12 @@ export async function getStatus() {
   return socket?.isConnected
 }
 
-export async function sendMsg(number: string, message: string) {
+export async function sendMsg(number: string, message: string, isNotif: boolean = false) {
   if (!socket) {
     throw new Error('Socket not connected')
   }
   let waId
+  console.log(number)
   if (number.endsWith('@s.whatsapp.net')) {
     waId = number.split('@')[0]
     console.log(waId, number)
@@ -203,18 +231,25 @@ export async function sendMsg(number: string, message: string) {
     }
     sentFileMessages.add(sentMsg.key.id)
     console.log(sentMsg, 'ini adalah msg id', sentMsg.key.id)
+    console.log('ini adalah sentMsg.message', sentMsg.message)
+    console.log('ini adalah sentMsg.messageTimestamp', sentMsg.messageTimestamp)
     const contact = await Contact.findBy('wa_id', jid)
     const contactId = contact?.id
     const groupId = null
+
+    const messageType = Object.keys(sentMsg.message || {})[0]
+    const timestampUnix = sentMsg.messageTimestamp?.toNumber() || Math.floor(Date.now() / 1000)
+    const timestamp = DateTime.fromSeconds(timestampUnix)
     // Manually create the message record since we're skipping messages.update
     const msgCreate = await Message.create({
       contactId: contactId,
       groupId: groupId,
       fromMe: true,
       messageId: sentMsg.key.id,
-      messageType: 'documentMessage',
+      messageType: messageType,
       content: message,
-      timestamp: DateTime.now(),
+      timestamp,
+      isNotif,
       isHasilLab: false,
     })
 

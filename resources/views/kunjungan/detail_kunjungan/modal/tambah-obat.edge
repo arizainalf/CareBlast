@@ -49,10 +49,21 @@
           </select>
         </div>
 
-        {{-- <div class="mb-3">
+        <div class="mb-3">
+          <label class="form-label">Hari Konsumsi</label><br />
+          @each( hari in ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'])
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="hariKonsumsi[]" value="{{ hari }}"
+              id="{{ hari | lower }}" checked>
+            <label class="form-check-label" for="{{ hari | lower }}">{{ hari }}</label>
+          </div>
+          @end
+        </div>
+
+        <div class="mb-3">
           <label class="form-label">Batas Waktu <span class="text-danger">*</span></label>
-          <input type="date" name="batasWaktu" class="form-control" required>
-        </div> --}}
+          <input type="date" name="batasWaktu" class="form-control" required value="{{ toDateInputValue(kunjungan.kunjunganBerikutnya) }}">
+        </div>
 
         <div class="mb-3">
           <label class="form-label">Status <span class="text-danger">*</span></label>

@@ -4,6 +4,18 @@
     const hiddenItems = document.querySelectorAll('.timeline-item.hidden');
     let isExpanded = false;
 
+    $('#hapusKunjunganForm').on('submit', function (e) {
+      e.preventDefault();
+      const form = $(this)
+
+      const url = form.attr('action')
+      const method = form.attr('method')
+
+      ajaxRequest(url, method)
+
+      console.log('disubmit')
+    })
+
     if (showMoreBtn) {
       showMoreBtn.addEventListener('click', function () {
         if (!isExpanded) {
@@ -75,23 +87,13 @@
       });
     }
 
-    // Preload data untuk modal edit
-    const editButtons = document.querySelectorAll('[data-bs-target^="#editModal"]');
-    editButtons.forEach(button => {
-      button.addEventListener('click', function () {
-        const targetModalId = this.getAttribute('data-bs-target');
-        const modal = document.querySelector(targetModalId);
-        if (modal) {
-        }
-      });
-    });
 
     $('.edit-kunjungan').on('submit', function (e) {
       e.preventDefault();
       const form = $(this);
       const kunjunganId = form.data('id');
       const url = `/kunjungan/${kunjunganId}`;
-      const formData = new FormData(this);
+      const formData = new FormData(this[0]);
       const method = 'PUT';
 
       ajaxRequest(url, method, formData)

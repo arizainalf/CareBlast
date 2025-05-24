@@ -5,9 +5,10 @@ import ObatPasien from '#models/obat_pasien'
 import Kunjungan from '#models/kunjungan'
 import { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
+import { getHariIni } from '#services/number_service'
 
 export default class HomeController {
-  public async index({ view, auth }: HttpContext) {
+    public async index({ view, auth }: HttpContext) {
     const userId = auth.user?.id || 0
 
     const pasien = await Pasien.query().where('id', userId).preload('jenisPenyakit').firstOrFail()
@@ -20,7 +21,9 @@ export default class HomeController {
       })
       .first()
 
-    const todaysDoctors = await Dokter.query().where('status', true).preload('spesialist').limit(4)
+    const hariIni = getHariIni()
+      
+    const todaysDoctors = await Dokter.query().where('status', true).andWhere('jadwal_hari','like', `%${hariIni}%`).preload('spesialist').limit(4)
 
     todaysDoctors.forEach((dokter) => {
       const noWa = dokter.noWhatsapp || ''
@@ -86,4 +89,5 @@ export default class HomeController {
       ...utils,
     })
   }
+  
 }

@@ -31,6 +31,9 @@ export default class Message extends BaseModel {
   declare groupId: string | null
 
   @column()
+  declare isNotif: boolean | null
+
+  @column()
   declare isHasilLab: boolean
 
   @column()

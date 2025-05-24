@@ -1,4 +1,4 @@
-@layout.auth()
+@layout.auth({ title: `Login` })
 @slot('auth')
 <div class="row justify-content-center">
   <div class="col-11 col-md-8 col-lg-5">
@@ -61,7 +61,7 @@
                     class="form-check-input" id="patientRemember" />
                   <label class="form-check-label text-muted" for="patientRemember">Ingat saya</label>
                 </div>
-                <a href="/forgot" class="text-decoration-none small">Lupa password?</a>
+                {{--  <a href="/forgot" class="text-decoration-none small">Lupa password?</a>  --}}
               </div>
 
               <button type="submit" class="btn btn-primary w-100 py-3">

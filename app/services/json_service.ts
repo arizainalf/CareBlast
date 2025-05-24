@@ -9,5 +9,5 @@ export async function saveFile(file: string, data: any, type: any) {
 
   load.push(data)
   fs.writeFileSync(file, JSON.stringify(load, null, 2))
-  console.log('success simpan '+ type)
+  console.log('json service : success simpan '+ type)
 }

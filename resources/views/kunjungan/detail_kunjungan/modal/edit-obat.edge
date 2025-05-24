@@ -4,8 +4,8 @@
       <h5 class="modal-title">Edit Obat</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
-    <div class="modal-body">
-      <form id="edit-medicine-form">
+    <form id="edit-medicine-form">
+      <div class="modal-body">
         {{ csrfField() }}
         <input type="hidden" id="edit-obat-uuid" name="uuid" value="">
         <div class="mb-3" style="display: none;">
@@ -40,12 +40,21 @@
             <span class="input-group-text"><i class="far fa-clock"></i></span>
           </div>
         </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
-      <button type="button" class="btn btn-primary" id="save-edit-obat">Simpan</button>
-    </div>
+        <div class="mb-2">
+          <label class="form-label">Hari Konsumsi</label>
+          <div id="edit-day-input">
+          </div>
+        </div>
+        <div class="mb-2">
+          <label for="batasWaktu">Batas Waktu</label>
+          <input type="date" class="form-control datepicker-input" name="batasWaktu" id="batasWaktu">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="save-edit-obat">Simpan</button>
+      </div>
+    </form>
   </div>
 </div>
 <style>
@@ -89,6 +98,7 @@
 </style>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+
     const editFrequencySelect = document.getElementById("edit-frequency-select");
     const editTimeInputsContainer = document.getElementById("edit-time-inputs");
     const editButtons = document.querySelectorAll(".edit-obat");
@@ -96,6 +106,8 @@
     const saveEditButton = document.getElementById("save-edit-obat");
     const editObatUuidInput = document.getElementById("edit-obat-uuid");
     const editKeteranganWaktu = document.getElementById("edit-keterangan-waktu");
+    const editBatasWaktu = document.getElementById("batasWaktu")
+
     let currentObatUuid = null;
 
     if (editFrequencySelect) {
@@ -146,11 +158,37 @@
 
     editButtons.forEach(button => {
       button.addEventListener("click", function () {
+
+        const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        const hariStr = this.getAttribute("data-hari") || "";
+        const hariArray = hariStr.split(',').map(h => h.trim());
+
+        console.log("days", days)
+        console.log("hariArray:", hariArray);
+        console.log("hariStr:", hariStr);
+
+        $('#edit-day-input').empty();
+
+        days.forEach(function (day) {
+          const isChecked = hariArray.includes(day) ? 'checked' : '';
+          const checkbox = `
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="hariKonsumsi[]" value="${day}" id="${day}" ${isChecked}>
+        <label class="form-check-label" for="${day}">${day}</label>
+      </div>
+    `;
+          $('#edit-day-input').append(checkbox);
+          console.log("1")
+        });
+
         const obatUuid = this.getAttribute("data-uuid");
         const obatNama = this.getAttribute("data-nama");
         const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
         const waktuStr = this.getAttribute("data-waktu");
         const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
+        const batasWaktu = formatDateToInput(this.getAttribute("data-batas"))
+
+        console.log(formatDateToInput(this.getAttribute("data-batas")))
 
         let waktuArray = [];
         try {
@@ -164,6 +202,9 @@
         if (editKeteranganWaktu) {
           editKeteranganWaktu.value = keteranganWaktu;
         }
+        if(editBatasWaktu){
+          editBatasWaktu.value = batasWaktu
+        }
 
         currentObatUuid = obatUuid;
         if (editFrequencySelect) {
@@ -175,15 +216,30 @@
 
     if (saveEditButton) {
       saveEditButton.addEventListener("click", function () {
-        const obatUuid = editObatUuidInput ? editObatUuidInput.value : currentObatUuid;
+        const obatUuid = editObatUuidInput?.value || currentObatUuid;
+
+
 
         if (!obatUuid) {
           alert('Error: ID obat tidak ditemukan');
           return;
         }
 
-        const frekuensi = editFrequencySelect.value;
-        const keteranganWaktu = editKeteranganWaktu.value;
+        const frekuensiRaw = editFrequencySelect?.value;
+        const frekuensi = parseInt(frekuensiRaw, 10);
+
+        if (isNaN(frekuensi) || frekuensi <= 0) {
+          alert('Frekuensi konsumsi tidak valid');
+          return;
+        }
+
+        const keteranganWaktu = editKeteranganWaktu?.value || '';
+
+        const hariKonsumsi = $("#edit-day-input input[name='hariKonsumsi[]']:checked")
+          .map(function () {
+            return this.value;
+          }).get();
+
         const timeInputs = document.querySelectorAll("input[name='waktu[]']");
 
         let isValid = true;
@@ -202,47 +258,29 @@
         }
 
         const waktuArray = Array.from(timeInputs)
-          .slice(0, parseInt(frekuensi, 10))
-          .map(input => input.value);
+          .slice(0, frekuensi)
+          .map(input => input.value.trim())
+          .filter(val => val); // Pastikan tidak null/empty
 
         const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
-
         if (!csrfToken) {
           console.error('CSRF token not found');
           alert('Error: CSRF token not found');
           return;
         }
 
-        fetch(`/obat-pasien/${obatUuid}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': csrfToken
-          },
-          body: JSON.stringify({
-            frekuensi,
-            keteranganWaktu,
-            waktu: waktuArray
-          })
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              const modal = bootstrap.Modal.getInstance(document.getElementById('editObatModal'));
-              modal.hide();
-              showSwal("success", "Sukses!", data.message,)
-              window.location.reload();
-            } else {
-              showSwal("error", "Gagal!", data.message,)
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            showSwal("error", "Gagal!", error)
+        const batasWaktu = $('#batasWaktu').val()
 
-          });
+        const url = `/obat-pasien/${obatUuid}`;
+        const method = 'PATCH';
+
+        ajaxRequest(url, method, {
+          frekuensi,
+          keteranganWaktu,
+          waktu: waktuArray,
+          hariKonsumsi,
+          batasWaktu
+        })
       });
     }
 

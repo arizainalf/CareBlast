@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo, beforeCreate } from '@adonisjs/lucid/orm'
 import crypto from 'crypto'
 import User from '#models/user'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { v4 as uuidv4 } from 'uuid'
 
 
 type TokenType = 'PASSWORD_RESET' | 'VERIFY_EMAIL'
@@ -31,6 +32,11 @@ export default class ResetToken extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @beforeCreate()
+  public static async generateUuid(resetToken: ResetToken) {
+    resetToken.uuid = uuidv4()
+  }
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
@@ -65,11 +71,9 @@ export default class ResetToken extends BaseModel {
 
   public static async expireTokens(user: User) {
     await user.related('resetTokens').query().update({
-      expiresAt: DateTime.now().toSQL(),
+      expires_at: DateTime.now().toSQL({ includeOffset: false })
     })
   }
-  // "type": "Error",
-  //     "message": "update `reset_tokens` set `expires_at` = 2025-05-21 14:02:31.081 +07:00 where `user_id` = 2 - Unknown column '_zone' in 'field list'",
 
   public static async getTokenUser(token: string, type: TokenType) {
     const record = await ResetToken.query()

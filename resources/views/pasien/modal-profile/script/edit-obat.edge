@@ -23,13 +23,6 @@
 
 <script>
 
-  function formatDateToInput(date) {
-    const d = new Date(date);
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${d.getFullYear()}-${month}-${day}`;
-  }
-
   document.addEventListener("DOMContentLoaded", () => {
     const frequencySelect = document.getElementById("frequency-select");
     const timeInputsContainer = document.getElementById("time-inputs");
@@ -82,60 +75,85 @@
       }, 100);
     }
 
-    editButtons.forEach(button => {
-      button.addEventListener("click", function (e) {
-        e.preventDefault();
+    function handleClick(e) {
+      e.preventDefault();
 
-        const obatUuid = this.getAttribute("data-uuid");
-        const obatNama = this.getAttribute("data-nama");
-        const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
-        const waktuStr = this.getAttribute("data-waktu");
-        const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
-        const batasWaktu = this.getAttribute("data-batas-waktu");
-        const batasWaktuStr = formatDateToInput(this.getAttribute("data-batas-waktu"));
-        const status = this.getAttribute("data-status");
+      const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      const hariStr = this.getAttribute("data-hari") || "";
+      const hariArray = hariStr.split(',').map(h => h.trim());
 
-        console.log($(this).data('cek'))
+      console.log("days", days)
+      console.log("hariArray:", hariArray);
+      console.log("hariStr:", hariStr);
 
-        console.log(batasWaktuStr, status, obatUuid)
 
-        let waktuArray = [];
-        if (typeof waktuStr === 'string') {
-          try {
-            waktuArray = JSON.parse(waktuStr);
-          } catch (e) {
-            waktuArray = waktuStr.includes(',')
-              ? waktuStr.split(',').map(time => time.trim())
-              : [waktuStr.trim()];
-          }
-        }
+      $('#day-inputs').empty();
 
-        waktuArray = waktuArray.filter(time => time && typeof time === 'string');
-
-        if (modalTitle) {
-          modalTitle.textContent = `Edit Obat ${obatNama}`;
-        }
-
-        if (editObatUuidInput) {
-          editObatUuidInput.value = obatUuid;
-        }
-
-        if (editKeteranganWaktu) {
-          editKeteranganWaktu.value = keteranganWaktu;
-        }
-
-        if (frequencySelect) {
-          frequencySelect.value = frekuensi;
-        }
-
-        if (frequencySelect) {
-          updateTimeInputs(frekuensi, waktuArray);
-        }
-
-        $('#status').val(status)
-        $('#batasWaktu').val(batasWaktuStr)
-        currentObatUuid = obatUuid;
+      days.forEach(function (day) {
+        const isChecked = hariArray.includes(day) ? 'checked' : '';
+        const checkbox = `
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="hariKonsumsi[]" value="${day}" id="${day}" ${isChecked}>
+        <label class="form-check-label" for="${day}">${day}</label>
+      </div>
+    `;
+        $('#day-inputs').append(checkbox);
+        console.log("1")
       });
+
+      const obatUuid = this.getAttribute("data-uuid");
+      const obatNama = this.getAttribute("data-nama");
+      const frekuensi = parseInt(this.getAttribute("data-frekuensi"), 10);
+      const waktuStr = this.getAttribute("data-waktu");
+      const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
+      const batasWaktu = this.getAttribute("data-batas-waktu");
+      const batasWaktuStr = formatDateToInput(this.getAttribute("data-batas-waktu"));
+      const status = this.getAttribute("data-status");
+
+      console.log(batasWaktuStr, status, obatUuid)
+
+      let waktuArray = [];
+      if (typeof waktuStr === 'string') {
+        try {
+          waktuArray = JSON.parse(waktuStr);
+        } catch (e) {
+          waktuArray = waktuStr.includes(',')
+            ? waktuStr.split(',').map(time => time.trim())
+            : [waktuStr.trim()];
+        }
+      }
+
+      waktuArray = waktuArray.filter(time => time && typeof time === 'string');
+
+      if (modalTitle) {
+        modalTitle.textContent = `Edit Obat ${obatNama}`;
+      }
+
+      if (editObatUuidInput) {
+        editObatUuidInput.value = obatUuid;
+      }
+
+      if (editKeteranganWaktu) {
+        editKeteranganWaktu.value = keteranganWaktu;
+      }
+
+      if (frequencySelect) {
+        frequencySelect.value = frekuensi;
+      }
+
+      if (frequencySelect) {
+        updateTimeInputs(frekuensi, waktuArray);
+      }
+
+      $('#status').val(status)
+      $('#batasWaktu').val(batasWaktuStr)
+      currentObatUuid = obatUuid;
+
+    }
+
+    editButtons.forEach(button => {
+      button.removeEventListener("click", handleClick); // optional safety
+      button.addEventListener("click", handleClick);
     });
 
     if (saveButton) {
@@ -143,6 +161,11 @@
         const obatUuid = editObatUuidInput
           ? editObatUuidInput.value
           : currentObatUuid;
+
+        const hariKonsumsi = $("#day-inputs input[name='hariKonsumsi[]']:checked").map(function () {
+          return this.value;
+        }).get();
+        console.log(hariKonsumsi)
 
         if (!obatUuid) {
           alert('Error: ID obat tidak ditemukan');
@@ -164,7 +187,7 @@
         });
 
         if (!isValid) {
-          alert('Harap isi semua waktu konsumsi');
+          showSwal('error', 'Gagal', 'harap isi semua!')
           return;
         }
 
@@ -188,7 +211,8 @@
             keteranganWaktu,
             waktu: waktuArray,
             batasWaktu,
-            status
+            status,
+            hariKonsumsi
           })
         })
           .then(response => response.json())
@@ -210,6 +234,7 @@
             showSwal('error', 'Gagal!', error)
             alert('Terjadi kesalahan saat menyimpan data');
           });
+
       });
     }
   });

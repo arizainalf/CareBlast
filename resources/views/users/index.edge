@@ -26,8 +26,9 @@
                   <th>#</th>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Tanggal</th>
+                  <th>Nomor Whatsapp</th>
                   <th>Role</th>
+                  <th>Foto</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -36,16 +37,19 @@
                 <tr>
                   <th>{{ index + 1 }}</th>
                   <td>
-                    <div class="d-flex align-items-center"><img src="{{ asset('images/')}}{{ user.foto }}"
-                        class="rounded-lg me-2" width="24" alt=""><span class="w-space-no">{{ user.fullName }}</span>
+                    <div class="d-flex align-items-center"><span class="w-space-no">{{ user.fullName }}</span>
                     </div>
                   </td>
                   <td>{{ user.email }}</td>
                   </td>
-                  <td>{{ user.phoneNumber }}</td>
+                  <td>{{ user.contact.waId ? formatPhoneNumber(user.contact.waId) : 'Kontak belum ada' }}</td>
                   <td>
                     <div class="d-flex align-items-center"><i class="fa fa-circle text-success me-1"></i>{{ user.role }}
                     </div>
+                  </td>
+                  <td>
+                    <img src="{{ user.foto }}" alt="{{user.fullName}}" class="img-fluid rounded-circle mb-3" width="50"
+                      height="50">
                   </td>
                   <td>
                     <div class="d-flex">
@@ -75,14 +79,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
-  document.getElementById('avatar').addEventListener('change', function (e) {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      document.getElementById('preview-avatar').src = event.target.result;
-    }
-    reader.readAsDataURL(e.target.files[0]);
-  });
-
   $(document).ready(function () {
     let modalUser = new bootstrap.Modal($('#tambahPengguna')[0]);
 
@@ -102,7 +98,7 @@
         $('#formUser').attr('data-id', user.id);
         $('#fullName').val(user.fullName);
         $('#email').val(user.email);
-        $('#phoneNumber').val(user.phoneNumber);
+        $('#phoneNumber').val(formatPhoneNumber(user.contact.waId));
         $('#role').val(user.role);
 
         // Sembunyikan password saat edit
@@ -131,30 +127,9 @@
 
       let formData = new FormData(this);
       let userId = $(this).attr('data-id');
-      let url = userId ? `/users/${userId}/update` : '/users/create';
+      let url = userId ? `/users/${userId}/update` : '/users';
       let method = userId ? 'PUT' : 'POST';
-
-
-      $.ajax({
-        url: url,
-        type: method,
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          if (response.success) {
-            showSwal("success", "Sukses", response.message, function () {
-              modalUser.hide();
-              location.reload();
-            });
-          } else {
-            showSwal("error", "Error", response.message);
-          }
-        },
-        error: function (error) {
-          showSwal("error", "Gagal", "Terjadi kesalahan dalam menyimpan data!");
-        }
-      });
+      ajaxRequest(url, method, formData)
     });
 
     // Hapus User

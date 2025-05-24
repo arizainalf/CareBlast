@@ -10,7 +10,9 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-      <form action="/kunjungans/{{ kunjungan.uuid }}?_method=DELETE" method="POST">
+      <form 
+      action="/kunjungans/{{ kunjungan.uuid }}?_method=DELETE" 
+      method="POST" id="hapusKunjunganForm">
         {{ csrfField() }}
         <button type="submit" class="btn btn-danger">Hapus</button>
       </form>
