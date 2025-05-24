@@ -15,7 +15,30 @@
             </button>
           </div>
         </div>
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <input type="text" id="search-contact" class="form-control" placeholder="Search contacts..." />
+          </div>
+        </div>
+
+        <!-- Pagination info -->
+
         <div class="flex-grow-1 overflow-auto" id="contact-list">
+        </div>
+
+        <!-- Load More Button (untuk load more pagination) -->
+        <div class="row">
+          <div class="col-12 text-center">
+            <small id="pagination-info" class="text-muted"></small>
+          </div>
+        </div>
+        <div id="pagination-controls" class="mt-3 d-flex justify-content-center">
+          <!-- Pagination buttons will be rendered here -->
+        </div>
+
+        <!-- Traditional Pagination Controls (alternative) -->
+        <div id="pagination-controls" class="mt-3 d-flex justify-content-center">
+          <!-- Pagination buttons will be rendered here -->
         </div>
       </div>
     </div>
@@ -144,8 +167,102 @@
 
 <script>
 
+  let currentPage = 1;
+  let isLoading = false;
+  const contactsPerPage = 8; // sesuaikan sesuai kebutuhan
+
+  function loadContacts(page = 1, search = '') {
+    if (isLoading) return;
+    isLoading = true;
+
+    if (page === 1) {
+      $('#contact-list').html('<div class="text-center p-3"><div class="spinner-border" role="status"></div></div>');
+    }
+
+    const params = {
+      page: page,
+      limit: contactsPerPage,
+      search: search
+    };
+
+    $.get('/get-all-contact/', params, function (data) {
+      const contactList = data.contact;
+      const pagination = data.pagination;
+
+      $('#contact-list').empty(); // selalu clear list
+      contactList.forEach(contact => {
+        $('#contact-list').append(`
+        <div class="list-group list-group-flush">
+          <label class="list-group-item d-flex align-items-center py-1 border-bottom">
+            <div class="d-flex justify-content-between align-items-center w-100">
+              <a href="javascript:void(0)" 
+                 data-pp='${contact.profilePicture}' 
+                 data-number="${contact.waId}" 
+                 data-id='${contact.id}' 
+                 data-nama='${contact.name ? contact.name : contact.username}'  
+                 class="contact">
+                <h6 class="mb-0">${contact.name ? contact.name : contact.username}</h6>
+                <small class="text-muted">${formatPhoneNumber(contact.waId)}</small>
+              </a>
+              <span class="badge">
+                <img src='${contact.profilePicture}' style='width: 50px; border-radius: 50%;' />
+              </span>
+            </div>
+          </label>
+        </div>
+      `);
+      });
+
+      updatePaginationInfo(pagination);
+      renderPaginationControls(pagination);
+      currentPage = pagination.currentPage;
+      isLoading = false;
+    }).fail(function () {
+      isLoading = false;
+      $('#contact-list').html('<div class="alert alert-danger">Error loading contacts</div>');
+    });
+  }
+
+  function updatePaginationInfo(pagination) {
+    const info = `Showing ${((pagination.currentPage - 1) * pagination.perPage) + 1} - ${Math.min(pagination.currentPage * pagination.perPage, pagination.total)} of ${pagination.total} contacts`;
+    $('#pagination-info').text(info);
+  }
+
+  function renderPaginationControls(pagination) {
+    const container = $('#pagination-controls');
+    container.empty();
+
+    const totalPages = pagination.totalPages;
+    const currentPage = pagination.currentPage;
+
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = $(`<button class="btn btn-sm ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} mx-1">${i}</button>`);
+      btn.on('click', () => loadContacts(i));
+      container.append(btn);
+    }
+  }
+
+  // Search function dengan debounce
+  let searchTimeout;
+  function searchContacts() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      const searchTerm = $('#search-contact').val();
+      currentPage = 1;
+      loadContacts(1, searchTerm);
+    }, 500); // Delay 500ms
+  }
 
   $(document).ready(function () {
+
+    loadContacts();
+
+    $('#search-contact').on('input', searchContacts);
+
+    // Load more button
+    $('#load-more-btn').on('click', function () {
+      loadContacts(currentPage + 1, $('#search-contact').val());
+    });
 
     async function getContact(id) {
       const nama = $('#editNama');
@@ -235,12 +352,13 @@
     }
     )
 
-
     $('#send-messages').on('submit', function (e) {
       e.preventDefault();
 
       // const id = $('#send-message').data('id');
       const formData = new FormData(this);
+
+      // ajaxRequest('/send-message', 'POST', formData)
 
       $.ajax({
         url: '/send-message',
@@ -252,7 +370,6 @@
           console.log(response);
           console.log(response.responseMsg);
           console.log(response.data);
-          console.log(response.status);
           // Reset form after sending
           $('#send-messages')[0].reset();
           $('#fileNameDisplay').addClass('d-none');
@@ -285,71 +402,118 @@
       $('#fileNameDisplay').addClass('d-none'); // Sembunyikan badge
     });
 
-    $.get('/get-all-contact/', function (data) {
-      console.log(data);
+    $(document).on('click', '.contact', function (e) {
+      e.preventDefault();
+      const id = $(this).data('id');
+      const nama = $(this).data('nama');
+      const pp = $(this).data('pp');
+      const number = $(this).data('number');
+      const editKontak = $('#editKontak');
+      const kontakEdit = $('#kontakEdit')
 
-      const contactList = data.contact;
+      editKontak.val('')
+      kontakEdit.val('')
 
-      contactList.forEach(contact => {
-        $('#contact-list').append(`
-          <div class="list-group list-group-flush">
-            <label class="list-group-item d-flex align-items-center py-1 border-bottom">
-              <div class="d-flex justify-content-between align-items-center w-100">
-                <a href="javascript:void(0)" data-pp='${contact.profilePicture}' data-number="${contact.waId}" data-id='${contact.id}' data-nama='${contact.name ? contact.name : contact.username}'  class="contact">
-                  <h6 class="mb-0">${contact.name ? contact.name : contact.username}</h6>
-                  <small class="text-muted">${formatPhoneNumber(contact.waId)}</small>
-                <a>
-                <span class="badge"><img src='${contact.profilePicture}' style='width: 50px; border-radius: 50%;' /></span>
-              </div>
-            </label>
-          </div>
-      `)
+      $('#contactName').val(nama);
+      $('#WaId').val(number);
+
+      editKontak.attr('data-id', id);
+      kontakEdit.attr('data-id', id);
+
+      console.log('ditekan', id)
+      getChat(id, nama, kontakEdit, editKontak);
+
+      $('#buttonEditKontak').on('click', function () {
+        const getcontact = getContact(id)
+        console.log(id, '#buttonEditKontak');
       });
 
-      $(document).on('click', '.contact', function (e) {
-        e.preventDefault();
-        const id = $(this).data('id');
-        const nama = $(this).data('nama');
-        const pp = $(this).data('pp');
-        const number = $(this).data('number');
-        const editKontak = $('#editKontak');
-        const kontakEdit = $('#kontakEdit')
+      $('#kontakEdit').on('submit', function (e) {
+        e.preventDefault()
 
-        editKontak.val('')
-        kontakEdit.val('')
+        const id = $(this).data('id')
+        const url = `/contact/${id}/update`
+        const method = 'PUT'
+        const data = new FormData(this)
 
-        $('#contactName').val(nama);
-        $('#WaId').val(number);
-
-        editKontak.attr('data-id', id);
-        kontakEdit.attr('data-id', id);
-
-        console.log('ditekan', id)
-        getChat(id, nama, kontakEdit, editKontak);
-
-        $('#buttonEditKontak').on('click', function () {
-          const getcontact = getContact(id)
-          console.log(id, '#buttonEditKontak');
-        });
-
-        $('#kontakEdit').on('submit', function (e) {
-          e.preventDefault()
-
-          const id = $(this).data('id')
-          const url = `/contact/${id}/update`
-          const method = 'PUT'
-          const data = new FormData(this)
-
-          ajaxRequest(url, method, data);
-
-        });
+        ajaxRequest(url, method, data);
 
       });
+
     });
 
+    function enableInfiniteScroll() {
+      $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+          if (!isLoading && currentPage < totalPages) {
+            loadContacts(currentPage + 1, $('#search-contact').val());
+          }
+        }
+      });
+    }
 
+    // Alternative: Traditional pagination with page numbers
+    function loadContactsWithPageNumbers(page = 1, search = '') {
+      isLoading = true;
 
+      const params = {
+        page: page,
+        limit: contactsPerPage,
+        search: search
+      };
 
+      $.get('/get-all-contact/', params, function (data) {
+        const contactList = data.contact;
+        const pagination = data.pagination;
+
+        // Clear and render contacts
+        $('#contact-list').empty();
+        contactList.forEach(contact => {
+        });
+
+        // Render pagination buttons
+        renderPaginationButtons(pagination);
+
+        currentPage = pagination.currentPage;
+        isLoading = false;
+      });
+    }
+
+    function renderPaginationButtons(pagination) {
+      let paginationHtml = '<nav><ul class="pagination">';
+
+      // Previous button
+      if (pagination.hasPreviousPage) {
+        paginationHtml += `<li class="page-item"><a class="page-link" href="#" data-page="${pagination.currentPage - 1}">&laquo;</a></li>`;
+      }
+
+      // Page numbers
+      const startPage = Math.max(1, pagination.currentPage - 2);
+      const endPage = Math.min(pagination.lastPage, pagination.currentPage + 2);
+
+      for (let i = startPage; i <= endPage; i++) {
+        const activeClass = i === pagination.currentPage ? 'active' : '';
+        paginationHtml += `<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+      }
+
+      // Next button
+      if (pagination.hasNextPage) {
+        paginationHtml += `<li class="page-item"><a class="page-link" href="#" data-page="${pagination.currentPage + 1}">&raquo;</a></li>`;
+      }
+
+      paginationHtml += '</ul></nav>';
+
+      $('#pagination-controls').html(paginationHtml);
+
+      // Pagination click handler
+      $('.page-link').on('click', function (e) {
+        e.preventDefault();
+        const page = $(this).data('page');
+        if (page && page !== currentPage) {
+          loadContactsWithPageNumbers(page, $('#search-contact').val());
+        }
+      });
+    }
   });
 </script>
 

@@ -20662,5 +20662,1149 @@
         "messageSecret": "k6hZJzoF16Vx0eSU1PyLs2oc2KOPQM0yYRb5KZaUf0g="
       }
     }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0A598DE86E45CF1FE1D",
+      "fromMe": true
+    },
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0A598DE86E45CF1FE1D",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0A598DE86E45CF1FE1D",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0A598DE86E45CF1FE1D",
+      "fromMe": true
+    },
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0A598DE86E45CF1FE1D",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0A598DE86E45CF1FE1D",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0A0BCA4F9E423721EBA",
+      "fromMe": true
+    },
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0A0BCA4F9E423721EBA",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0A0BCA4F9E423721EBA",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0A0BCA4F9E423721EBA",
+      "fromMe": true
+    },
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0A0BCA4F9E423721EBA",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0A0BCA4F9E423721EBA",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0A598DE86E45CF1FE1D",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0A598DE86E45CF1FE1D",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0A598DE86E45CF1FE1D",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0A0BCA4F9E423721EBA",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0A0BCA4F9E423721EBA",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0A0BCA4F9E423721EBA",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB027D72B1C69F2E5AE73",
+      "fromMe": true
+    },
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB027D72B1C69F2E5AE73",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB027D72B1C69F2E5AE73",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB027D72B1C69F2E5AE73",
+      "fromMe": true
+    },
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB027D72B1C69F2E5AE73",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB027D72B1C69F2E5AE73",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB027D72B1C69F2E5AE73",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "groupId": null,
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB027D72B1C69F2E5AE73",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB027D72B1C69F2E5AE73",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB04E1C75CAA91B603B54",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB04E1C75CAA91B603B54",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB04E1C75CAA91B603B54",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0D3EE73C73AE5577B42",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0D3EE73C73AE5577B42",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0D3EE73C73AE5577B42",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB05FD1B7FDB4185EAC0A",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB05FD1B7FDB4185EAC0A",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB05FD1B7FDB4185EAC0A",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0540025F4BB2B55F625",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0540025F4BB2B55F625",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0A0BCA4F9E423721EBA",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB027D72B1C69F2E5AE73",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB04E1C75CAA91B603B54",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0D3EE73C73AE5577B42",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB05FD1B7FDB4185EAC0A",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0540025F4BB2B55F625",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0A598DE86E45CF1FE1D",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0A0BCA4F9E423721EBA",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB027D72B1C69F2E5AE73",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB04E1C75CAA91B603B54",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0D3EE73C73AE5577B42",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB05FD1B7FDB4185EAC0A",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB05FD1B7FDB4185EAC0A",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0540025F4BB2B55F625",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0540025F4BB2B55F625",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0540025F4BB2B55F625",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0B072EB01CFECFCE3BF",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0B072EB01CFECFCE3BF",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0B072EB01CFECFCE3BF",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0B072EB01CFECFCE3BF",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB05D61574EFEB506596E",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB05D61574EFEB506596E",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB05D61574EFEB506596E",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB05D61574EFEB506596E",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB05D61574EFEB506596E",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB05D61574EFEB506596E",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0B072EB01CFECFCE3BF",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B072EB01CFECFCE3BF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB05D61574EFEB506596E",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB05D61574EFEB506596E",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB05D61574EFEB506596E",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0C59240807A0A3DFE1B",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0C59240807A0A3DFE1B",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0C59240807A0A3DFE1B",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0BB7B248916E58F3241",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0BB7B248916E58F3241",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0BB7B248916E58F3241",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0B9334B8C8F02AB44CB",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0B9334B8C8F02AB44CB",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:63@s.whatsapp.net",
+      "id": "3EB0B9334B8C8F02AB44CB",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0B9334B8C8F02AB44CB",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0B9334B8C8F02AB44CB",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0B9334B8C8F02AB44CB",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0C59240807A0A3DFE1B",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0BB7B248916E58F3241",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B9334B8C8F02AB44CB",
+      "fromMe": true
+    },
+    "contactId": "fa8632d8-80c3-454a-a4af-137ee8670e71",
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0B9334B8C8F02AB44CB",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B9334B8C8F02AB44CB",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0B9334B8C8F02AB44CB",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0B9334B8C8F02AB44CB",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0B9334B8C8F02AB44CB",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0BB7B248916E58F3241",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0BB7B248916E58F3241",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB0C59240807A0A3DFE1B",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB0C59240807A0A3DFE1B",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB05D61574EFEB506596E",
+      "fromMe": true
+    },
+    "pushName": "Saya (Owner)",
+    "messageId": "3EB05D61574EFEB506596E",
+    "messageType": "unknown",
+    "text": "",
+    "isHasilLab": false
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:65@s.whatsapp.net",
+      "id": "3EB05D61574EFEB506596E",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "fromMe": false,
+      "id": "A8C05860CF45E530B48B3AEFB11E1744"
+    },
+    "messageTimestamp": 1748083072,
+    "pushName": "arizainalf",
+    "broadcast": false,
+    "message": {
+      "conversation": "Aneh redundan wae",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "pPpuLq0YUz26CA==",
+          "senderTimestamp": "1748016973",
+          "recipientKeyHash": "qjBKBliSTb6kQQ==",
+          "recipientTimestamp": "1747812392"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "2SraNt2nlGkNwjHAPFxgteS1/wuDIHB1282UNIQtUdA="
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "fromMe": false,
+      "id": "A4920C507749E7330BF7D79D8354F769"
+    },
+    "messageTimestamp": 1748083835,
+    "pushName": "arizainalf",
+    "broadcast": false,
+    "message": {
+      "conversation": "Cik send",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "pPpuLq0YUz26CA==",
+          "senderTimestamp": "1748016973",
+          "recipientKeyHash": "qjBKBliSTb6kQQ==",
+          "recipientTimestamp": "1747812392"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "LTkHEW4WerfujUXpxR/yGRtfrPaLAjcXskSmGAQqgJw="
+      }
+    }
   }
 ]

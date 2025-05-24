@@ -90,7 +90,6 @@ export default class WhatsappsController {
     const hasil = await Message.query()
       .where('is_hasil_lab', true)
       .preload('contact')
-      .preload('group')
       .orderBy('created_at', 'desc')
     return response.json({
       success: true,
@@ -132,7 +131,6 @@ export default class WhatsappsController {
     const message = await Message.query()
       .where('contact_id', params.id)
       .preload('contact')
-      .preload('group')
       .orderBy('timestamp', 'asc')
     const contact = await Contact.findBy('id', params.id)
     return response.json({
@@ -163,11 +161,45 @@ export default class WhatsappsController {
     return response.json({ new_messages: newMessages })
   }
 
-  public async getAllContact({ response }: HttpContext) {
-    const contact = await Contact.all()
+  public async getAllContact({ request, response }: HttpContext) {
+    const page = request.input('page', 1)
+    const limit = request.input('limit', 8) // 10 contacts per page
+    const search = request.input('search', '') // optional search
+
+    let query = Contact.query()
+
+    // Jika ada parameter search
+    if (search) {
+      query = query.where((builder) => {
+        builder
+          .where('name', 'LIKE', `%${search}%`)
+          .orWhere('username', 'LIKE', `%${search}%`)
+          .orWhere('waId', 'LIKE', `%${search}%`)
+      })
+    }
+
+    const contacts = await query
+      .orderBy('name', 'asc')
+      .paginate(page, limit)
+
+      console.log(contacts.currentPage < contacts.lastPage)
+      console.log(contacts.currentPage > 1)
+
+      const total = contacts.total
+      const perPage = contacts.perPage
+
     return response.json({
       success: true,
-      contact,
+      contact: contacts.all(), // data contacts
+      pagination: {
+        currentPage: contacts.currentPage,
+        lastPage: contacts.lastPage,
+        perPage: perPage,
+        total: total,
+        totalPages: total / perPage, 
+        hasNextPage: contacts.currentPage < contacts.lastPage,
+        hasPreviousPage: contacts.currentPage > 1,
+      }
     })
   }
 
@@ -176,7 +208,6 @@ export default class WhatsappsController {
     const message = await Message.query()
       .where('id', params.uuid)
       .preload('contact')
-      .preload('group')
     return response.json({
       success: true,
       message,
@@ -231,13 +262,13 @@ export default class WhatsappsController {
 
     console.log('Nomor:', number)
     console.log('Message:', message)
-    console.log('File:', file)
+    // console.log('File:', file)
     console.log('Nama:', nama)
 
     if (file && nama) {
       const responseMsg = await sendFile(number, file, message, nama)
       return response.json({
-        status: 'success',
+        success: true,
         message: 'Hasil Lab Telah Terkirim!',
         data: responseMsg,
       })
@@ -245,10 +276,11 @@ export default class WhatsappsController {
     const contact = await Contact.findBy('waId', number)
     const responseMsg = await sendMsg(number, message)
     return response.json({
-      status: 'success',
+      success: true,
       nama,
       contact,
       responseMsg,
+      message: 'Pesan Berhasil Dikirim',
     })
   }
 
