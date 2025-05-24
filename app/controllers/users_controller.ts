@@ -1,11 +1,15 @@
 import { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
-import { createUserValidator } from '#validators/user'
-import { MultipartFile } from '@adonisjs/core/bodyparser'
+// import { createUserValidator } from '#validators/user'
+// import { MultipartFile } from '@adonisjs/core/bodyparser'
 // import { dd } from '@adonisjs/core/services/dumper'
 import Contact from '#models/contact'
 import { formatWhatsappNumber } from '#services/number_service'
 import { getProfilePicture } from '#services/whatsapp_service'
+import { join } from 'path'
+import { createId } from '@paralleldrive/cuid2'
+import fs from 'node:fs'
+
 
 
 export default class UsersController {
@@ -13,51 +17,45 @@ export default class UsersController {
    * Display a list of resource
    */
   async index({ view }: HttpContext) {
-    const users = await User.all()
+    const users = await User.query().preload('contact').exec()
     return view.render('users/index', { users })
-  }
-
-  private async saveFile(file: MultipartFile | null): Promise<string | null> {
-    if (!file) {
-      throw new Error('File is required')
-    }
-
-    if (!file.isValid) {
-      throw new Error('Invalid file')
-    }
-
-    const extname = file.extname ?? 'unknown'
-    const fileName = `${new Date().getTime()}.${extname}`
-
-    await file.move('public/images/users', { name: fileName })
-
-    return `users/${fileName}`
   }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response, session }: HttpContext) {
+  async store({ request, response }: HttpContext) {
     try {
-      const payload = await request.validateUsing(createUserValidator)
-      let fotoPath = ''
-      if (request.file('avatar')) {
-        if (payload.avatar) {
-          fotoPath = (await this.saveFile(payload.avatar)) ?? 'users/default-profile.jpg'
-        }
+      const { email, password, fullName, phoneNumber } = request.all()
+      const foto = request.file('foto')
+
+      let fotoName = null
+
+      if (foto) {
+        fotoName = `${createId()}.${foto.extname}`
+
+        // Path absolut dari root project ke public/images/users
+        const targetPath = join('public', 'images', 'users')
+
+        await foto.move(targetPath, {
+          name: fotoName,
+          overwrite: true,
+        })
+
+        fotoName = `/images/users/${fotoName}`
+
       } else {
-        fotoPath = 'users/default-profile.jpg'
+        fotoName = '/images/users/user.png'
       }
 
       const user = await User.create({
-        fullName: payload.fullName,
-        email: payload.email,
-        password: payload.password,
-        foto: fotoPath,
-        phoneNumber: payload.phoneNumber,
+        fullName,
+        email,
+        password,
+        foto: fotoName,
       })
 
-      const waId = formatWhatsappNumber(payload.phoneNumber)
+      const waId = formatWhatsappNumber(phoneNumber)
       let profilePicture
       try {
         profilePicture = await getProfilePicture(waId)
@@ -66,22 +64,30 @@ export default class UsersController {
         profilePicture = 'images/users/user.png'
       }
 
-      if (payload.phoneNumber) {
+      if (phoneNumber) {
         await Contact.create({
           userId: user.uuid,
           waId,
-          name: payload.fullName,
-          username: payload.fullName,
+          name: fullName,
+          username: fullName,
           profilePicture,
         })
       }
 
-      session.flash({ 'success': 'User ' + user.fullName + ' ditambahkan!' })
-      return response.redirect().back()
+      const referer = request.headers().referer
+
+      return response.json({
+        success: true,
+        message: 'Data berhasil ditambahkan.',
+        redirectUrl: referer
+      })
     } catch (error) {
       console.log(error)
-      session.flash({ 'error': 'Gagal menambahkan user! ' + error.message })
-      return response.redirect().back()
+      return response.json({
+        success: false,
+        message: 'Error gagal menambahkan data.',
+        error
+      })
     }
   }
 
@@ -97,20 +103,48 @@ export default class UsersController {
    * Edit individual record
    */
   public async edit({ params, response }: HttpContext) {
-    const user = await User.find(params.id);
+    const user = await User.query().preload('contact').where('id', params.id).first();
     return response.json(user);
   }
 
   public async update({ request, params, response }: HttpContext) {
     const user = await User.findOrFail(params.id);
-    const data = request.only(['fullName', 'email', 'phoneNumber', 'role']);
+    const data = request.only(['fullName', 'email', 'role', 'foto']);
+    const phoneNumber = request.input('phoneNumber')
 
     try {
+      const foto = request.file('foto')
+      if (foto) {
+        // Hapus foto lama jika ada
+        const oldFotoPath = user.foto
+
+        if (oldFotoPath && !oldFotoPath?.includes('user.png')) {
+          const oldFotoFullPath = join('public', oldFotoPath) // Mendapatkan path lengkap dari foto lama
+          try {
+            fs.unlinkSync(oldFotoFullPath) // Menghapus file lama
+          } catch (err) {
+            console.log('Error saat menghapus foto lama:', err)
+          }
+        }
+
+        // Menyimpan foto baru
+        const fotoName = `${createId()}.${foto.extname}`
+        const targetPath = join('public', 'images', 'users')
+
+        await foto.move(targetPath, {
+          name: fotoName,
+          overwrite: true,
+        })
+
+        // Memperbarui foto path
+        user.foto = `/images/users/${fotoName}`
+      }
+
       user.merge({ ...data });
 
       const contact = await Contact.findBy('user_id', user.uuid)
 
-      const newNoHp = data.phoneNumber || ''
+      const newNoHp = phoneNumber || ''
       const newWaId = formatWhatsappNumber(newNoHp)
       if (!contact && newNoHp) {
         let profilePicture
@@ -168,75 +202,102 @@ export default class UsersController {
 
   async editPassword({ request, auth, response }: HttpContext) {
     const payload = request.only(['current_password', 'new_password', 'confirm_password'])
-    const user = auth.user
+    const user = auth.use('web').user
+    console.log(payload)
 
     if (!user) {
-      return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'User tidak ditemukan' })
+      return response.badRequest({ success: false, message: 'User tidak ditemukan' })
     }
 
     if (!payload.current_password || !payload.new_password || !payload.confirm_password) {
-      return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'Password lama, password baru, dan konfirmasi password wajib diisi' })
+      return response.badRequest({ success: false, message: 'Password lama, password baru, dan konfirmasi password wajib diisi' })
     } else if (user instanceof User && !await user.verifyPassword(payload.current_password)) {
-      return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'Password lama salah' })
+      return response.badRequest({ success: false, message: 'Password lama salah' })
     } else if (payload.new_password !== payload.confirm_password) {
-      return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'Password baru dan konfirmasi password tidak sama' })
+      return response.badRequest({ success: false, message: 'Password baru dan konfirmasi password tidak sama' })
     }
 
+    const referer = request.headers().referer
+
     try {
-      if ('password' in user) {
-        user.password = payload.confirm_password
-      } else {
-        return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'User tidak valid untuk operasi ini' })
-      }
+      user.password = payload.confirm_password
       await user.save()
-      return response.ok({ status: 'success', title: 'Berhasil!', message: 'Password berhasil diperbarui' })
+      return response.ok({ success: true, message: 'Password berhasil diperbarui', redirectUrl: referer })
     } catch (error) {
-      return response.badRequest({ status: 'error', title: 'Ada Kesalahan!', message: 'Gagal memperbarui password' + error.message })
+      return response.badRequest({ success: false, message: 'Gagal memperbarui password' + error.message })
     }
   }
 
 
   async editProfile({ request, auth, response, view }: HttpContext) {
     if (request.method() === 'GET') {
-      return view.render('profile/index', { user: auth.user })
+      let userWithContact = null
+      if (auth.user && auth.user instanceof User) {
+        userWithContact = await auth.user.load('contact')
+      }
+      return view.render('profile/index', { user: userWithContact })
     }
 
-    const user = auth.user
+    const user = auth.use('web').user
     if (!user) {
       return response.badRequest({
-        status: 'error',
-        title: 'Ada Kesalahan!',
+        success: false,
         message: 'User tidak ditemukan',
       })
     }
 
     // Ambil data input kecuali 'photo' karena photo adalah file
-    const payload = request.only(['fullName', 'email', 'phoneNumber'])
+    const payload = request.only(['fullName', 'email'])
+    const phoneNumber = request.input('phoneNumber')
 
 
-    if (!payload.fullName || !payload.email || !payload.phoneNumber) {
+    if (!payload.fullName || !payload.email || !phoneNumber) {
       return response.badRequest({
-        status: 'error',
-        title: 'Ada Kesalahan!',
+        success: false,
         message: 'Nama, Email, dan No Hp/Wa wajib diisi',
       })
     }
 
     try {
+
+      const foto = request.file('foto')
+      if (foto) {
+        // Hapus foto lama jika ada
+        const oldFotoPath = user.foto
+
+        if (oldFotoPath && !oldFotoPath?.includes('user.png')) {
+          const oldFotoFullPath = join('public', oldFotoPath) // Mendapatkan path lengkap dari foto lama
+          try {
+            fs.unlinkSync(oldFotoFullPath) // Menghapus file lama
+          } catch (err) {
+            console.log('Error saat menghapus foto lama:', err)
+          }
+        }
+
+        // Menyimpan foto baru
+        const fotoName = `${createId()}.${foto.extname}`
+        const targetPath = join('public', 'images', 'users')
+
+        await foto.move(targetPath, {
+          name: fotoName,
+          overwrite: true,
+        })
+
+        // Memperbarui foto path
+        user.foto = `/images/users/${fotoName}`
+      }
+
       user.merge({ ...payload })
       await user.save()
       return response.ok({
-        status: 'success',
-        title: 'Berhasil!',
+        success: true,
         message: 'Profil berhasil diperbarui',
       })
     } catch (error) {
       return response.badRequest({
-        status: 'error',
-        title: 'Ada Kesalahan!',
+        success: false,
         message: 'Gagal memperbarui profil: ' + error.message,
       })
     }
   }
-
 }

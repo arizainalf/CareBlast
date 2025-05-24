@@ -17,11 +17,7 @@ export default class extends BaseSchema {
       table.string('message_type').notNullable()
       table.text('content').notNullable()
 
-      table.string('group_id').nullable().references('id')
-        .inTable('groups')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE')
-
+      table.boolean('is_notif').defaultTo(false)
       table.boolean('is_hasil_lab').defaultTo(false)
       table.string('file_name').nullable()
       table.string('file_path').nullable()

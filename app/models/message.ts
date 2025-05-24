@@ -28,7 +28,7 @@ export default class Message extends BaseModel {
   declare timestamp: DateTime
 
   @column()
-  declare groupId: string | null
+  declare isNotif: boolean | null
 
   @column()
   declare isHasilLab: boolean
@@ -50,6 +50,7 @@ export default class Message extends BaseModel {
 
   @belongsTo(() => Group)
   declare group: BelongsTo<typeof Group>
+  status: any
 
   @beforeCreate()
   public static async generateUuid(message: Message) {

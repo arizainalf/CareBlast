@@ -20,7 +20,8 @@ export default class ObatPasiensController {
         temaKunjungan,
         keterangan,
         batasWaktu,
-        status
+        status,
+        hariKonsumsi
       } = request.body()
 
       console.log(params.uuid)
@@ -67,6 +68,7 @@ export default class ObatPasiensController {
         kunjunganId: selectedKunjunganId,
         frekuensi: 1,
         waktuKonsumsi: JSON.stringify(['08:00']),
+        hariKonsumsi: JSON.stringify(hariKonsumsi),
         keteranganWaktu,
         batasWaktu: batasWaktu? batasWaktu : kunjungan[0]?.kunjunganBerikutnya?.toJSDate?.() ?? kunjungan[0]?.kunjunganBerikutnya ?? null,
         status
@@ -93,8 +95,10 @@ export default class ObatPasiensController {
 
     try {
       const obatPasienUuid = params.uuid
-      const { frekuensi, waktu, keteranganWaktu, batasWaktu, status } = request.body()
+      const { frekuensi, waktu, keteranganWaktu, batasWaktu, status, hariKonsumsi } = request.body()
       const waktuArray = Array.isArray(waktu) ? waktu : [waktu]
+
+      console.log(hariKonsumsi)
 
       const updated = await ObatPasien.query()
         .where('uuid', obatPasienUuid)
@@ -102,6 +106,7 @@ export default class ObatPasiensController {
           frekuensi: Number.parseInt(frekuensi, 10),
           waktuKonsumsi: JSON.stringify(waktuArray),
           keteranganWaktu,
+          hariKonsumsi: JSON.stringify(hariKonsumsi),
           batasWaktu,
           status
         })

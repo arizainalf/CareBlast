@@ -6,6 +6,7 @@ import JenisPenyakit from '#models/jenis_penyakit'
 import generatePdf from '#services/generate_pdf'
 import Kunjungan from '#models/kunjungan'
 import Message from '#models/message'
+import db from '@adonisjs/lucid/services/db'
 
 const COLORS = ['#886CC0', '#FFCF6D', '#FFA7D7', '#6CBCB7', '#FF7778', '#5FAAE3', '#50C45E', '#DFA73A']
 
@@ -25,11 +26,11 @@ export default class LaporanController {
     let bulan: number | null = null
     let tahun: number | null = null
 
-    if (qs.pagePasien){
+    if (qs.pagePasien) {
       pagePasien = qs.pagePasien;
     }
 
-    if (qs.pageKunjungan){
+    if (qs.pageKunjungan) {
       pageKunjungan = qs.pageKunjungan;
     }
 
@@ -59,9 +60,9 @@ export default class LaporanController {
     const pasienSebelumnyaQuery = Pasien.query()
     const kunjunganSekarangQuery = Kunjungan.query()
     const kunjunganSebelumnyaQuery = Kunjungan.query()
-    const pesanSekarangQuery = Message.query().where('from_me', true).where('is_hasil_lab', false)
+    const pesanSekarangQuery = Message.query().where('from_me', true).where('is_hasil_lab', false).where('is_notif', true)
     const hasilLabSekarangQuery = Message.query().where('from_me', true).where('is_hasil_lab', true)
-    const pesanSebelumnyaQuery = Message.query().where('from_me', true).where('is_hasil_lab', false)
+    const pesanSebelumnyaQuery = Message.query().where('from_me', true).where('is_hasil_lab', false).where('is_notif', true)
     const hasilLabSebelumnyaQuery = Message.query().where('from_me', true).where('is_hasil_lab', true)
 
     if (filterBulan && bulanIni && bulanSebelumnya) {
@@ -212,18 +213,41 @@ export default class LaporanController {
         tahunDipilih: tahun,
       })
 
+      const sekarang = DateTime.now().toFormat('yyyy LLL dd')
       const pdfBuffer = await generatePdf(html)
       response.header('Content-Type', 'application/pdf')
-      response.header('Content-Disposition', `attachment; filename="laporan-${bulan || 'semua'}-${tahun || 'semua'}.pdf"`)
+      response.header('Content-Disposition', `attachment; filename="laporan-${bulan ? bulan + '-' + tahun! : (tahun ? tahun : 'semua')}-${sekarang}.pdf"`)
       return response.send(pdfBuffer)
     }
 
+    const now = DateTime.now()
+    const mode = status
+    const month = bulan || now.month
+    const year = tahun || now.year
+
+    const chartPasien = await this.getCounts(Pasien, mode, year, month)
+    const chartKunjungan = await this.getCounts(Kunjungan, mode, year, month)
+    const chartPesan = await this.getCounts(
+      Message,
+      mode,
+      year, month, { from_me: true, is_hasil_lab: false, is_notif: true }
+    )
+    const chartHasilLab = await this.getCounts(
+      Message,
+      mode,
+      year, month, { from_me: true, is_hasil_lab: true }
+    )
+
     return view.render('laporan/index', {
+      chartData: {
+        pasien: chartPasien,
+        kunjungan: chartKunjungan,
+        pesan: chartPesan,
+        hasilLab: chartHasilLab,
+      },
       status,
       DateTime,
-      // dataKunjungan,
       dataKunjunganPaginate,
-      // dataPasien,
       dataPasienPaginate,
       totalHasilLabTerkirimSekarang: Number(totalHasilLabTerkirimSekarang[0].$extras.total),
       totalHasilLabTerkirimSebelumnya: Number(totalHasilLabTerkirimSebelumnya[0].$extras.total),
@@ -277,4 +301,113 @@ export default class LaporanController {
 
     return result
   }
+
+  async getCounts(
+    model: any,
+    mode: string = 'semua',
+    tahun?: number,
+    bulan?: number,
+    extraWhere: Record<string, any> = {},
+    field = 'created_at'
+  ) {
+    const now = DateTime.now()
+    const tahunAktif = tahun ?? now.year
+    const bulanAktif = bulan ?? now.month
+
+    console.log(now)
+    console.log(bulan, bulanAktif)
+    console.log(tahun, tahunAktif)
+
+    // Mulai query dari model
+    let query = model.query()
+
+    // Terapkan kondisi tambahan dari extraWhere
+    for (const key in extraWhere) {
+      query = query.where(key, extraWhere[key])
+    }
+
+    let labels: string[] = []
+    let data: number[] = []
+
+    if (mode === 'semua') {
+      // Total berdasarkan tahun (semua tahun)
+
+      const minYearResult = await query
+        .clone()
+        .select(db.raw('MIN(EXTRACT(YEAR FROM ??)) as min_year', [field]))
+        .first()
+      const maxYearResult = await query
+        .clone()
+        .select(db.raw('MAX(EXTRACT(YEAR FROM ??)) as max_year', [field]))
+        .first()
+
+      const minYear = minYearResult?.min_year ? parseInt(minYearResult.min_year) : tahunAktif
+      const maxYear = maxYearResult?.max_year ? parseInt(maxYearResult.max_year) : tahunAktif
+
+      // Pastikan maxYear tidak kurang dari tahunAktif
+      const endYear = maxYear < tahunAktif ? tahunAktif : maxYear
+
+      // Generate label tahun dinamis lengkap dari minYear sampai endYear
+      labels = []
+      data = []
+      for (let y = minYear; y <= endYear; y++) {
+        labels.push(y.toString())
+        data.push(0)
+      }
+
+      const results = await query
+        .clone()
+        .select(db.raw('EXTRACT(YEAR FROM ??) as period, COUNT(*) as count', [field]))
+        .groupByRaw('EXTRACT(YEAR FROM ??)', [field])
+        .orderByRaw('EXTRACT(YEAR FROM ??)', [field])
+
+      results.forEach((r: { $extras: { period: number; count: string } }) => {
+        const year = r.$extras.period
+        labels.push(year.toString())
+        data.push(parseInt(r.$extras.count))
+      })
+    } else if (mode === 'tahunan') {
+      // Total per bulan dalam tahunAktif
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
+      labels = [...monthNames]
+      data = Array(12).fill(0)
+
+      const results = await query
+        .clone()
+        .select(db.raw('EXTRACT(MONTH FROM ??) as period, COUNT(*) as count', [field]))
+        .whereRaw('EXTRACT(YEAR FROM ??) = ?', [field, tahunAktif])
+        .groupByRaw('EXTRACT(MONTH FROM ??)', [field])
+        .orderByRaw('EXTRACT(MONTH FROM ??)', [field])
+
+      results.forEach((r: { $extras: { period: number; count: string } }) => {
+        const month = r.$extras.period  // Ini adalah nomor bulan (1-12)
+        const index = month - 1  // Convert ke index array (0-11)
+        if (index >= 0 && index < 12) {
+          data[index] = parseInt(r.$extras.count)
+        }
+      })
+    } else if (mode === 'bulanan') {
+      // Total per hari dalam bulanAktif dan tahunAktif
+      const totalHari = DateTime.local(tahunAktif, bulanAktif).daysInMonth ?? 0
+      labels = Array.from({ length: totalHari }, (_, i) => (i + 1).toString().padStart(2, '0'))
+      data = Array(totalHari).fill(0)
+
+      const results = await query
+        .clone()
+        .select(db.raw('EXTRACT(DAY FROM ??) as period, COUNT(*) as count', [field]))
+        .whereRaw('EXTRACT(YEAR FROM ??) = ?', [field, tahunAktif])
+        .whereRaw('EXTRACT(MONTH FROM ??) = ?', [field, bulanAktif])
+        .groupByRaw('EXTRACT(DAY FROM ??)', [field])
+        .orderByRaw('EXTRACT(DAY FROM ??)', [field])
+
+      results.forEach((r: { $extras: { period: number; count: string } }) => {
+        const day = r.$extras.period
+        data[day - 1] = parseInt(r.$extras.count)
+      })
+    }
+    console.log(labels)
+    console.log(data)
+    return { labels, data }
+  }
+
 }

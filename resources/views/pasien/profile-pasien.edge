@@ -1,12 +1,12 @@
 @layout.app({ title: `Profile ${pasien.name}` })
 @slot('styles')
 <style>
-    .dropdown:hover .dropdown-menu {
-      display: block;
-      margin-top: 0;
-      right: 0;
-      left: auto;
-    }
+  .dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+    right: 0;
+    left: auto;
+  }
 </style>
 @end
 @slot('content')
@@ -184,7 +184,8 @@
                             data-bs-toggle="modal" data-bs-target="#basicModal" data-uuid="{{ item.uuid }}"
                             data-nama="{{ item.obat.nama }}" data-frekuensi="{{ item.frekuensi }}"
                             data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}"
-                            data-batas-waktu="{{ item.batasWaktu }}" data-status="{{ item.status }}">
+                            data-hari="{{ item.hariKonsumsi }}" data-batas-waktu="{{ item.batasWaktu }}"
+                            data-status="{{ item.status }}">
                             <i class="fas fa-pencil-alt" style="cursor: pointer; user-select: none;"></i>
                           </span>
                           <span class="badge badge-primary badge-pill" style="cursor: default; user-select: none;">{{
@@ -215,7 +216,8 @@
                             data-bs-toggle="modal" data-bs-target="#basicModal" data-uuid="{{ item.uuid }}"
                             data-nama="{{ item.obat.nama }}" data-frekuensi="{{ item.frekuensi }}"
                             data-waktu="{{ item.waktuKonsumsi }}" data-keterangan-waktu="{{ item.keteranganWaktu }}"
-                            data-batas-waktu="{{ item.batasWaktu }}" data-status="{{ item.status }}">
+                            data-batas-waktu="{{ item.batasWaktu }}" data-status="{{ item.status }}"
+                            data-hari="{{ item.hariKonsumsi }}">
                             <i class="fas fa-pencil-alt" style="cursor: pointer; user-select: none;"></i>
                           </span>
                           <span class="badge badge-secondary badge-pill" style="cursor: default; user-select: none;">{{

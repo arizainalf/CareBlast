@@ -1,4 +1,4 @@
-import { Redirect, type HttpContext } from '@adonisjs/core/http'
+import { type HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import { sendMsg } from '#services/whatsapp_service'
 import ResetToken from '#models/reset_token'
@@ -6,7 +6,7 @@ import env from '#start/env'
 
 export default class PasswordResetsController {
     async show({ view }: HttpContext) {
-        return view.render('auth/reset_password')
+        return view.render('auth/reset-pw')
     }
 
     async forgot({ request, response }: HttpContext) {
@@ -48,6 +48,7 @@ export default class PasswordResetsController {
 
             const sendVerificationCode = await sendMsg(
                 no_hp, message)
+
             if (!sendVerificationCode) {
                 return response.json({
                     success: false,
@@ -65,24 +66,29 @@ export default class PasswordResetsController {
         }
     }
 
-    async resetPassword({ request, response }: HttpContext) {
-        const { password, confirm_password, token } = request.all()
+    async resetPassword({ request, response, params }: HttpContext) {
+        const { password, password_confirmation } = request.all()
 
-        if (!password || !confirm_password) {
+        const token_reset = params.uuid
+
+        console.log(token_reset);
+        console.log(password, password_confirmation)
+
+        if (!password || !password_confirmation) {
             return response.json({
                 success: false,
                 message: 'Password dan konfirmasi password dibutuhkan.',
             })
         }
 
-        if (password !== confirm_password) {
+        if (password !== password_confirmation) {
             return response.json({
                 success: false,
                 message: 'Password tidak sama.',
             })
         }
 
-        const resetToken = await ResetToken.verify(token, 'PASSWORD_RESET')
+        const resetToken = await ResetToken.verify(token_reset, 'PASSWORD_RESET')
 
         if (!resetToken) {
             return response.json({
@@ -91,7 +97,7 @@ export default class PasswordResetsController {
             })
         }
 
-        const user = await ResetToken.getTokenUser(token, 'PASSWORD_RESET')
+        const user = await ResetToken.getTokenUser(token_reset, 'PASSWORD_RESET')
         if (!user) {
             return response.json({
                 success: false,

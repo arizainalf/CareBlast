@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-dialog-centered" role="document">
   <div class="modal-content">
-    <form id="formUser"  data-id="" >
+    <form id="formUser" data-id="">
       <div class="modal-header">
         <h5 class="modal-title">Tambah Pengguna</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -10,39 +10,30 @@
         <div class="row">
           <div class="col-12">
             <div class="mb-3">
-              <label class="form-label">Foto Profile</label>
-              <div class="d-flex align-items-center">
-                <div class="avatar-preview me-3">
-                  <img src="images/users/default-profile.jpg" id="preview-avatar" class="rounded-circle" width="60" alt="">
-                </div>
-                <div class="upload-btn-wrapper">
-                  <input type="file" class="form-control" name="avatar" id="avatar" accept="image/*" >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="mb-3">
               <label class="form-label">Nama Lengkap</label>
-              <input type="text" class="form-control" name="fullName" id="fullName" placeholder="Masukkan nama lengkap" value="{{ old('fullName') || '' }}">
+              <input type="text" class="form-control" name="fullName" id="fullName" placeholder="Masukkan nama lengkap"
+                value="{{ old('fullName') || '' }}">
             </div>
           </div>
           <div class="col-6">
             <div class="mb-3">
               <label class="form-label">No Whatsapp</label>
-              <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Masukkan phoneNumber" value="{{ old('phoneNumber') || '' }}">
+              <input type="text" class="form-control" name="phoneNumber" id="phoneNumber"
+                placeholder="Masukkan nomor whatsapp" value="{{ old('phoneNumber') || '' }}">
             </div>
           </div>
           <div class="col-6">
             <div class="mb-3">
               <label class="form-label">Email</label>
-              <input type="email" class="form-control" name="email" id="email" placeholder="Masukkan e-mail" value="{{ old('email') || '' }}">
+              <input type="email" class="form-control" name="email" id="email" placeholder="Masukkan e-mail"
+                value="{{ old('email') || '' }}">
             </div>
           </div>
           <div class="col-12">
             <div class="mb-3">
               <label class="form-label" id="passwordField">Password</label>
-              <input type="password" class="form-control" name="password" id="passwordField" placeholder="Masukkan password">
+              <input type="password" class="form-control" name="password" id="passwordField"
+                placeholder="Masukkan password">
             </div>
           </div>
           <div class="col-12">

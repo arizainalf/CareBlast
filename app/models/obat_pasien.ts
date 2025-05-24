@@ -41,10 +41,13 @@ export default class ObatPasien extends BaseModel {
   declare keteranganWaktu: string
 
   @column()
+  declare hariKonsumsi: string | null
+
+  @column()
   declare batasWaktu: Date
 
   @column()
-  declare status: boolean 
+  declare status: boolean | number 
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

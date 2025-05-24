@@ -13,20 +13,33 @@ export default class extends BaseSeeder {
 
   public async run() {
     // Seed Users
-    await User.createMany([
+    const users = await User.createMany([
       {
         fullName: 'Super Admin',
         email: 'superadmin@gmail.com',
         password: '11221122',
         role: 'super_admin',
-        phoneNumber: '081930865458',
       },
       {
         fullName: 'Admin',
         email: 'admin@gmail.com',
         password: '11221122',
         role: 'admin',
-        phoneNumber: '081930865458',
+      },
+    ])
+
+    await Contact.createMany([
+      {
+        userId: users[0].uuid,
+        name: 'Super Admin',
+        username: 'superadmin',
+        waId: '6285959638322@s.whatsapp.net',
+      },
+      {
+        userId: users[1].uuid,
+        name: 'Admin',
+        username: 'admin',
+        waId: '6281904002654@s.whatsapp.net',
       },
     ])
 
@@ -45,49 +58,54 @@ export default class extends BaseSeeder {
     const dokterData = [
       {
         nip: 'DOK001',
-        nama: 'Dr. Andi Wijaya',
+        nama: 'Andi Wijaya',
         noWhatsapp: '087818179639',
         spesialistId: spesialists[0].id,
         jamMulai: '08:00',
         jamSelesai: '14:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         status: true,
       },
       {
         nip: 'DOK002',
-        nama: 'Dr. Siti Rahma',
+        nama: 'Siti Rahma',
 
         noWhatsapp: '087818179639',
 
         spesialistId: spesialists[1].id,
         jamMulai: '09:00',
         jamSelesai: '15:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         status: true,
       },
       {
         nip: 'DOK003',
-        nama: 'Dr. Budi Santoso',
+        nama: 'Budi Santoso',
         noWhatsapp: '087818179639',
         spesialistId: spesialists[2].id,
         jamMulai: '10:00',
         jamSelesai: '16:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         status: true,
       },
       {
         nip: 'DOK004',
-        nama: 'Dr. Dewi Anggraini',
+        nama: 'Dewi Anggraini',
         noWhatsapp: '087818179639',
         spesialistId: spesialists[3].id,
         jamMulai: '13:00',
         jamSelesai: '19:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         status: true,
       },
       {
         nip: 'DOK005',
-        nama: 'Dr. Rudi Hartono',
+        nama: 'Rudi Hartono',
         noWhatsapp: '087818179639',
         spesialistId: spesialists[4].id,
         jamMulai: '08:00',
         jamSelesai: '16:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         status: true,
       },
     ]
@@ -169,10 +187,10 @@ export default class extends BaseSeeder {
     )
 
     await Contact.create({
-      pasien_id: pasien.uuid,
+      pasienId: pasien.uuid,
       name: 'Jodi Maulana',
       username: 'jodimaulana',
-      waId: '6281930865458@s.whatsapp',
+      waId: '6281930865458@s.whatsapp.net',
     })
   }
 }

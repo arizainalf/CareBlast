@@ -16,17 +16,6 @@
     document.getElementById('resetPasswordForm').classList.remove('d-none');
   }
 
-  function handleResetPassword(e) {
-    e.preventDefault();
-    // Handle password reset logic here
-    alert('Password reset successfully!');
-    window.location.href = 'login';
-  }
-
-  function resendCode() {
-    alert('Verification code resent!');
-  }
-
   // Handle verification code input
   document.querySelectorAll('.verification-input').forEach((input, index) => {
     input.addEventListener('keyup', (e) => {

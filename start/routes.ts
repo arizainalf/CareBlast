@@ -30,7 +30,7 @@ router.get('/forgot', async ({ view }) => {
 
 router.post('/forgot', [PasswordResetsController, 'forgot']).as('forgotPost')
 router.get('/reset-password/:uuid', [PasswordResetsController, 'show']).as('reset-password')
-router.post('/reset-password', [PasswordResetsController, 'resetPassword']).as('reset-password.post')
+router.post('/reset-password/:uuid', [PasswordResetsController, 'resetPassword']).as('reset-password.post')
 
 // Route Patients
 router
@@ -75,6 +75,9 @@ router
     router
       .put('/dokter/:id/updateStatus', [DokterSpesialistsController, 'updateStatus'])
       .as('dokter.updateStatus')
+
+    router.put('/dokter/:id/jadwal', [DokterSpesialistsController, 'updateHari'])
+      .as('spesialis.jadwal')
   })
   .use(middleware.auth({ guards: ['web'] }))
   .middleware(middleware.role(['super_admin']))

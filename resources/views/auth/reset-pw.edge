@@ -1,10 +1,10 @@
-@layout.auth()
+@layout.auth({ title: `Reset Password` })
 @slot('auth')
 <div class="row">
     <div class="col-4"></div>
     <div class="col-4">
         <!-- Reset Password Form -->
-        <div class="card p-4" id="resetPasswordForm">
+        <div class="card p-4">
             <div class="card-body">
                 <div class="reset-icon">
                     <i class="fas fa-lock-open text-white fa-2x"></i>
@@ -12,7 +12,7 @@
                 <h4 class="text-center mb-4 fw-bold">Reset Password</h4>
                 <p class="text-muted text-center mb-4">Create a new strong password</p>
 
-                <form onsubmit="handleResetPassword(event)">
+                <form id="resetPasswordForm">
                     <div class="mb-4">
                         <label class="form-label text-muted">New Password</label>
                         <div class="input-group">
@@ -46,31 +46,29 @@
 </div>
 @end
 
-@slot('script')
+@slot('scripts')
 <script>
     $(document).ready(function () {
         const pathSegments = window.location.pathname.split('/')
         const token = pathSegments[pathSegments.length - 1]
 
+        console.log('Token:', token)    
+
         $('#resetPasswordForm').on('submit', function (event) {
             event.preventDefault();
+
+            console.log('Form submitted');
             // Handle the reset password logic here
             const newPassword = $(this).find('input[name="password"]').val();
             const confirmPassword = $(this).find('input[name="password_confirmation"]').val();
 
             if (newPassword !== confirmPassword) {
                 showSwal('error', 'Passwords do not match', 'Please make sure both passwords are the same.');
-                return;
             }
 
             const url = '/reset-password/' + token;
             const method = 'POST';
-            const data = {
-                new_password: newPassword,
-                confirm_password: confirmPassword,
-                reset_token: token,
-                _token: '{{ csrf_token() }}'
-            };
+            const data = new FormData(this)
 
             ajaxRequest(url, method, data)
         });

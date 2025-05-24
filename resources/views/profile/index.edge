@@ -1,4 +1,7 @@
 @layout.app({ title: "Edit Profile" })
+@slot('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+@end
 @slot('content')
 <div class="container-fluid py-4">
   <div class="row justify-content-center g-4">
@@ -12,6 +15,30 @@
           <form action="{{ route('edit-profile.post')}}" method="POST" enctype="multipart/form-data" id="editProfile">
             {{ csrfField() }}
             <div class="row g-3">
+
+              <div class="col-12">
+                <div class="mb-3 row">
+                  <div class="col-4">
+                    <img src="{{ auth.user.foto }}" alt="{{ auth.user.fullName}}"
+                      class="img-fluid rounded-circle mb-3 shadow" width="150">
+                  </div>
+                  <div class="col-8">
+                    <img id="image-preview" style="max-width: 100%; display: none;">
+                    <div id="cropped-image-container" style="display: none;">
+                      <img id="cropped-image" style="max-width: 100%;" class="rounded-circle">
+                    </div>
+                  </div>
+
+                  <button type="button" class="btn btn-primary mt-2" id="crop-button"
+                    style="display: none;">Crop</button>
+                  <button type="button" class="btn btn-primary mt-2" id="edit-button"
+                    style="display: none;">Edit</button>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="foto">Foto Profile</label>
+                  <input type="file" class="form-control" name="foto1" id="upload" accept="image/*">
+                </div>
+              </div>
               <div class="col-12">
                 <div class="mb-3">
                   <label class="form-label" for="fullName">Nama Lengkap</label>
@@ -28,7 +55,8 @@
               <div class="col-12">
                 <div class="mb-3">
                   <label class="form-label" for="notlp">No HP/Whatsapp</label>
-                  <input type="text" class="form-control" name="phoneNumber" id="notlp" value="{{ auth.user.phoneNumber || ''}}">
+                  <input type="text" class="form-control" name="phoneNumber" id="notlp"
+                    value="{{ auth.user.contact.waId ? formatPhoneNumber(auth.user.contact.waId) : '' }}">
                 </div>
               </div>
               <div class="col-12">
@@ -119,58 +147,95 @@
     transition: all 0.3s ease;
   }
 </style>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 <script>
+
   document.addEventListener('DOMContentLoaded', function () {
+    let cropper;
+    let imgBlob;
+
+    $('#upload').change(function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#image-preview').attr('src', e.target.result).show();
+          if (cropper) {
+            cropper.destroy();
+          }
+          cropper = new Cropper($('#image-preview')[0], {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 0.8,
+            responsive: true,
+            cropBoxResizable: false,
+          });
+          $('#crop-button').show();
+          $('#edit-button').hide();
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    $('#crop-button').click(function () {
+      if (cropper) {
+        const canvas = cropper.getCroppedCanvas();
+        canvas.toBlob(function (blob) {
+          imgBlob = blob;
+          const croppedImage = URL.createObjectURL(blob);
+          $('#cropped-image').attr('src', croppedImage);
+          $('#cropped-image-container').show();
+          $('#image-preview').hide();
+          $('.cropper-container.cropper-bg').hide();
+          $('#crop-button').hide();
+          $('#edit-button').show();
+        }, 'image/jpeg');
+      }
+    });
+
+    $('#edit-button').click(function () {
+      $('#cropped-image-container').hide();
+      $('#image-preview').show();
+      $('#crop-button').show();
+      $('#edit-button').hide();
+      if (cropper) {
+        cropper.destroy();
+      }
+      cropper = new Cropper($('#image-preview')[0], {
+        aspectRatio: 1,
+        viewMode: 1,
+        autoCropArea: 0.8,
+        responsive: true,
+        cropBoxResizable: false,
+      });
+    });
+
     const profileForm = document.getElementById('editProfile')
     const passwordForm = document.getElementById('editPassword')
 
-    passwordForm.addEventListener('submit', async function (event) {
-      event.preventDefault()
+    $('#editPassword').on('submit', function (e) {
+      e.preventDefault();
 
-      const formData = new FormData(passwordForm)
-      const response = await fetch(passwordForm.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-          'Accept': 'application/json',
-        },
-      })
+      const formData = new FormData(this)
+      const url = $(this).attr('action')
+      const method = 'POST'
 
-      const result = await response.json()
-
-      Swal.fire({
-        title: result.title,
-        text: result.message,
-        icon: result.status,
-        timer: 2000,
-        showConfirmButton: false,
-      })
+      ajaxRequest(url, method, formData)
     })
 
-    profileForm.addEventListener('submit', async function (event) {
+    $('#editProfile').on('submit', function (event) {
       event.preventDefault()
 
+      const url = $(this).attr('action')
       const formData = new FormData(profileForm)
-      const response = await fetch(profileForm.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-          'Accept': 'application/json',
-        },
-      })
+      if (imgBlob) {
+        formData.append('foto', imgBlob, 'cropped.jpg');
+      }
 
-      const result = await response.json()
+      ajaxRequest(url, 'POST', formData)
 
-      Swal.fire({
-        title: result.title,
-        text: result.message,
-        icon: result.status,
-        timer: 2000,
-        showConfirmButton: false,
-      })
     })
   })
 </script>

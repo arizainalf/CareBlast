@@ -17,7 +17,7 @@ export default class extends BaseSchema {
       table.string('wa_id').unique()
       table.string('username').nullable()
       table.string('name').nullable()
-      table.string('profile_picture').nullable()
+      table.string('profile_picture').defaultTo('/images/users/user.png')
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

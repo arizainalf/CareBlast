@@ -137,6 +137,7 @@
   $(document).ready(function () {
 
     $(document).on('click', '.tambahDokter', function (e) {
+      e.preventDefault();
       $('#formDokter')[0].reset();
       $('#formDokter').attr('data-id', '');
       // $('#spesialist_id').empty(); // Clear the options in the select element
@@ -197,7 +198,28 @@
       let dokterJamMulai = $(this).data('jam-mulai');
       let dokterJamSelesai = $(this).data('jam-selesai');
       let dokterStatus = $(this).data('status');
+      let hariStr = $(this).data('jadwal-hari');
 
+      const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      const hariArray = hariStr.split(',').map(h => h.trim());
+
+      console.log("days", days)
+      console.log("hariArray:", hariArray);
+      console.log("hariStr:", hariStr);
+
+      $('#jadwalHari').empty();
+
+      days.forEach(function (day) {
+        const isChecked = hariArray.includes(day) ? 'checked' : '';
+        const checkbox = `
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="jadwalHari[]" value="${day}" id="${day}" ${isChecked}>
+        <label class="form-check-label" for="${day}">${day}</label>
+      </div>
+    `;
+        $('#jadwalHari').append(checkbox);
+        console.log("1")
+      });
 
       $.get('/spesialis', function (spesialisList) {
         spesialisList.spesialist.forEach(function (item) {
@@ -294,6 +316,19 @@
       });
     })
 
+    $(document).on('change', '.jadwal-checkbox', function () {
+      const dokterId = $(this).data('dokter-id')
+
+      // Ambil semua checkbox yang terkait dokter ini
+      const checked = $(`.jadwal-checkbox[data-dokter-id="${dokterId}"]:checked`)
+        .map(function () { return $(this).val() })
+        .get()
+
+      // Kirim ke server
+      ajaxRequest(`/dokter/${dokterId}/jadwal`, 'PUT', {
+        jadwalHari: checked,
+      })
+    })
 
     $('#formDokter').on('submit', function (e) {
       e.preventDefault();
@@ -307,7 +342,25 @@
         formData.append('foto', imgBlob, 'cropped.jpg');
       }
       ajaxRequest(url, method, formData)
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
 
+
+    })
+
+    $(document).on('change', '.jadwal-checkbox', function () {
+      const dokterId = $(this).data('dokter-id')
+
+      // Ambil semua checkbox yang terkait dokter ini
+      const checked = $(`.jadwal-checkbox[data-dokter-id="${dokterId}"]:checked`)
+        .map(function () { return $(this).val() })
+        .get()
+
+      // Kirim ke server
+      ajaxRequest(`/dokter/${dokterId}/jadwal`, 'PUT', {
+        jadwalHari: checked,
+      })
     })
 
     $('#formSpesialist').on('submit', function (e) {

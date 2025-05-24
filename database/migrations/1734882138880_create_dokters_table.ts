@@ -19,6 +19,7 @@ export default class extends BaseSchema {
         .onUpdate('CASCADE')
       table.string('jam_mulai').notNullable()
       table.string('jam_selesai').notNullable()
+      table.json('jadwal_hari').notNullable()
       table.boolean('status').defaultTo(true)
       table.string('foto').defaultTo('/images/dokters/user.png')
       table.timestamp('created_at')

@@ -17,6 +17,7 @@
         <th>No Whatsapp</th>
         <th>Spesialis</th>
         <th>Jam Kerja</th>
+        <th>Jadwal</th>
         <th>Status</th>
         <th>Foto</th>
         <th>Aksi</th>
@@ -31,6 +32,23 @@
         <td>{{ dokter.noWhatsapp }}</td>
         <td>{{ dokter.spesialist.nama }}</td>
         <td>{{dokter.jamMulai}}-{{dokter.jamSelesai}}</td>
+
+        <td>
+          <div class="d-flex flex-wrap">
+            @each(day in allDays)
+            <div class="form-check form-check-inline me-2 mb-2">
+              <input class="form-check-input jadwal-checkbox" type="checkbox" name="jadwalHari[]" value="{{ day }}"
+                id="{{ day }}" data-dokter-id="{{ dokter.id }}" 
+                @if(dokter.jadwalHari.includes(day))
+                {{ 'checked' }}
+                @end
+                >
+              <label class="form-check-label" for="{{ day }}">{{ day }}</label>
+            </div>
+            @end
+          </div>
+        </td>
+
         <td>
           <div class="status-wrapper d-flex align-items-center">
             <div class="toggle-switch-wrapper me-2">
@@ -44,14 +62,15 @@
               ? 'Aktif' : 'Tidak Aktif' }}</span>
           </div>
         </td>
-        <td><img src="{{ dokter.foto }}" style="width: 75px; height: 75px" alt=""></td>
+        <td><img src="{{ dokter.foto }}" width="50" alt="" class="rounded-circle"></td>
         <td>
           <div class="d-flex">
             <a href="#" class="btn btn-primary shadow btn-xs sharp me-1 editDokter" data-id="{{ dokter.id }}"
               data-nama="{{ dokter.nama }}" data-nip="{{ dokter.nip }}" data-spesialis-id="{{ dokter.spesialist.id }}"
               data-spesialis="{{ dokter.spesialist.nama }}" data-jam-mulai="{{ dokter.jamMulai }}"
               data-no-whatsapp="{{dokter.noWhatsapp}}" data-jam-selesai="{{ dokter.jamSelesai }}"
-              data-status="{{ dokter.status }}" data-bs-toggle="modal" data-bs-target="#tambahDokterModal">
+              data-jadwal-hari="{{ dokter.jadwalHari }}" data-status="{{ dokter.status }}" data-bs-toggle="modal"
+              data-bs-target="#tambahDokterModal">
               <i class="fas fa-pencil-alt"></i>
             </a>
             <a href="#" class="btn btn-danger shadow btn-xs sharp deleteDokter" data-id="{{ dokter.id }}"
@@ -76,7 +95,6 @@
       <form id="formDokter">
         {{ csrfField() }}
         <input type="hidden" name="jenis" id="jenis" value="dokter">
-        {{-- <input type="hidden" name="foto" id="foto"> --}}
         <div class="modal-body">
           <div class="mb-3">
             <input type="file" class="form-control mb-2" name="foto1" id="upload" accept="image/*" placeholder="Foto">
@@ -114,6 +132,15 @@
             <div class="col-sm-6 mt-2 mt-sm-0">
               <input type="text" name="jam_selesai" id="jam_selesai" class="form-control" placeholder="Jam Selesai">
             </div>
+          </div>
+          <div class="mb-2" id="jadwalHari">
+            @each( hari in ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'])
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" name="jadwalHari[]" value="{{ hari }}"
+                id="{{ hari | lower }}" checked>
+              <label class="form-check-label" for="{{ hari | lower }}">{{ hari }}</label>
+            </div>
+            @end
           </div>
           <div class="mb-2">
             <select class="form-control" required id="status" name="status">

@@ -69,6 +69,8 @@ export default class KunjungansController {
 
       const dokterId = request.input('dokter')
 
+      const hariKonsumsi = ['Senin','Selasa','Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu']
+
       console.log(request.input('dokter'), request.input('obatList'))
 
       const kunjungan = await Kunjungan.create({
@@ -91,6 +93,7 @@ export default class KunjungansController {
           waktuKonsumsi: JSON.stringify(['08:00']),
           batasWaktu: kunjunganBerikutnya,
           keteranganWaktu: 'Sesudah makan',
+          hariKonsumsi: JSON.stringify(hariKonsumsi),
         }))
         await ObatPasien.createMany(obatPasienData)
       } else {
@@ -103,6 +106,7 @@ export default class KunjungansController {
           waktuKonsumsi: JSON.stringify(['08:00']),
           batasWaktu: kunjunganBerikutnya,
           keteranganWaktu: 'Sesudah makan',
+          hariKonsumsi: JSON.stringify(hariKonsumsi),
         })
       }
 
@@ -113,7 +117,7 @@ export default class KunjungansController {
         message: 'Data kunjungan berhasil ditambahkan',
         redirectUrl: `/data-kunjungan`,
       })
-      
+
     } catch (error) {
       console.error('Error menambahkan kunjungan:', error)
       return response

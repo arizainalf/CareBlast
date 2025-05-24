@@ -87,7 +87,6 @@ export default class PasiensController {
         'alamat',
         'jenis_kelamin',
         'golongan_darah',
-        'no_hp',
       ]) as Record<string, any>
 
       const existingPatient = await Pasien.query().where('nik', data.nik).first()

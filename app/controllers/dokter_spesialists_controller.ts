@@ -1,6 +1,6 @@
 import Dokter from '#models/dokter'
 import Spesialist from '#models/spesialist'
-import { Redirect, type HttpContext } from '@adonisjs/core/http'
+import { type HttpContext } from '@adonisjs/core/http'
 import { join } from 'path'
 import { createId } from '@paralleldrive/cuid2'
 import fs from 'node:fs'
@@ -15,6 +15,7 @@ export default class DokterSpesialistsController {
     return view.render('puskesmas/data-dokter', {
       spesialists,
       dokters,
+      allDays: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
     })
   }
 
@@ -28,7 +29,7 @@ export default class DokterSpesialistsController {
    */
   async store({ request, response }: HttpContext) {
     if (request.input('jenis') === 'dokter') {
-      const { nip, nama, spesialist_id, jam_mulai, jam_selesai, status, no_whatsapp } = request.all()
+      const { nip, nama, spesialist_id, jam_mulai, jam_selesai, status, no_whatsapp, jadwalHari } = request.all()
       const foto = request.file('foto')
 
       let fotoName = null
@@ -56,17 +57,18 @@ export default class DokterSpesialistsController {
         jamMulai: jam_mulai,
         jamSelesai: jam_selesai,
         status,
+        jadwalHari: JSON.stringify(jadwalHari),
         foto: fotoName,
       })
 
-      return response.json({ success: true, message: 'Dokter berhasil disimpan!', dokter , redirectUrl: '/dokter' })
+      return response.json({ success: true, message: 'Dokter berhasil disimpan!', dokter, redirectUrl: '/dokter' })
     }
 
     // untuk spesialist
     if (request.input('jenis') === 'spesialist') {
       const { nama, gelar } = request.all()
       const spesialist = await Spesialist.create({ nama, gelar })
-      return response.json({ success: true, message: 'Spesialis berhasil disimpan!', spesialist , redirectUrl: '/dokter' })
+      return response.json({ success: true, message: 'Spesialis berhasil disimpan!', spesialist, redirectUrl: '/dokter' })
     }
   }
 
@@ -100,14 +102,16 @@ export default class DokterSpesialistsController {
       // Update dokter dengan pengecekan foto baru
       const dokter = await Dokter.findOrFail(params.id_dokter)
       const data = request.only(['nama', 'nip', 'spesialist_id', 'jam_mulai', 'jam_selesai', 'status', 'no_whatsapp'])
+      const jadwalHari = request.input('jadwalHari')
+      dokter.jadwalHari = JSON.stringify(jadwalHari)
 
       // Cek apakah ada foto baru
       const foto = request.file('foto')
       if (foto) {
         // Hapus foto lama jika ada
         const oldFotoPath = dokter.foto
-        
-        if (oldFotoPath && !oldFotoPath?.includes('user.png') ) {
+
+        if (oldFotoPath && !oldFotoPath?.includes('user.png')) {
           const oldFotoFullPath = join('public', oldFotoPath) // Mendapatkan path lengkap dari foto lama
           try {
             fs.unlinkSync(oldFotoFullPath) // Menghapus file lama
@@ -146,6 +150,16 @@ export default class DokterSpesialistsController {
     return response.json({ success: true, message: 'Status berhasil diperbarui!', dokter });
   }
 
+  async updateHari({ params, request, response }: HttpContext) {
+    const dokter = await Dokter.findOrFail(params.id)
+    const jadwalHari = request.input('jadwalHari')
+    if (!Array.isArray(jadwalHari)) {
+      return response.badRequest({ success: false, message: 'Jadwal hari harus berupa array' })
+    }
+    dokter.jadwalHari = JSON.stringify(jadwalHari)
+    await dokter.save()
+    return response.json({ success: true, message: 'Jadwal berhasil diperbarui!', dokter });
+  }
   /**
    * Delete record
    */

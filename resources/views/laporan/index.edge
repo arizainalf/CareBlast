@@ -142,6 +142,12 @@
             </div>
         </div>
 
+        <div class="col-xl-12">
+            <div class="card border-0 bg-white">
+                <div id="chart" style="height: 250px; max-height: 250px;"></div>
+            </div>
+        </div>
+
         <!-- Chart and WhatsApp Section -->
         <div class="col-xl-6">
             <div class="card border-0 bg-white">
@@ -262,7 +268,53 @@
 
 @include('laporan/partials/script')
 
+{{--
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
+    let labels = []
+
+    @each(item in chartData.pasien.labels)
+    labels.push('{{ item }}')
+    @end
+
+    $(document).ready(function () {
+        const options = {
+            chart: {
+                type: 'bar',
+                height: 350,
+            },
+            xaxis: {
+                categories: labels,
+            },
+            series: [
+                {
+                    name: 'Pasien',
+                    data: [{{ chartData.pasien.data }}],
+        },
+            {
+                name: 'Kunjungan',
+                data: [{{ chartData.kunjungan.data }}],
+    },
+        {
+            name: 'Pesan',
+            data: [{{ chartData.pesan.data }}],
+      },
+        {
+            name: 'Hasil Lab',
+            data: [{{ chartData.hasilLab.data }}],
+      },
+    ],
+  }
+
+  const chart = new ApexCharts(document.querySelector('#chart'), options)
+    chart.render()
+    })
+</script>
+
+<script>
+
     const jenisPenyakitData = {{{ JSON.stringify(jenisPenyakitData) }}};
     const monthlyData = {{{ JSON.stringify(monthlyData) }}};
     const colors = ['#886CC0', '#FFCF6D', '#FFA7D7', '#6CBCB7', '#FF7778', '#5FAAE3', '#50C45E', '#DFA73A'];
