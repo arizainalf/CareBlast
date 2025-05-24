@@ -28,5 +28,15 @@
     "update": {
       "status": 4
     }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB010D7B5875B031D4460",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
   }
 ]
