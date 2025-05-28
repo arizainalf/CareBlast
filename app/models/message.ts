@@ -3,7 +3,6 @@ import { BaseModel, column, beforeCreate, belongsTo } from '@adonisjs/lucid/orm'
 import { v4 as uuidv4 } from 'uuid'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Contact from '#models/contact'
-import Group from '#models/group'
 
 export default class Message extends BaseModel {
   @column({ isPrimary: true })
@@ -48,8 +47,6 @@ export default class Message extends BaseModel {
   @belongsTo(() => Contact)
   declare contact: BelongsTo<typeof Contact>
 
-  @belongsTo(() => Group)
-  declare group: BelongsTo<typeof Group>
   status: any
 
   @beforeCreate()

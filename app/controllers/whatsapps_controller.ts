@@ -236,7 +236,7 @@ export default class WhatsappsController {
     }
 
     try {
-      const responseMsg = await sendFile(jid, file, caption, name)
+      const responseMsg = await sendFile(jid, file, caption)
       console.log('sendfile response:', responseMsg)
 
       return response.json({
@@ -266,7 +266,7 @@ export default class WhatsappsController {
     console.log('Nama:', nama)
 
     if (file && nama) {
-      const responseMsg = await sendFile(number, file, message, nama)
+      const responseMsg = await sendFile(number, file, message)
       return response.json({
         success: true,
         message: 'Hasil Lab Telah Terkirim!',

@@ -368,9 +368,11 @@ export async function sendMsg(number: string, message: string, isNotif: boolean 
   }
 }
 
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+function delay(minMs: number = 3000, maxMs: number = 5000): Promise<void> {
+  const randomMs = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+  return new Promise((resolve) => setTimeout(resolve, randomMs));
 }
+
 
 export async function sendBulkMessage(numbers: string[], message: string) {
   const results = []
@@ -385,13 +387,13 @@ export async function sendBulkMessage(numbers: string[], message: string) {
     }
 
     // Wait before sending to next number
-    await delay(3000)
+    await delay()
   }
 
   return results
 }
 
-export async function sendFile(jid: string, file: any, caption: string, name: string) {
+export async function sendFile(jid: string, file: any, caption: string) {
   let waId
   console.log('[FILE] JID:', jid)
   

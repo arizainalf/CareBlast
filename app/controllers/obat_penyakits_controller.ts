@@ -3,14 +3,7 @@ import JenisPenyakit from '#models/jenis_penyakit'
 import Obat from '#models/obat'
 import { inject } from '@adonisjs/core'
 import type { ModelPaginatorContract } from '@adonisjs/lucid/types/model'
-import { hash } from 'crypto'
-import Message from '#models/message'
 
-interface FlashMessage {
-  type: 'penyakit' | 'obat'
-  message: string
-  isError?: boolean
-}
 
 @inject()
 export default class ObatPenyakitController {
@@ -40,19 +33,8 @@ export default class ObatPenyakitController {
     })
   }
 
-  async storePenyakit({ request, response, session }: HttpContext) {
-    // await this.handleDatabaseOperation(
-    //   async () => {
-    //     await this.createPenyakit(request.only(['nama', 'deskripsi']))
-    //     this.setFlashMessage(session, {
-    //       type: 'penyakit',
-    //       message: 'Data penyakit berhasil ditambahkan',
-    //     })
-    //   },
-    //   session,
-    //   response,
-    //   '#dataPenyakit'
-    // )
+  async storePenyakit({ request, response }: HttpContext) {
+
     try {
       await this.createPenyakit(request.only(['nama', 'deskripsi']))
       return response.json({
@@ -71,19 +53,8 @@ export default class ObatPenyakitController {
     }
   }
 
-  async updatePenyakit({ request, response, session, params }: HttpContext) {
-    // await this.handleDatabaseOperation(
-    //   async () => {
-    //     await this.modifyPenyakit(params.uuid, request.only(['nama', 'deskripsi']))
-    //     this.setFlashMessage(session, {
-    //       type: 'penyakit',
-    //       message: 'Data penyakit berhasil diperbarui',
-    //     })
-    //   },
-    //   session,
-    //   response,
-    //   '#dataPenyakit'
-    // )
+  async updatePenyakit({ request, response, params }: HttpContext) {
+   
     try {
       await this.modifyPenyakit(params.uuid, request.only(['nama', 'deskripsi']))
       return response.json({
@@ -102,19 +73,8 @@ export default class ObatPenyakitController {
     }
   }
 
-  async destroyPenyakit({ response, session, params }: HttpContext) {
-    // await this.handleDatabaseOperation(
-    //   async () => {
-    //     await this.deletePenyakit(params.uuid)
-    //     this.setFlashMessage(session, {
-    //       type: 'penyakit',
-    //       message: 'Data penyakit berhasil dihapus',
-    //     })
-    //   },
-    //   session,
-    //   response,
-    //   '#dataPenyakit'
-    // )
+  async destroyPenyakit({ response, params }: HttpContext) {
+
     try {
       await this.deletePenyakit(params.uuid)
       return response.json({
@@ -136,16 +96,8 @@ export default class ObatPenyakitController {
     return response.json({ penyakits })
   }
 
-  async storeObat({ request, response, session }: HttpContext) {
-    // await this.handleDatabaseOperation(
-    //   async () => {
-    //     await this.createObat(request.only(['nama', 'dosis']))
-    //     this.setFlashMessage(session, { type: 'obat', message: 'Data obat berhasil ditambahkan' })
-    //   },
-    //   session,
-    //   response,
-    //   '#dataObat'
-    // )
+  async storeObat({ request, response }: HttpContext) {
+
     try {
       await this.createObat(request.only(['nama', 'dosis']))
       return response.json({
@@ -166,16 +118,8 @@ export default class ObatPenyakitController {
 
   }
 
-  async updateObat({ request, response, session, params }: HttpContext) {
-    // await this.handleDatabaseOperation(
-    //   async () => {
-    //     await this.modifyObat(params.uuid, request.only(['nama', 'dosis']))
-    //     this.setFlashMessage(session, { type: 'obat', message: 'Data obat berhasil diperbarui' })
-    //   },
-    //   session,
-    //   response,
-    //   '#dataObat'
-    // )
+  async updateObat({ request, response, params }: HttpContext) {
+
     try {
       await this.modifyObat(params.uuid, request.only(['nama', 'dosis']))
       return response.json({
@@ -194,16 +138,8 @@ export default class ObatPenyakitController {
     }
   }
 
-  async destroyObat({ response, session, params }: HttpContext) {
-    // await this.handleDatabaseOperation(
-    //   async () => {
-    //     await this.deleteObat(params.uuid)
-    //     this.setFlashMessage(session, { type: 'obat', message: 'Data obat berhasil dihapus' })
-    //   },
-    //   session,
-    //   response,
-    //   '#dataObat'
-    // )
+  async destroyObat({ response, params }: HttpContext) {
+
     try {
       await this.deleteObat(params.uuid)
       return response.json({
@@ -224,26 +160,6 @@ export default class ObatPenyakitController {
     const { search, page } = request.only(['search', 'page'])
     const obats = await this.getPaginatedObat(page ?? 1, search)
     return response.json({ obats })
-  }
-
-  private async handleDatabaseOperation(
-    operation: Function,
-    session: any,
-    response: any,
-    hash: string = ''
-  ) {
-    try {
-      await operation()
-      return response.redirect().back() + hash
-    } catch (error) {
-      console.error(error)
-      this.setFlashMessage(session, {
-        type: hash.includes('Penyakit') ? 'penyakit' : 'obat',
-        message: 'Terjadi kesalahan saat memproses data',
-        isError: true,
-      })
-      return response.redirect().back() + hash
-    }
   }
 
   private async getPaginatedPenyakit(
@@ -294,7 +210,4 @@ export default class ObatPenyakitController {
     return obat.delete()
   }
 
-  private setFlashMessage(session: any, { type, message, isError = false }: FlashMessage) {
-    session.flash(`${type}_${isError ? 'error' : 'success'}`, message)
-  }
 }

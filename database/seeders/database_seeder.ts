@@ -71,14 +71,12 @@ export default class extends BaseSeeder {
         email: 'superadmin@gmail.com',
         password: '11221122',
         role: 'super_admin',
-        phoneNumber: '081930865458',
       },
       {
         fullName: 'Admin',
         email: 'admin@gmail.com',
         password: '11221122',
         role: 'admin',
-        phoneNumber: '081930865458',
       },
     ])
 
