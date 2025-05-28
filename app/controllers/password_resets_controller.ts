@@ -3,6 +3,7 @@ import User from '#models/user'
 import { sendMsg } from '#services/whatsapp_service'
 import ResetToken from '#models/reset_token'
 import env from '#start/env'
+import { formatWhatsappNumber } from '#services/number_service'
 
 export default class PasswordResetsController {
     async show({ view }: HttpContext) {
@@ -26,13 +27,14 @@ export default class PasswordResetsController {
         }
         else if (email && no_hp) {
             const user = await User.findBy('email', email)
+            const noWa = formatWhatsappNumber(no_hp)
             if (!user) {
                 return response.json({
                     success: false,
                     message: 'Email tidak ditemukan.',
                 })
             }
-            if (user.phoneNumber !== no_hp) {
+            if (user.contact.waId !== noWa) {
                 return response.json({
                     success: false,
                     message: 'Nomor hp tidak sama.',

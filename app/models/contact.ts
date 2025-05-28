@@ -44,11 +44,11 @@ export default class Contact extends BaseModel {
   })
   declare pasien: BelongsTo<typeof Pasien>
 
-  @belongsTo(() => Pasien, {
-    foreignKey: 'user_id', // Kunci asing yang mengacu pada pasien
-    localKey: 'uuid' // Kunci lokal yang digunakan untuk relasi
-  })
-  declare user: BelongsTo<typeof Pasien>
+  // @belongsTo(() => Pasien, {
+  //   foreignKey: 'user_id', // Kunci asing yang mengacu pada pasien
+  //   localKey: 'uuid' // Kunci lokal yang digunakan untuk relasi
+  // })
+  // declare user: BelongsTo<typeof Pasien>
 
   @beforeCreate()
   public static assignUuid(contact: Contact) {
