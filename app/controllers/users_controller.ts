@@ -1,8 +1,5 @@
 import { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
-// import { createUserValidator } from '#validators/user'
-// import { MultipartFile } from '@adonisjs/core/bodyparser'
-// import { dd } from '@adonisjs/core/services/dumper'
 import Contact from '#models/contact'
 import { formatWhatsappNumber } from '#services/number_service'
 import { getProfilePicture } from '#services/whatsapp_service'

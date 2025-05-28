@@ -7,8 +7,10 @@ import('dayjs/locale/id.js').then(() => {
     dayjs.locale('id')
 })
 
-function delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+function delay(minMs: number = 4000, maxMs: number = 10000): Promise<void> {
+    const randomMs = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+    console.log(randomMs)
+    return new Promise((resolve) => setTimeout(resolve, randomMs));
 }
 
 // Fungsi untuk pilih pesan acak dari array template
@@ -33,23 +35,41 @@ cron.schedule('0 * * * *', async () => {
 
         console.log(now, tomorrowDate)
 
+        const pesanTemplateKunjungan = [
+            (sapaan: any, nama: any) => `Selamat pagi ${sapaan} ${nama}, ini pengingat bahwa besok adalah jadwal kunjungan Anda. Jangan lupa hadir tepat waktu ya.`,
+            (sapaan: any, nama: any) => `Hai ${sapaan} ${nama}, besok adalah jadwal kunjungan Anda. Mohon pastikan untuk datang sesuai waktu yang telah ditentukan.`,
+            (sapaan: any, nama: any) => `Yth. ${sapaan} ${nama}, kami mengingatkan bahwa besok adalah hari kunjungan Anda. Jangan lupa membawa dokumen/obat yang diperlukan.`,
+            (sapaan: any, nama: any) => `Besok adalah jadwal kunjungan medis Anda, ${sapaan} ${nama}. Semoga dalam keadaan sehat, sampai jumpa di klinik.`,
+            (sapaan: any, nama: any) => `Halo ${sapaan} ${nama}, jadwal kunjungan Anda akan dilaksanakan besok. Kami siap menyambut kedatangan Anda.`,
+            (sapaan: any, nama: any) => `📅 Reminder untuk ${sapaan} ${nama}: Besok adalah jadwal kunjungan Anda. Pastikan tidak terlewat ya.`,
+            (sapaan: any, nama: any) => `🔔 Pengingat: ${sapaan} ${nama}, Anda memiliki jadwal kunjungan besok. Mohon datang sesuai waktu yang ditentukan.`,
+            (sapaan: any, nama: any) => `${sapaan} ${nama}, kunjungan Anda dijadwalkan besok. Silakan konfirmasi kehadiran jika ada perubahan.`,
+            (sapaan: any, nama: any) => `Salam sehat, ${sapaan} ${nama}. Besok Anda dijadwalkan untuk kunjungan ke fasilitas kesehatan. Mohon persiapkan diri dengan baik.`,
+            (sapaan: any, nama: any) => `🕘 Hai ${sapaan} ${nama}, kami ingin mengingatkan bahwa besok Anda memiliki jadwal kunjungan. Jangan sampai lupa!`
+        ];
+
         for (const kunjungan of kunjungans) {
             // Lewati jika tidak ada tanggal kunjungan berikutnya
             if (!kunjungan.kunjunganBerikutnya) continue;
 
-            // Pastikan bentuknya bisa di-parse oleh dayjs
+            // Parse tanggal kunjungan berikutnya
             const kunjunganDate = dayjs(kunjungan.kunjunganBerikutnya.toString()).format('YYYY-MM-DD');
 
             if (kunjunganDate === tomorrowDate) {
+                const sapaan = kunjungan.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu';
+                const nama = kunjungan.pasien.name;
+                const noHp = kunjungan.pasien.no_hp;
+
+                // Ambil template acak dan isi dengan sapaan + nama
+                const pesanFn = pesanTemplateKunjungan[Math.floor(Math.random() * pesanTemplateKunjungan.length)];
+                const pesan = pesanFn(sapaan, nama);
+
                 try {
-                    const response = await sendMsg(
-                        kunjungan.pasien.no_hp,
-                        `Selamat pagi ${kunjungan.pasien.name}, besok adalah jadwal kunjungan anda`
-                    );
-                    console.log(`Kirim pesan kunjungan ${kunjungan.pasien.no_hp}:`, response);
-                    await delay(300)
+                    const response = await sendMsg(noHp, pesan);
+                    console.log(`Kirim pesan kunjungan ke ${noHp}:`, response);
+                    await delay(); // delay agar tidak dianggap spam
                 } catch (error) {
-                    console.error(`Failed to send message to ${kunjungan.pasien.no_hp}:`, error);
+                    console.error(`Gagal kirim pesan ke ${noHp}:`, error);
                 }
             }
         }
@@ -75,10 +95,23 @@ cron.schedule('0 * * * *', async () => {
 
             // Template pesan variasi supaya tidak monoton
             const pesanTemplates = [
-                `${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, saatnya minum obat: ${obat.obat.nama}. Ingat, ${obat.keteranganWaktu}.`,
-                `Halo ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, waktunya konsumsi obat ${obat.obat.nama}. ${obat.keteranganWaktu} ya.`,
-                `${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, jangan lupa minum obat ${obat.obat.nama} sesuai jadwal. Catatan: ${obat.keteranganWaktu}.`,
-                `Minum obat ${obat.obat.nama} sekarang, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. ${obat.keteranganWaktu}. Semangat!`
+                `${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, saatnya minum obat *${obat.obat.nama}*. Jangan lupa ya, ${obat.keteranganWaktu}.`,
+                `Halo ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, waktunya konsumsi obat *${obat.obat.nama}*. ${obat.keteranganWaktu}, jangan lewatkan.`,
+                `${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, jangan lupa minum obat *${obat.obat.nama}* sesuai jadwal. Catatan: ${obat.keteranganWaktu}.`,
+                `Sekarang waktunya minum obat *${obat.obat.nama}*, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. ${obat.keteranganWaktu}. Tetap semangat dan jaga kesehatan!`,
+                `Yth. ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Bapak' : 'Ibu'} ${obat.pasien.name}, mohon untuk segera minum obat *${obat.obat.nama}*. Jadwal: ${obat.keteranganWaktu}.`,
+                `Pengingat: Obat *${obat.obat.nama}* perlu dikonsumsi sekarang, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. ${obat.keteranganWaktu}.`,
+                `Salam sehat, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Saatnya konsumsi *${obat.obat.nama}*. ${obat.keteranganWaktu}, ya.`,
+                `Jadwal minum obat *${obat.obat.nama}* sudah tiba, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Jangan ditunda, ${obat.keteranganWaktu}.`,
+                `Ingat ya, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, sekarang waktunya minum *${obat.obat.nama}*. ${obat.keteranganWaktu}.`,
+                `Waktunya minum *${obat.obat.nama}*, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Tetap teratur agar cepat pulih!`,
+                `Obat *${obat.obat.nama}* harus diminum sekarang ya, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Jangan sampai lupa! (${obat.keteranganWaktu})`,
+                `Semoga sehat selalu, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Saat ini jadwalnya minum obat *${obat.obat.nama}*. ${obat.keteranganWaktu}.`,
+                `⏰ Pengingat waktu minum obat: *${obat.obat.nama}* untuk ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Waktunya: ${obat.keteranganWaktu}.`,
+                `✉️ Halo ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, ini pengingat untuk minum *${obat.obat.nama}*. Jangan lupa, ${obat.keteranganWaktu}.`,
+                `Mohon perhatian, saatnya minum obat *${obat.obat.nama}*. ${obat.keteranganWaktu} ya, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}.`,
+                `Waktu menunjukkan saatnya untuk minum *${obat.obat.nama}*, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Tetap disiplin konsumsi ya.`,
+                `Hai ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, jangan sampai terlewat minum obat *${obat.obat.nama}*. Jadwal: ${obat.keteranganWaktu}.`
             ];
 
             for (const waktu of obat.waktuKonsumsi) {
@@ -91,7 +124,7 @@ cron.schedule('0 * * * *', async () => {
                             pesan, true
                         );
                         console.log(`scheduler kirim pesan ke ${obat.pasien.no_hp}:`, response);
-                        await delay(3000)
+                        await delay()
                     } catch (error) {
                         console.error(`Gagal kirim ke ${obat.pasien.no_hp}:`, error);
                     }
