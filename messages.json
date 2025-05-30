@@ -1,0 +1,39 @@
+[
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "fromMe": false,
+      "id": "EDC43C36FC01601DC7534D433999A5AE"
+    },
+    "messageTimestamp": 1748438242,
+    "pushName": "arizainalf",
+    "broadcast": false,
+    "message": {
+      "conversation": "Halo pak",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "pQrlNe5iA82yIA==",
+          "senderTimestamp": "1748130768",
+          "recipientKeyHash": "qjBKBliSTb6kQQ==",
+          "recipientTimestamp": "1747812392"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "KDhtnoXcJBCHXQHY0f46BMbAHDW2s4m/cOmJ46wLP9c="
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "120363318728384033@g.us",
+      "fromMe": false,
+      "id": "1978280956",
+      "participant": "6289663523862@s.whatsapp.net"
+    },
+    "messageTimestamp": "1748443446",
+    "participant": "6289663523862@s.whatsapp.net",
+    "messageStubType": "GROUP_PARTICIPANT_LEAVE",
+    "messageStubParameters": [
+      "6289663523862@s.whatsapp.net"
+    ]
+  }
+]

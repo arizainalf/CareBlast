@@ -9,6 +9,8 @@ import Kunjungan from '#models/kunjungan'
 import ObatPasien from '#models/obat_pasien'
 import { v4 as uuid } from 'uuid'
 import { DateTime } from 'luxon'
+import Contact from '#models/contact'
+
 
 export default class extends BaseSeeder {
   private generateNIK(): string {
@@ -37,6 +39,13 @@ export default class extends BaseSeeder {
 
     return `${provinceCode}${regencyCode}${subDistrictCode}${date}${month}${year}${randomNum}`
   }
+
+  private getRandomDate(fromYear = 2020, toYear = 2025): DateTime {
+  const start = new Date(fromYear, 0, 1).getTime()
+  const end = new Date(toYear, 11, 31).getTime()
+  const randomDate = new Date(start + Math.random() * (end - start))
+  return DateTime.fromJSDate(randomDate)
+}
 
   private generateTimeSlots(frequency: number): string[] {
     // Generate appropriate time slots based on frequency
@@ -100,16 +109,16 @@ export default class extends BaseSeeder {
         spesialistId: spesialists[0].id,
         jamMulai: '08:00',
         jamSelesai: '14:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         status: true,
       },
       {
         nip: 'DOK002',
         nama: 'Dr. Siti Rahma',
-
         noWhatsapp: '087818179639',
-
         spesialistId: spesialists[1].id,
         jamMulai: '09:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         jamSelesai: '15:00',
         status: true,
       },
@@ -120,6 +129,7 @@ export default class extends BaseSeeder {
         spesialistId: spesialists[2].id,
         jamMulai: '10:00',
         jamSelesai: '16:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         status: true,
       },
       {
@@ -129,6 +139,7 @@ export default class extends BaseSeeder {
         spesialistId: spesialists[3].id,
         jamMulai: '13:00',
         jamSelesai: '19:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         status: true,
       },
       {
@@ -138,6 +149,7 @@ export default class extends BaseSeeder {
         spesialistId: spesialists[4].id,
         jamMulai: '08:00',
         jamSelesai: '16:00',
+        jadwalHari: '["Senin","Rabu","Jumat"]',
         status: true,
       },
     ]
@@ -229,20 +241,20 @@ export default class extends BaseSeeder {
       const firstName =
         index % 2 === 0
           ? ['Budi', 'Siti', 'Ahmad', 'Dewi', 'Eko', 'Putri', 'Rizki', 'Andi'][
-              Math.floor(Math.random() * 8)
-            ]
+          Math.floor(Math.random() * 8)
+          ]
           : ['John', 'Jane', 'Michael', 'Sarah', 'David', 'Lisa', 'Kevin', 'Emma'][
-              Math.floor(Math.random() * 8)
-            ]
+          Math.floor(Math.random() * 8)
+          ]
 
       const lastName =
         index % 2 === 0
           ? ['Santoso', 'Wijaya', 'Hidayat', 'Kusuma', 'Pratama', 'Sari', 'Putra', 'Dewi'][
-              Math.floor(Math.random() * 8)
-            ]
+          Math.floor(Math.random() * 8)
+          ]
           : ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis'][
-              Math.floor(Math.random() * 8)
-            ]
+          Math.floor(Math.random() * 8)
+          ]
 
       const golonganDarah = ['A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-'][
         Math.floor(Math.random() * 8)
@@ -252,15 +264,13 @@ export default class extends BaseSeeder {
         name: `${firstName} ${lastName}`,
         tempat: cities[Math.floor(Math.random() * cities.length)],
         tanggal_lahir: birthDate,
-        no_hp: `08${Math.floor(Math.random() * 1000000000)
-          .toString()
-          .padStart(9, '0')}`,
         alamat: `Jl. ${['Sudirman', 'Thamrin', 'Gatot Subroto', 'Diponegoro', 'Ahmad Yani'][Math.floor(Math.random() * 5)]} No. ${Math.floor(Math.random() * 100) + 1}`,
         jenisPenyakitId: jenisPenyakits[Math.floor(Math.random() * jenisPenyakits.length)].id,
         uuid: uuid(),
         jenis_kelamin: Math.random() > 0.5 ? 'Laki-laki' : 'Perempuan',
         nik: this.generateNIK(),
         golongan_darah: golonganDarah,
+        created_at: this.getRandomDate(),
       }
     })
 
@@ -271,6 +281,16 @@ export default class extends BaseSeeder {
 
     // Create between 1-3 visits for each patient
     for (const pasien of pasiens) {
+
+      await Contact.create({
+        pasienId: pasien.uuid,
+        name: pasien.name,
+        username: pasien.name,
+        waId: `628${Math.floor(Math.random() * 1000000000)
+          .toString()
+          .padStart(9, '0')}` + '@s.whatsapp.net',
+      })
+
       const visitCount = 1 + Math.floor(Math.random() * 3)
 
       for (let i = 0; i < visitCount; i++) {
@@ -342,6 +362,7 @@ export default class extends BaseSeeder {
           keterangan: `Kunjungan ${i + 1} untuk pemeriksaan kondisi pasien dan evaluasi pengobatan.`,
           tanggalKunjungan: visitDate,
           kunjunganBerikutnya: nextVisitDate,
+          created_at: this.getRandomDate(),
         })
       }
     }
@@ -422,8 +443,18 @@ export default class extends BaseSeeder {
           obatId: obatId,
           frekuensi: frekuensi,
           waktuKonsumsi: JSON.stringify(waktuKonsumsi), // JSON array of time strings
+          hariKonsumsi: `[
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+    "Minggu"
+]`,
           keteranganWaktu:
             keteranganWaktuOptions[Math.floor(Math.random() * keteranganWaktuOptions.length)],
+          created_at: this.getRandomDate(),
         })
       }
     }

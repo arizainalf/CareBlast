@@ -85,7 +85,8 @@
     // Event Edit User
     $(document).on('click', '#btnEdit', function (e) {
       e.preventDefault();
-
+      let modalTitle = $('#modalTitleUser')
+      modalTitle.html('Edit Pengguna')
       let userId = $(this).data('id');
       console.log(userId)
 
@@ -114,6 +115,8 @@
     $('#btnTambah').on('click', function () {
       $('#formUser')[0].reset();
       $('#formUser').attr('data-id', ''); // Reset ID
+      let modalTitle = $('#modalTitleUser')
+      modalTitle.html('Tambah Pengguna')
 
       // Tampilkan password saat tambah
       $('#passwordField, #passwordConfirmationField').show().prop('required', true);

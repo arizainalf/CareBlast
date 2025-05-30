@@ -69,7 +69,7 @@ export default class KunjungansController {
 
       const dokterId = request.input('dokter')
 
-      const hariKonsumsi = ['Senin','Selasa','Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu']
+      const hariKonsumsi = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu']
 
       console.log(request.input('dokter'), request.input('obatList'))
 
@@ -83,31 +83,34 @@ export default class KunjungansController {
         kunjunganBerikutnya,
       })
 
-      if (Array.isArray(obatList) && obatList.length > 0) {
-        const obatPasienData = obatList.map((obatId) => ({
-          uuid: uuidv4(),
-          pasienId: pasien.id,
-          kunjunganId: kunjungan.id,
-          obatId,
-          frekuensi: 1,
-          waktuKonsumsi: JSON.stringify(['08:00']),
-          batasWaktu: kunjunganBerikutnya,
-          keteranganWaktu: 'Sesudah makan',
-          hariKonsumsi: JSON.stringify(hariKonsumsi),
-        }))
-        await ObatPasien.createMany(obatPasienData)
-      } else {
-        await ObatPasien.create({
-          uuid: uuidv4(),
-          pasienId: pasien.id,
-          kunjunganId: kunjungan.id,
-          obatId: undefined,
-          frekuensi: 1,
-          waktuKonsumsi: JSON.stringify(['08:00']),
-          batasWaktu: kunjunganBerikutnya,
-          keteranganWaktu: 'Sesudah makan',
-          hariKonsumsi: JSON.stringify(hariKonsumsi),
-        })
+      if (obatList) {
+
+        if (Array.isArray(obatList) && obatList.length > 0) {
+          const obatPasienData = obatList.map((obatId) => ({
+            uuid: uuidv4(),
+            pasienId: pasien.id,
+            kunjunganId: kunjungan.id,
+            obatId,
+            frekuensi: 1,
+            waktuKonsumsi: JSON.stringify(['08:00']),
+            batasWaktu: kunjunganBerikutnya,
+            keteranganWaktu: 'Sesudah makan',
+            hariKonsumsi: JSON.stringify(hariKonsumsi),
+          }))
+          await ObatPasien.createMany(obatPasienData)
+        } else {
+          await ObatPasien.create({
+            uuid: uuidv4(),
+            pasienId: pasien.id,
+            kunjunganId: kunjungan.id,
+            obatId: undefined,
+            frekuensi: 1,
+            waktuKonsumsi: JSON.stringify(['08:00']),
+            batasWaktu: kunjunganBerikutnya,
+            keteranganWaktu: 'Sesudah makan',
+            hariKonsumsi: JSON.stringify(hariKonsumsi),
+          })
+        }
       }
 
       console.log('Kunjungan berhasil ditambahkan:', kunjungan)

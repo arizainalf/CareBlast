@@ -16,12 +16,12 @@
         <td>{{ obat.dosis % 1 == 0 ? parseInt(obat.dosis) : obat.dosis }} mg</td>
         <td>
           <div class="d-flex">
-            <button class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
-              data-bs-target="#editObat{{ obat.uuid }}">
+            <button class="btn btn-primary shadow btn-xs sharp me-2 edit-button-obat" data-bs-toggle="modal"
+              data-bs-target="#editObat" data-uuid="{{obat.uuid}}" data-nama="{{obat.nama}}" data-dosis="{{obat.dosis}}">
               <i class="fas fa-pencil-alt"></i>
             </button>
-            <button type="button" class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal"
-              data-bs-target="#hapusObat{{ obat.uuid }}">
+            <button type="button" class="btn btn-danger shadow btn-xs sharp delete-button-obat" data-bs-toggle="modal"
+              data-bs-target="#hapusObat" data-uuid="{{obat.uuid}}" data-nama="{{obat.nama}}">
               <i class="fa fa-trash"></i>
             </button>
           </div>

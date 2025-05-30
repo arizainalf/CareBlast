@@ -4,7 +4,7 @@
       <h5 class="modal-title">Konfirmasi Hapus</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
-    <form action="/obat-pasien/{{ obatPasien.uuid }}" method="POST">
+    <form action="/obat-pasien/{{ obatPasien.uuid }}" method="POST" id="hapusObat">
       {{ csrfField() }}
       <input type="hidden" name="_method" value="DELETE">
       <div class="modal-body">

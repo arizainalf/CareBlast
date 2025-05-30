@@ -167,11 +167,11 @@ export default class DokterSpesialistsController {
     if (params.id_spesialist) {
       const spesialist = await Spesialist.findOrFail(params.id_spesialist)
       await spesialist.delete()
-      return response.json({ success: true, message: 'Pengguna berhasil dihapus!', spesialist, redirectUrl: '/dokter' });
+      return response.json({ success: true, message: 'Spesialis berhasil dihapus!', spesialist, redirectUrl: '/dokter' });
     } else if (params.id_dokter) {
       const dokter = await Dokter.findOrFail(params.id_dokter)
       await dokter.delete()
-      return response.json({ success: true, message: 'Pengguna berhasil dihapus!', dokter, redirectUrl: '/dokter' });
+      return response.json({ success: true, message: 'Spesialis berhasil dihapus!', dokter, redirectUrl: '/dokter' });
     }
   }
 }
