@@ -2,12 +2,26 @@ import fs from 'node:fs'
 
 export async function saveFile(file: string, data: any, type: any) {
   const filePath = file
-  if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, JSON.stringify([]))
+
+  let load: any[] = []
+  try {
+    if (fs.existsSync(filePath)) {
+      const content = fs.readFileSync(filePath, 'utf-8')
+      load = content.trim() ? JSON.parse(content) : []
+    } else {
+      fs.writeFileSync(filePath, JSON.stringify([]))
+    }
+  } catch (e) {
+    console.error(`[ERROR] Failed to read/parse ${file}:`, e)
+    load = []
   }
-  const load = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
 
   load.push(data)
-  fs.writeFileSync(file, JSON.stringify(load, null, 2))
-  console.log('json service : success simpan '+ type)
+
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(load, null, 2))
+    console.log('json service : success simpan ' + type)
+  } catch (e) {
+    console.error(`[ERROR] Failed to write ${file}:`, e)
+  }
 }

@@ -293,12 +293,13 @@ export default class PasiensController {
         'alamat',
         'jenis_kelamin',
         'golongan_darah',
-        'no_hp',
       ]) as Record<string, any>
+
+      const no_hp = request.input('no_hp')
 
       const contact = await Contact.findBy('pasien_id', pasien.uuid)
 
-      const newNoHp = data.no_hp || ''
+      const newNoHp = no_hp || ''
       const newWaId = NumberHelper(newNoHp) + '@s.whatsapp.net'
 
       const firstName = request.input('first_name', '')

@@ -5,7 +5,7 @@ import type { HasMany } from '@adonisjs/lucid/types/relations'
 import Messages from '#models/message'
 import Pasien from '#models/pasien'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-
+import type User from '#models/user'
 
 export default class Contact extends BaseModel {
   @column({ isPrimary: true })
@@ -43,6 +43,12 @@ export default class Contact extends BaseModel {
     localKey: 'uuid' // Kunci lokal yang digunakan untuk relasi
   })
   declare pasien: BelongsTo<typeof Pasien>
+
+  @belongsTo(() => import('#models/user'),{
+    foreignKey: 'user_id', // Kunci asing yang mengacu pada pasien
+    localKey: 'uuid' // Kunci lokal yang digunakan untuk relasi
+  })
+  declare user: BelongsTo<typeof User>
 
   @beforeCreate()
   public static assignUuid(contact: Contact) {

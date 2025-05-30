@@ -15,6 +15,7 @@ export default class UsersController {
    */
   async index({ view }: HttpContext) {
     const users = await User.query().preload('contact').exec()
+    console.log(users)
     return view.render('users/index', { users })
   }
 

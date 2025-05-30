@@ -1,26 +1,26 @@
-@each(obat in obats)
-<div class="modal fade" id="hapusObat{{ obat.uuid }}" tabindex="-1" aria-hidden="true">
+{{--  @each(obat in obats)  --}}
+<div class="modal fade" id="hapusObat" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Hapus Data Obat</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        Obat <b>{{ obat.nama }}</b> akan dihapus?
+      <div class="modal-body" id="deleteModalTitle">
+        Obat akan dihapus?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary light" data-bs-dismiss="modal">Batal</button>
-        <form action="{{ route('delete-obat', { uuid: obat.uuid }) }}" method="POST" class="d-inline"
+        <form class="d-inline"
           id="hapus-obat-form">
-          {{--  {{ csrfField() }}  --}}
+          {{ csrfField() }}
           <button type="submit" class="btn btn-danger light">Hapus</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-@endeach
+{{--  @endeach  --}}
 
 <!-- Add Modal -->
 <div class="modal fade" id="tambahObat" tabindex="-1" aria-labelledby="tambahObatLabel" aria-hidden="true">
@@ -54,11 +54,11 @@
   </div>
 </div>
 
-@each(obat in obats)
-<div class="modal fade" id="editObat{{ obat.uuid }}" tabindex="-1" aria-hidden="true">
+{{--  @each(obat in obats)  --}}
+<div class="modal fade" id="editObat" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ route('update-obat', { uuid: obat.uuid }) }}" method="POST" id="update-obat-form">
+      <form method="POST" id="update-obat-form">
         <div class="modal-header">
           <h5 class="modal-title">Edit Obat</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -66,14 +66,14 @@
         <div class="modal-body">
           {{ csrfField() }}
           <div class="mb-3">
-            <label for="nama-{{ obat.uuid }}" class="form-label">Nama Obat</label>
-            <input type="text" class="form-control" id="nama-{{ obat.uuid }}" name="nama" value="{{ obat.nama }}"
+            <label for="nama" class="form-label">Nama Obat</label>
+            <input type="text" class="form-control" id="nama" name="nama"
               required>
           </div>
           <div class="mb-3">
-            <label for="dosis-{{ obat.uuid }}" class="form-label">Dosis (mg)</label>
-            <input type="number" step="0.01" class="form-control" id="dosis-{{ obat.uuid }}" name="dosis"
-              value="{{ obat.dosis }}" required>
+            <label for="dosis" class="form-label">Dosis (mg)</label>
+            <input type="number" step="0.01" class="form-control" id="dosis" name="dosis"
+               required>
           </div>
         </div>
         <div class="modal-footer">
@@ -84,4 +84,4 @@
     </div>
   </div>
 </div>
-@endeach
+{{--  @endeach  --}}

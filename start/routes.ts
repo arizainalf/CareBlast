@@ -100,7 +100,7 @@ router
     router.delete('/pasien/:uuid/delete', [PasiensController, 'destroy']).as('pasien.destroy')
     router.post('/pasien/:uuid/obat', [ObatPasiensController, 'store'])
     router.patch('/obat-pasien/:uuid', [ObatPasiensController, 'update'])
-    router.post('/obat-pasien/:uuid', [ObatPasiensController, 'destroy'])
+    router.delete('/obat-pasien/:uuid', [ObatPasiensController, 'destroy'])
     router.delete('/pasien/:uuid/obat-kunjungan', [ObatPasiensController, 'destroyByKunjungan'])
     router.post('/pasien/:uuid/kunjungan', [KunjungansController, 'store'])
     router.get('/pasiens', [PasiensController, 'index'])

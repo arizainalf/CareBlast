@@ -40,7 +40,7 @@ export default class ObatPenyakitController {
       return response.json({
         success: true,
         message: 'Data penyakit berhasil ditambahkan',
-        hash: '#dataPenyakit',
+        redirectUrl: '/obat-penyakit'
       })
     } catch (error) {
       console.error('Error creating penyakit:', error)
@@ -54,13 +54,13 @@ export default class ObatPenyakitController {
   }
 
   async updatePenyakit({ request, response, params }: HttpContext) {
-   
+
     try {
       await this.modifyPenyakit(params.uuid, request.only(['nama', 'deskripsi']))
       return response.json({
         success: true,
         message: 'Data penyakit berhasil diubah!',
-        hash: '#dataPenyakit',
+        redirectUrl: '/obat-penyakit'
       })
     } catch (error) {
       console.error('Error update penyakit:', error)
@@ -80,6 +80,7 @@ export default class ObatPenyakitController {
       return response.json({
         success: true,
         message: 'Data penyakit berhasil dihapus',
+        redirectUrl: '/obat-penyakit'
       })
     } catch (error) {
       console.log('error hapus penyakit ', error)
@@ -97,14 +98,20 @@ export default class ObatPenyakitController {
   }
 
   async storeObat({ request, response }: HttpContext) {
+    const obat = await Obat.query().where('nama', request.input('nama')).first()
+    if (obat) {
+      return response.status(500).json({
+        success: false,
+        message: 'Obat sudah ada',
+      })
+    }
 
     try {
       await this.createObat(request.only(['nama', 'dosis']))
       return response.json({
         success: true,
         message: 'Data obat berhasil ditambahkan',
-        // redirectUrl: '/obat-penyakit',
-        hash: '#dataObat',
+        redirectUrl: '/obat-penyakit'
       })
     } catch (error) {
       console.error('Error creating obat:', error)
@@ -125,7 +132,7 @@ export default class ObatPenyakitController {
       return response.json({
         success: true,
         message: 'Data obat berhasil diubah!',
-        hash: '#dataObat'
+        redirectUrl: '/obat-penyakit'
       })
     } catch (error) {
       console.error('Error update obat:', error)
@@ -145,6 +152,7 @@ export default class ObatPenyakitController {
       return response.json({
         success: true,
         message: 'Data obat berhasil dihapus',
+        redirectUrl: '/obat-penyakit'
       })
     } catch (error) {
       console.log('error hapus obat ', error)

@@ -164,6 +164,7 @@ export default class ObatPasiensController {
   }
 
   async destroyByKunjungan({ request, response, params }: HttpContext) {
+    console.log(params)
     try {
       const pasienUuid = params.uuid
       let kunjunganId = request.input('kunjunganId')

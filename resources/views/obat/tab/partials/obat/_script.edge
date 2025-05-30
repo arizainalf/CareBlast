@@ -25,7 +25,7 @@
                 <td>
                   <div class="d-flex">
                     <button class="btn btn-primary shadow btn-xs sharp me-2" data-bs-toggle="modal"
-                      data-bs-target="#editObat${obat.uuid}">
+                      data-bs-target="#editObat">
                       <i class="fas fa-pencil-alt"></i>
                     </button>
                   </div>
@@ -59,25 +59,50 @@
       ajaxRequest(url, method, formData)
     });
 
-    $('#update-obat-form').on('submit', function (event) {
-      event.preventDefault();
+    $('.edit-button-obat').on('click', function (e) {
+      e.preventDefault();
+      const uuid = $(this).data('uuid')
+      const nama = $(this).data('nama')
+      const dosis = $(this).data('dosis')
+      console.log('edit button ditekan',uuid, nama, dosis)
+      
+      $('#nama').val(nama)
+      $('#dosis').val(dosis)
 
+      const url = `/obat-penyakit/obat/${uuid}/update`
 
-      console.log('update form di submit')
-      let formData = new FormData(this);
-      const url = $(this).attr('action');
-      const method = $(this).attr('method') || 'POST';
+      $('#update-obat-form').on('submit', function (event) {
+        event.preventDefault();
 
-      ajaxRequest(url, method, formData)
-    });
+        console.log('update form di submit')
+        let formData = new FormData(this);
+        const method = $(this).attr('method') || 'POST';
 
-    $('#hapus-obat-form').on('submit', function (event) {
-      event.preventDefault();
+        ajaxRequest(url, method, formData)
+      });
 
-      let formData = new FormData(this);
-      const url = $(this).attr('action');
-      const method = $(this).attr('method') || 'POST';
-      ajaxRequest(url, method, formData)
     })
+
+    $('.delete-button-obat').on('click', function () {
+      const uuid = $(this).data('uuid')
+      const nama = $(this).data('nama')
+      const url = `/obat-penyakit/obat/${uuid}/delete`
+
+      const modalTitle = `Obat <b>${nama}</b> akan dihapus?`
+
+      $('#deleteModalTitle').html(modalTitle);
+      console.log(modalTitle)
+
+      $('#hapus-obat-form').on('submit', function (event) {
+        event.preventDefault();
+        console.log('disubmit hapus obat')
+
+        let formData = new FormData(this);
+        const method = $(this).attr('method') || 'POST';
+        ajaxRequest(url, method, formData)
+      })
+
+    })
+
   });
 </script>

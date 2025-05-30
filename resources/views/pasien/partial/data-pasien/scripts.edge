@@ -10,9 +10,7 @@
       let url = $(this).attr('action');
       let method = $(this).attr('method');
 
-      ajaxRequest(url, method, formData, () => {
-        location.reload();
-      });
+      ajaxRequest(url, method, formData);
     });
   })
 

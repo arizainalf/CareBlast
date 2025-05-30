@@ -48,13 +48,11 @@ export default class User extends compose(BaseModel, AuthFinder) {
   }
 
   @hasOne(() => Contact, {
-    foreignKey: 'userId',
     localKey: 'uuid',
   })
   declare contact: HasOne<typeof Contact>
 
   @hasMany(() => ResetToken, {
-    foreignKey: 'userId',
     localKey: 'id',
   })
   declare resetTokens: HasMany<typeof ResetToken>

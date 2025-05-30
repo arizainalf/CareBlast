@@ -140,6 +140,8 @@
       e.preventDefault();
       $('#formDokter')[0].reset();
       $('#formDokter').attr('data-id', '');
+      let modalTitle = $('#titelModalDokter')
+      modalTitle.html('Tambah Dokter')
       // $('#spesialist_id').empty(); // Clear the options in the select element
       $.get('/spesialis', function (spesialisList) {
         spesialisList.spesialist.forEach(function (item) {
@@ -151,6 +153,8 @@
     $(document).on('click', '.tambahSpesialis', function (e) {
       $('#formSpesialis')[0].reset();
       $('#formSpesialis').attr('data-id', '');
+      let modalTitle = $('#titelModalSpesialist')
+      modalTitle.html('Tambah Spesialis')
     });
 
   })
@@ -181,6 +185,8 @@
       let spesialisId = $(this).data('id');
       let spesialisName = $(this).data('nama');
       let spesialisGelar = $(this).data('gelar');
+      let modalTitle = $('#titelModalSpesialist')
+      modalTitle.html('Edit Spesialis')
 
       $('#formSpesialist').attr('data-id', spesialisId);
       $('#nama_spesialis').val(spesialisName);
@@ -199,6 +205,8 @@
       let dokterJamSelesai = $(this).data('jam-selesai');
       let dokterStatus = $(this).data('status');
       let hariStr = $(this).data('jadwal-hari');
+      let modalTitle = $('#titelModalDokter')
+      modalTitle.html('Edit Dokter')
 
       const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
       const hariArray = hariStr.split(',').map(h => h.trim());
@@ -292,7 +300,7 @@
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
       let spesialisId = $(this).attr('data-id')
-      let url = `/spesialist/${dokterId}/hapus`
+      let url = `/spesialist/${spesialisId}/hapus`
 
       $.ajax({
         url: url,
