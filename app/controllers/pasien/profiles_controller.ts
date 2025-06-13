@@ -10,6 +10,7 @@ export default class ProfilesController {
     const pasien = await Pasien.query()
       .where('id', userId)
       .preload('jenisPenyakit')
+      .preload('contact')
       .preload('kunjungans', (query) => {
         query.orderBy('tanggalKunjungan', 'desc').limit(1)
       })

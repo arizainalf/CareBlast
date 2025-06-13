@@ -27,7 +27,14 @@
     </div>
     <div class="grid grid-cols-3 gap-3 text-sm">
       <span class="text-gray-500">No. Telepon</span>
-      <span class="col-span-2 font-medium text-gray-800">{{{pasien.no_hp}}}</span>
+      <span class="col-span-2 font-medium text-gray-800">
+        {{
+        (pasien.no_hp || pasien.contact?.waId)
+        ?.replace('@s.whatsapp.net', '')
+        ?.replace(/^62/, '0')
+        || '-'
+        }}
+      </span>
     </div>
     <div class="grid grid-cols-3 gap-3 text-sm">
       <span class="text-gray-500">Golongan Darah</span>
@@ -69,13 +76,13 @@
       <h4 class="font-semibold text-gray-800 mb-1">
         Keluhan Pasien
       </h4>
-        @if(pasien.kunjungans.length > 0)
-        <p class="text-sm text-gray-700">
-          {{ pasien.kunjungans[0].keterangan || '-' }}
-        </p>
-        @else
-        <p class="text-sm text-gray-500">Belum ada keluhan.</p>
-        @endif
+      @if(pasien.kunjungans.length > 0)
+      <p class="text-sm text-gray-700">
+        {{ pasien.kunjungans[0].keterangan || '-' }}
+      </p>
+      @else
+      <p class="text-sm text-gray-500">Belum ada keluhan.</p>
+      @endif
     </div>
   </div>
 </div>
