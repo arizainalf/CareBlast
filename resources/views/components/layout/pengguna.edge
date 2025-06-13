@@ -63,6 +63,14 @@
           </svg>
           <span>Kunjungan</span>
         </a>
+        <a href="{{ route('pengguna.dokter') }}" data-page="visits"
+          class="nav-item flex flex-col items-center px-3 py-2 text-xs font-medium text-gray-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 3v5a6 6 0 006 6v4a2 2 0 104 0v-4a6 6 0 006-6V3M9 21h6" />
+          </svg>
+          <span>Dokter</span>
+        </a>
         <a href="/pengguna/profile" data-page="profile"
           class="nav-item flex flex-col items-center px-3 py-2 text-xs font-medium {{ request.matchesRoute('pengguna.profile') ? 'active text-accent' : 'text-gray-500' }}">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
