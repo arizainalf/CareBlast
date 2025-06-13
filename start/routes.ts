@@ -1,5 +1,6 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+const DoctorsController = () => import('#controllers/pasien/doctors_controller')
 
 const ProfilesController = () => import('#controllers/pasien/profiles_controller')
 const VisitsController = () => import('#controllers/pasien/visits_controller')
@@ -30,13 +31,16 @@ router.get('/forgot', async ({ view }) => {
 
 router.post('/forgot', [PasswordResetsController, 'forgot']).as('forgotPost')
 router.get('/reset-password/:uuid', [PasswordResetsController, 'show']).as('reset-password')
-router.post('/reset-password/:uuid', [PasswordResetsController, 'resetPassword']).as('reset-password.post')
+router
+  .post('/reset-password/:uuid', [PasswordResetsController, 'resetPassword'])
+  .as('reset-password.post')
 
 // Route Patients
 router
   .group(() => {
     router.get('/', [HomeController, 'index']).as('pengguna.home')
     router.get('/kunjungan', [VisitsController, 'index']).as('pengguna.kunjungan')
+    router.get('/dokter', [DoctorsController, 'index']).as('pengguna.dokter')
     router.get('/profile', [ProfilesController, 'index']).as('pengguna.profile')
     router.get('/logout', [SessionController, 'destroy']).as('logoutPengguna')
   })
@@ -76,7 +80,8 @@ router
       .put('/dokter/:id/updateStatus', [DokterSpesialistsController, 'updateStatus'])
       .as('dokter.updateStatus')
 
-    router.put('/dokter/:id/jadwal', [DokterSpesialistsController, 'updateHari'])
+    router
+      .put('/dokter/:id/jadwal', [DokterSpesialistsController, 'updateHari'])
       .as('spesialis.jadwal')
   })
   .use(middleware.auth({ guards: ['web'] }))
