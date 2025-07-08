@@ -240,6 +240,7 @@ export default class KunjungansController {
   }
 
   async destroy({ params, response }: HttpContext) {
+    // console.log('Deleting kunjungan with params:', params)
     try {
       const { uuid } = params
       const kunjungan = await Kunjungan.findByOrFail('uuid', uuid)

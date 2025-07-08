@@ -4,8 +4,6 @@
     $('.tambahPasien').on('submit', function (e) {
       e.preventDefault();
 
-      console.log('submit tambah pasien')
-
       let formData = new FormData(this);
       let url = $(this).attr('action');
       let method = $(this).attr('method');

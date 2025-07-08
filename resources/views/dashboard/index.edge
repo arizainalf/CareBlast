@@ -40,7 +40,8 @@
                   <h6 class="text-uppercase text-muted mb-2 fw-semibold small">Total Pasien</h6>
                   <h2 class="mb-0 fw-bold"><span id="totalPasienCounter">0</span></h2>
                   <div class="progress default-progress mt-3" style="height: 5px;">
-                    <div class="progress-bar bg-gradient1 progress-animated bg-info" style="width: 75%;" role="progressbar">
+                    <div class="progress-bar bg-gradient1 progress-animated bg-info" style="width: 75%;"
+                      role="progressbar">
                       <span class="sr-only">75% Complete</span>
                     </div>
                   </div>
@@ -97,249 +98,247 @@
     <div class="col-xl-8">
       @else
       <div class="col-xl-12">
-    @end
-      <div class="card border-0 bg-white">
-        <div class="card-header bg-transparent border-0 pb-0">
-          <div class="d-flex align-items-center justify-content-between">
-            <h5 class="fw-bold mb-0 me-2">Analisis Penyakit Pasien</h5>
-            <ul class="nav nav-tabs border-0" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link px-3 py-2 active" data-bs-toggle="tab" href="#penyakit-monthly"
-                role="tab">Bulanan</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link px-3 py-2" data-bs-toggle="tab" href="#penyakit-distribution"
-                  role="tab">Distribusi</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="tab-content">
-            <div class="tab-pane fade active show" id="penyakit-monthly">
-              <div id="penyakitChart" class="penyakitChart" style="height: 250px; max-height: 250px;"></div>
-            </div>
-            <div class="tab-pane fade" id="penyakit-distribution">
-              <div id="penyakitPieChart" class="penyakitChart" style="height: 250px; max-height: 250px;"></div>
+        @end
+        <div class="card border-0 bg-white">
+          <div class="card-header bg-transparent border-0 pb-0">
+            <div class="d-flex align-items-center justify-content-between">
+              <h5 class="fw-bold mb-0 me-2">Analisis Penyakit Pasien</h5>
+              <ul class="nav nav-tabs border-0" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link px-3 py-2 active" data-bs-toggle="tab" href="#penyakit-monthly"
+                    role="tab">Bulanan</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link px-3 py-2" data-bs-toggle="tab" href="#penyakit-distribution"
+                    role="tab">Distribusi</a>
+                </li>
+              </ul>
             </div>
           </div>
-          <div class="row mb-4">
-            @each(item in jenisPenyakitData)
-            <div class="col-6 col-md-3 mb-3">
-              <div class="disease-stat p-3 bg-white rounded shadow text-center">
-                <h4 class="fs-18 fw-bold mb-1" style="color: {{ item.color }};">
-                  {{ item.pasien_count }}
-                </h4>
-                <span class="fs-14 disease-name d-inline-block text-truncate w-100" title="{{ item.nama }}">
-                  {{ item.nama }}
-                </span>
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane fade active show" id="penyakit-monthly">
+                <div id="penyakitChart" class="penyakitChart" style="height: 250px; max-height: 250px;"></div>
+              </div>
+              <div class="tab-pane fade" id="penyakit-distribution">
+                <div id="penyakitPieChart" class="penyakitChart" style="height: 250px; max-height: 250px;"></div>
               </div>
             </div>
-            @end
-          </div>
-        </div>
-      </div>
-    </div>
-
-    @if(auth.user.role == 'super_admin')    
-    <!-- WhatsApp Connection -->
-    <div class="col-xl-4">
-      <div class="card border-0 bg-white" style="max-height: 400px; overflow-y: auto;">
-        <div class="card-header bg-transparent border-0">
-          <h5 class="fw-bold mb-0">WhatsApp Connection</h5>
-        </div>
-        <div class="card-body">
-          <div class="text-center">
-            <div class="qr-container mb-4">
-              <img id="qrCode" class="qr-image img-fluid" alt="QR Code" style="max-width: 180px;">
-              <div class="qr-overlay">
-                <div class="spinner-border text-primary" role="status">
-                  <span class="visually-hidden">Loading...</span>
+            <div class="row mb-4">
+              @each(item in jenisPenyakitData)
+              <div class="col-6 col-md-3 mb-3">
+                <div class="disease-stat p-3 bg-white rounded shadow text-center">
+                  <h4 class="fs-18 fw-bold mb-1" style="color: {{ item.color }};">
+                    {{ item.pasien_count }}
+                  </h4>
+                  <span class="fs-14 disease-name d-inline-block text-truncate w-100" title="{{ item.nama }}">
+                    {{ item.nama }}
+                  </span>
                 </div>
               </div>
-            </div>
-            <div id="status" class="connection-status mb-3">
-              <span class="status-dot"></span> Waiting for connection...
-            </div>
-            <div class="d-grid gap-2">
-              <button class="btn btn-primary btn-sm" onclick="refreshQR()">
-                <i class="fas fa-sync-alt me-2"></i>Refresh QR Code
-              </button>
-              <button class="btn btn-outline-danger btn-sm" onclick="logout()" id="logoutBtn" style="display: none;">
-                <i class="fas fa-sign-out-alt me-2"></i>Logout
-              </button>
+              @end
             </div>
           </div>
         </div>
       </div>
+
+      @if(auth.user.role == 'super_admin')
+      <!-- WhatsApp Connection -->
+      <div class="col-xl-4">
+        <div class="card border-0 bg-white" style="max-height: 400px; overflow-y: auto;">
+          <div class="card-header bg-transparent border-0">
+            <h5 class="fw-bold mb-0">WhatsApp Connection</h5>
+          </div>
+          <div class="card-body">
+            <div class="text-center">
+              <div class="qr-container mb-4">
+                <img id="qrCode" class="qr-image img-fluid" alt="QR Code" style="max-width: 180px;">
+                <div class="qr-overlay">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>
+              <div id="status" class="connection-status mb-3">
+                <span class="status-dot"></span> Waiting for connection...
+              </div>
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary btn-sm" onclick="refreshQR()">
+                  <i class="fas fa-sync-alt me-2"></i>Refresh QR Code
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="logout()" id="logoutBtn" style="display: none;">
+                  <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @end
     </div>
-    @end
   </div>
-</div>
-@include('dashboard/partials/style')
-@end
+  @include('dashboard/partials/style')
+  @end
 
-@slot('scripts')
+  @slot('scripts')
 
-@include('dashboard/partials/script')
+  @include('dashboard/partials/script')
 
-<script>
-  const jenisPenyakitData = {{{ JSON.stringify(jenisPenyakitData) }}};
-  const monthlyData = {{{ JSON.stringify(monthlyData) }}};
-  const colors = ['#886CC0', '#FFCF6D', '#FFA7D7', '#6CBCB7', '#FF7778', '#5FAAE3', '#50C45E', '#DFA73A'];
+  <script>
+    const jenisPenyakitData = {{{ JSON.stringify(jenisPenyakitData) }}};
+    const monthlyData = {{{ JSON.stringify(monthlyData) }}};
+    const colors = ['#886CC0', '#FFCF6D', '#FFA7D7', '#6CBCB7', '#FF7778', '#5FAAE3', '#50C45E', '#DFA73A'];
 
-  function initCharts() {
-    if (document.getElementById('penyakitChart')) {
-      const months = monthlyData.map(item => item.month);
-      const series = jenisPenyakitData.map((penyakit, index) => {
-        return {
-          name: penyakit.nama,
-          data: monthlyData.map(month => {
-            const penyakitData = month.data.find(p => p.penyakit_id === penyakit.id);
-            return penyakitData ? penyakitData.count : 0;
-          }),
-          color: colors[index % colors.length]
+    function initCharts() {
+      if (document.getElementById('penyakitChart')) {
+        const months = monthlyData.map(item => item.month);
+        const series = jenisPenyakitData.map((penyakit, index) => {
+          return {
+            name: penyakit.nama,
+            data: monthlyData.map(month => {
+              const penyakitData = month.data.find(p => p.penyakit_id === penyakit.id);
+              return penyakitData ? penyakitData.count : 0;
+            }),
+            color: colors[index % colors.length]
+          };
+        });
+
+        const options = {
+          series: series,
+          chart: {
+            type: 'bar',
+            height: 300,
+            stacked: true,
+            toolbar: {
+              show: false
+            },
+            zoom: {
+              enabled: false
+            }
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              legend: {
+                position: 'bottom',
+                offsetX: -10,
+                offsetY: 0
+              }
+            }
+          }],
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              borderRadius: 5,
+              columnWidth: '60%',
+            },
+          },
+          xaxis: {
+            categories: months,
+            labels: {
+              style: {
+                fontSize: '12px',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            },
+          },
+          yaxis: {
+            labels: {
+              style: {
+                fontSize: '12px',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            },
+          },
+          legend: {
+            position: 'bottom',
+            offsetY: 0,
+            fontSize: '12px',
+            fontFamily: 'Poppins, sans-serif',
+            markers: {
+              fillColors: colors,
+              width: 15,
+              height: 15,
+              strokeWidth: 0,
+              radius: 12,
+            },
+          },
+          fill: {
+            opacity: 1
+          },
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val + " pasien";
+              }
+            }
+          }
         };
-      });
 
-      console.log(months, series)
+        const chart = new ApexCharts(document.getElementById('penyakitChart'), options);
+        chart.render();
+      }
 
-      const options = {
-        series: series,
-        chart: {
-          type: 'bar',
-          height: 300,
-          stacked: true,
-          toolbar: {
-            show: false
+      if (document.getElementById('penyakitPieChart')) {
+        const labels = jenisPenyakitData.map(item => item.nama);
+        const series = jenisPenyakitData.map(item => item.pasien_count);
+
+        const options = {
+          series: series,
+          chart: {
+            width: '100%',
+            height: 300,
+            type: 'pie',
           },
-          zoom: {
-            enabled: false
-          }
-        },
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: 'bottom',
-              offsetX: -10,
-              offsetY: 0
-            }
-          }
-        }],
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            borderRadius: 5,
-            columnWidth: '60%',
-          },
-        },
-        xaxis: {
-          categories: months,
-          labels: {
-            style: {
-              fontSize: '12px',
-              fontFamily: 'Poppins, sans-serif',
+          labels: labels,
+          colors: colors.slice(0, jenisPenyakitData.length),
+          legend: {
+            position: 'bottom',
+            fontSize: '12px',
+            fontFamily: 'Poppins, sans-serif',
+            markers: {
+              width: 15,
+              height: 15,
+              strokeWidth: 0,
+              radius: 12,
             },
           },
-        },
-        yaxis: {
-          labels: {
-            style: {
-              fontSize: '12px',
-              fontFamily: 'Poppins, sans-serif',
-            },
-          },
-        },
-        legend: {
-          position: 'bottom',
-          offsetY: 0,
-          fontSize: '12px',
-          fontFamily: 'Poppins, sans-serif',
-          markers: {
-            fillColors: colors,
-            width: 15,
-            height: 15,
-            strokeWidth: 0,
-            radius: 12,
-          },
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return val + " pasien";
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 300
+              },
+              legend: {
+                position: 'bottom'
+              }
             }
-          }
-        }
-      };
+          }],
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val + " pasien";
+              }
+            }
+          },
+        };
 
-      const chart = new ApexCharts(document.getElementById('penyakitChart'), options);
-      chart.render();
+        const chart = new ApexCharts(document.getElementById('penyakitPieChart'), options);
+        chart.render();
+      }
     }
 
-    if (document.getElementById('penyakitPieChart')) {
-      const labels = jenisPenyakitData.map(item => item.nama);
-      const series = jenisPenyakitData.map(item => item.pasien_count);
-
-      const options = {
-        series: series,
-        chart: {
-          width: '100%',
-          height: 300,
-          type: 'pie',
-        },
-        labels: labels,
-        colors: colors.slice(0, jenisPenyakitData.length),
-        legend: {
-          position: 'bottom',
-          fontSize: '12px',
-          fontFamily: 'Poppins, sans-serif',
-          markers: {
-            width: 15,
-            height: 15,
-            strokeWidth: 0,
-            radius: 12,
-          },
-        },
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 300
-            },
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }],
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return val + " pasien";
-            }
-          }
-        },
-      };
-
-      const chart = new ApexCharts(document.getElementById('penyakitPieChart'), options);
-      chart.render();
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-        loadQRCode();
-        initCharts();
-        initCounters();
+    document.addEventListener('DOMContentLoaded', function () {
+      loadQRCode();
+      initCharts();
+      initCounters();
     }); 
-</script>
-@end
+  </script>
+  @end
 
-@inject({
+  @inject({
   getColor: (id) => {
-    return ['#886CC0', '#FFCF6D', '#FFA7D7', '#6CBCB7', '#FF7778', '#5FAAE3', '#50C45E', '#DFA73A'][(id - 1) % 8];
+  return ['#886CC0', '#FFCF6D', '#FFA7D7', '#6CBCB7', '#FF7778', '#5FAAE3', '#50C45E', '#DFA73A'][(id - 1) % 8];
   }
-})
-@end
+  })
+  @end

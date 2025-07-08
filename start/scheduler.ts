@@ -9,7 +9,6 @@ import('dayjs/locale/id.js').then(() => {
 
 function delay(minMs: number = 4000, maxMs: number = 10000): Promise<void> {
     const randomMs = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
-    console.log(randomMs)
     return new Promise((resolve) => setTimeout(resolve, randomMs));
 }
 
@@ -20,7 +19,6 @@ function getRandomMessage(templates: string[]) {
 }
 
 cron.schedule('0 * * * *', async () => {
-    console.log('Cron job started')
     try {
         const obatPasiens = await ObatPasien
             .query()
@@ -33,7 +31,6 @@ cron.schedule('0 * * * *', async () => {
         const tomorrowDate = getTomorrowDate();
         const dateNow = getCurrentDate();
 
-        console.log(now, tomorrowDate)
 
         const pesanTemplateKunjungan = [
             (sapaan: any, nama: any) => `Selamat pagi ${sapaan} ${nama}, ini pengingat bahwa besok adalah jadwal kunjungan Anda. Jangan lupa hadir tepat waktu ya.`,
@@ -65,8 +62,7 @@ cron.schedule('0 * * * *', async () => {
                 const pesan = pesanFn(sapaan, nama);
 
                 try {
-                    const response = await sendMsg(noHp, pesan);
-                    console.log(`Kirim pesan kunjungan ke ${noHp}:`, response);
+                    await sendMsg(noHp, pesan);
                     await delay(); // delay agar tidak dianggap spam
                 } catch (error) {
                     console.error(`Gagal kirim pesan ke ${noHp}:`, error);
@@ -75,23 +71,14 @@ cron.schedule('0 * * * *', async () => {
         }
 
         const hariIni = getHariIni()
-        console.log(hariIni)
 
         for (const obat of obatPasiens) {
-            console.log('Obat Pasien', obat.id, 'ditemukan')
-            console.log(obat.waktuKonsumsi)
-            console.log(obat.hariKonsumsi)
 
             if (!Array.isArray(obat.waktuKonsumsi) || !Array.isArray(obat.hariKonsumsi)) continue
-            console.log(1)
             if (!obat.hariKonsumsi.includes(hariIni)) {
-                console.log(`Obat Pasien ${obat.id} tidak dijadwalkan untuk hari ${hariIni}`)
                 continue
             }
-            console.log(3)
-            console.log(obat.status)
             if (obat.status !== 1) continue
-            console.log(2)
 
             // Template pesan variasi supaya tidak monoton
             const pesanTemplates = [
@@ -115,15 +102,13 @@ cron.schedule('0 * * * *', async () => {
             ];
 
             for (const waktu of obat.waktuKonsumsi) {
-                console.log('looping waktu')
                 if (waktu === now) {
                     try {
                         const pesan = getRandomMessage(pesanTemplates);
-                        const response = await sendMsg(
+                        await sendMsg(
                             obat.pasien.contact.waId,
                             pesan, true
                         );
-                        console.log(`scheduler kirim pesan ke ${obat.pasien.no_hp}:`, response);
                         await delay()
                     } catch (error) {
                         console.error(`Gagal kirim ke ${obat.pasien.no_hp}:`, error);

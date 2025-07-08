@@ -19,10 +19,8 @@
       $('.bulkDeleteObat').on('submit', function (e) {
         e.preventDefault();
 
-        console.log('bulk delete obat di submit')
 
         const url = '/pasien/{{ pasien.uuid }}/obat-kunjungan'
-        console.log(url)
         const method = 'DELETE'
         const formData = new FormData(this)
 
@@ -34,7 +32,6 @@
     $(document).on('submit', '.hapusPasien', function (e) {
       e.preventDefault();
 
-      console.log('hapus pasien di submit')
       const form = $(this);
       const url = form.attr('action');
       const method = 'DELETE';

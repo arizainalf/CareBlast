@@ -82,10 +82,6 @@
       const hariStr = this.getAttribute("data-hari") || "";
       const hariArray = hariStr.split(',').map(h => h.trim());
 
-      console.log("days", days)
-      console.log("hariArray:", hariArray);
-      console.log("hariStr:", hariStr);
-
 
       $('#day-inputs').empty();
 
@@ -98,8 +94,7 @@
       </div>
     `;
         $('#day-inputs').append(checkbox);
-        console.log("1")
-      });
+      })
 
       const obatUuid = this.getAttribute("data-uuid");
       const obatNama = this.getAttribute("data-nama");
@@ -109,8 +104,6 @@
       const batasWaktu = this.getAttribute("data-batas-waktu");
       const batasWaktuStr = formatDateToInput(this.getAttribute("data-batas-waktu"));
       const status = this.getAttribute("data-status");
-
-      console.log(batasWaktuStr, status, obatUuid)
 
       let waktuArray = [];
       if (typeof waktuStr === 'string') {
@@ -165,8 +158,6 @@
         const hariKonsumsi = $("#day-inputs input[name='hariKonsumsi[]']:checked").map(function () {
           return this.value;
         }).get();
-        console.log(hariKonsumsi)
-
         if (!obatUuid) {
           alert('Error: ID obat tidak ditemukan');
           return;
@@ -195,8 +186,6 @@
         const status = $('#status').val()
         const waktuArray = Array.from(timeInputs).map(input => input.value);
         const csrfToken = document.querySelector('input[name="_csrf"]').value;
-
-        console.log(batasWaktu, status)
 
         fetch(`/obat-pasien/${obatUuid}`, {
           method: 'PATCH',

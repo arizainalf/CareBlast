@@ -41,11 +41,11 @@ export default class extends BaseSeeder {
   }
 
   private getRandomDate(fromYear = 2020, toYear = 2025): DateTime {
-  const start = new Date(fromYear, 0, 1).getTime()
-  const end = new Date(toYear, 11, 31).getTime()
-  const randomDate = new Date(start + Math.random() * (end - start))
-  return DateTime.fromJSDate(randomDate)
-}
+    const start = new Date(fromYear, 0, 1).getTime()
+    const end = new Date(toYear, 11, 31).getTime()
+    const randomDate = new Date(start + Math.random() * (end - start))
+    return DateTime.fromJSDate(randomDate)
+  }
 
   private generateTimeSlots(frequency: number): string[] {
     // Generate appropriate time slots based on frequency
@@ -74,7 +74,7 @@ export default class extends BaseSeeder {
 
   public async run() {
     // Seed Users
-    await User.createMany([
+    const users = await User.createMany([
       {
         fullName: 'Super Admin',
         email: 'superadmin@gmail.com',
@@ -86,6 +86,21 @@ export default class extends BaseSeeder {
         email: 'admin@gmail.com',
         password: '11221122',
         role: 'admin',
+      },
+    ])
+
+    await Contact.createMany([
+      {
+        userId: users[0].uuid,
+        name: 'Super Admin',
+        username: 'superadmin',
+        waId: '6285959638322@s.whatsapp.net',
+      },
+      {
+        userId: users[1].uuid,
+        name: 'Admin',
+        username: 'admin',
+        waId: '6281904002654@s.whatsapp.net',
       },
     ])
 
@@ -436,12 +451,15 @@ export default class extends BaseSeeder {
 
         const keteranganWaktuOptions = ['Sebelum makan', 'Sesudah makan']
 
+        const now = new Date()
+
         obatPasienData.push({
           uuid: uuid(),
           pasienId: pasien.id,
           kunjunganId: kunjungan.id,
           obatId: obatId,
           frekuensi: frekuensi,
+          batasWaktu: now,
           waktuKonsumsi: JSON.stringify(waktuKonsumsi), // JSON array of time strings
           hariKonsumsi: `[
     "Senin",

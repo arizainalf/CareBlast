@@ -115,7 +115,7 @@ router
     router.get('/kunjungan/search', [KunjungansController, 'search'])
     router.get('/kunjungan/:uuid', [KunjungansController, 'show'])
     router.put('/kunjungan/:uuid', [KunjungansController, 'update'])
-    router.post('/kunjungans/:uuid', [KunjungansController, 'destroy'])
+    router.delete('/kunjungans/:uuid', [KunjungansController, 'destroy'])
 
     router.get('/send-file', [WhatsappsController, 'sendFile']).as('send-file')
     router.post('/send-file', [WhatsappsController, 'sendFile']).as('send-file.post')

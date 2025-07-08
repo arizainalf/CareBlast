@@ -58,13 +58,11 @@ const showSwal = (type, title, message, callback = null, redirectUrl = null, has
 // 🔄 AJAX Request (dengan showSwal & optional callback)
 const ajaxRequest = (url, method, formData = null, callback = null) => {
   const isFormData = formData instanceof FormData;
+  const hasFormData = formData !== null && formData !== undefined;
 
-  $.ajax({
+  const ajaxOptions = {
     url: url,
     type: method,
-    data: isFormData ? formData : JSON.stringify(formData),
-    processData: !isFormData,
-    contentType: isFormData ? false : "application/json",
     headers: {
       "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
       Accept: "application/json",
@@ -82,8 +80,18 @@ const ajaxRequest = (url, method, formData = null, callback = null) => {
       const message = xhr.responseJSON?.message || "Terjadi kesalahan tidak diketahui.";
       showSwal("error", "Gagal!", message);
     },
-  });
+  };
+
+  // Tambahkan data hanya jika formData tersedia
+  if (hasFormData) {
+    ajaxOptions.data = isFormData ? formData : JSON.stringify(formData);
+    ajaxOptions.processData = !isFormData;
+    ajaxOptions.contentType = isFormData ? false : "application/json";
+  }
+
+  $.ajax(ajaxOptions);
 };
+
 
 const ajaxCall = (url, method, data, successCallback, errorCallback) => {
   $.ajax({

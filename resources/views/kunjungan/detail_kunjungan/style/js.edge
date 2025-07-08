@@ -11,18 +11,6 @@
       ajaxRequest(url, method)
     })
 
-    $('#hapusKunjunganForm').on('submit', function (e) {
-      e.preventDefault();
-      const form = $(this)
-
-      const url = form.attr('action')
-      const method = form.attr('method')
-
-      ajaxRequest(url, method)
-
-      console.log('disubmit')
-    })
-
     if (showMoreBtn) {
       showMoreBtn.addEventListener('click', function () {
         if (!isExpanded) {

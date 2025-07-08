@@ -62,7 +62,8 @@
 
         <div class="mb-3">
           <label class="form-label">Batas Waktu <span class="text-danger">*</span></label>
-          <input type="date" name="batasWaktu" class="form-control" required value="{{ toDateInputValue(kunjungan.kunjunganBerikutnya) }}">
+          <input type="date" name="batasWaktu" class="form-control" required
+            value="{{ toDateInputValue(kunjungan.kunjunganBerikutnya) }}">
         </div>
 
         <div class="mb-3">
@@ -133,8 +134,6 @@
 
     $('#add-medicine-form').on('submit', function (e) {
       e.preventDefault()
-
-      console.log('tambah obat di submit')
 
       const pasienUuid = $(this).data('pasien-uuid')
       const url = `/pasien/${pasienUuid}/obat`
