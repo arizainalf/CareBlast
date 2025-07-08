@@ -19,8 +19,8 @@
                             <span class="input-group-text bg-light border-end-0">
                                 <i class="fas fa-lock text-muted"></i>
                             </span>
-                            <input type="password" name="password" class="form-control border-start-0" placeholder="Enter new password"
-                                required>
+                            <input type="password" name="password" class="form-control border-start-0"
+                                placeholder="Enter new password" required>
                         </div>
                     </div>
 
@@ -52,12 +52,10 @@
         const pathSegments = window.location.pathname.split('/')
         const token = pathSegments[pathSegments.length - 1]
 
-        console.log('Token:', token)    
 
         $('#resetPasswordForm').on('submit', function (event) {
             event.preventDefault();
 
-            console.log('Form submitted');
             // Handle the reset password logic here
             const newPassword = $(this).find('input[name="password"]').val();
             const confirmPassword = $(this).find('input[name="password_confirmation"]').val();

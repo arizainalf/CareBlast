@@ -75,7 +75,6 @@
     
     $(document).on('submit', '#deleteForm',function (event) {
       event.preventDefault();
-      console.log('Hapus Penyakit dihapus')
       let formData = new FormData(this);
       const url = $(this).attr('action'); 
       const method = $(this).attr('method') || 'POST';

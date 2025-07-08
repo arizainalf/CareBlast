@@ -27,7 +27,6 @@
       const formData = new FormData(this);
       const url = '/pasien/{{ pasien.uuid }}/obat'
       const method = 'POST';
-      console.log(formData)
 
       ajaxRequest(url, method, formData)
     });

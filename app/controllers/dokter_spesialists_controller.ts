@@ -145,7 +145,6 @@ export default class DokterSpesialistsController {
   async updateStatus({ params, request, response }: HttpContext) {
     const dokter = await Dokter.findOrFail(params.id)
     dokter.status = request.input('status')
-    console.log(dokter.status)
     await dokter.save()
     return response.json({ success: true, message: 'Status berhasil diperbarui!', dokter });
   }

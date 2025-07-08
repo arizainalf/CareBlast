@@ -163,9 +163,6 @@
         const hariStr = this.getAttribute("data-hari") || "";
         const hariArray = hariStr.split(',').map(h => h.trim());
 
-        console.log("days", days)
-        console.log("hariArray:", hariArray);
-        console.log("hariStr:", hariStr);
 
         $('#edit-day-input').empty();
 
@@ -178,7 +175,6 @@
       </div>
     `;
           $('#edit-day-input').append(checkbox);
-          console.log("1")
         });
 
         const obatUuid = this.getAttribute("data-uuid");
@@ -188,7 +184,6 @@
         const keteranganWaktu = this.getAttribute("data-keterangan-waktu");
         const batasWaktu = formatDateToInput(this.getAttribute("data-batas"))
 
-        console.log(formatDateToInput(this.getAttribute("data-batas")))
 
         let waktuArray = [];
         try {
@@ -202,7 +197,7 @@
         if (editKeteranganWaktu) {
           editKeteranganWaktu.value = keteranganWaktu;
         }
-        if(editBatasWaktu){
+        if (editBatasWaktu) {
           editBatasWaktu.value = batasWaktu
         }
 

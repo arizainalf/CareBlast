@@ -10,12 +10,29 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-      <form 
-      action="/kunjungans/{{ kunjungan.uuid }}?_method=DELETE" 
-      method="POST" id="hapusKunjunganForm">
+      <form id="hapusKunjunganForm" data-id="{{ kunjungan.uuid }}">
         {{ csrfField() }}
         <button type="submit" class="btn btn-danger">Hapus</button>
       </form>
     </div>
   </div>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('#hapusKunjunganForm');
+
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const id = form.dataset.id;
+        const url = `/kunjungans/${id}`;
+        const method = form.getAttribute('method');
+
+        console.log(url, method, id);
+
+        ajaxRequest(url, "DELETE")
+      });
+    }
+  });
+</script>

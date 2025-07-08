@@ -275,18 +275,15 @@
         nama.val(data.contact.username || data.contact.name);
         const nomor = formatPhoneNumber(data.contact.waId);
         nowa.val(nomor);
-        console.log(data.contact);
       });
     }
 
     function getChat(id, nama) {
       $.get('/get-chat/' + id, function (data) {
-        console.log('chat +', data)
         $('#contactName').val(nama);
         $('#WaId').val(data.contact.waId);
         const messages = data.message
         const pp = data.contact.profilePicture;
-        console.log(pp)
 
         $('#chat-body').html('');
 
@@ -367,9 +364,6 @@
         contentType: false,
         processData: false,
         success: function (response) {
-          console.log(response);
-          console.log(response.responseMsg);
-          console.log(response.data);
           // Reset form after sending
           $('#send-messages')[0].reset();
           $('#fileNameDisplay').addClass('d-none');
@@ -420,12 +414,10 @@
       editKontak.attr('data-id', id);
       kontakEdit.attr('data-id', id);
 
-      console.log('ditekan', id)
       getChat(id, nama, kontakEdit, editKontak);
 
       $('#buttonEditKontak').on('click', function () {
         const getcontact = getContact(id)
-        console.log(id, '#buttonEditKontak');
       });
 
       $('#kontakEdit').on('submit', function (e) {

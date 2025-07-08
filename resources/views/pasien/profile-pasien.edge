@@ -316,8 +316,6 @@
 @slot('scripts')
 <script>
   $(document).ready(function () {
-    console.log('ready')
-
     $('#form-kunjungan').on('submit', function (e) {
       e.preventDefault();
 
@@ -326,8 +324,6 @@
       const url = '/pasien/' + uuid + '/kunjungan'
       const method = 'POST'
       const formData = new FormData(this)
-
-      console.log(form, uuid, url, method, formData)
 
       ajaxRequest(url, method, formData)
     })

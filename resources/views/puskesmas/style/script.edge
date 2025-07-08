@@ -82,7 +82,6 @@
           statusBadge.classList.add('bg-danger');
         }
 
-        console.log(this.checked)
         updateDoctorStatus(doctorId, this.checked);
       });
     });
@@ -109,7 +108,6 @@
 
     // Example function for AJAX update
     function updateDoctorStatus(id, isActive) {
-      console.log(id, isActive)
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       $.ajax({
         url: `/dokter/${id}/updateStatus`,
@@ -120,7 +118,6 @@
         },
         success: function (response) {
           if (response.success) {
-            console.log('Status berhasil diperbarui');
           } else {
             console.error('Gagal memperbarui status:', response.message);
             showSwal("error", "Error", response.message);
@@ -180,7 +177,6 @@
     $(document).on('click', '.editSpesialist', function (e) {
       e.preventDefault()
 
-      console.log('edit spesialist')
 
       let spesialisId = $(this).data('id');
       let spesialisName = $(this).data('nama');
@@ -211,9 +207,6 @@
       const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
       const hariArray = hariStr.split(',').map(h => h.trim());
 
-      console.log("days", days)
-      console.log("hariArray:", hariArray);
-      console.log("hariStr:", hariStr);
 
       $('#jadwalHari').empty();
 
@@ -226,7 +219,6 @@
       </div>
     `;
         $('#jadwalHari').append(checkbox);
-        console.log("1")
       });
 
       $.get('/spesialis', function (spesialisList) {
@@ -351,7 +343,6 @@
       }
       ajaxRequest(url, method, formData)
       for (let [key, value] of formData.entries()) {
-        console.log(key, value);
       }
 
 
@@ -374,14 +365,12 @@
     $('#formSpesialist').on('submit', function (e) {
       e.preventDefault();
 
-      console.log('submit form spesialist')
 
       let formData = new FormData(this);
       let spesialistId = $(this).attr('data-id');
       let url = spesialistId ? `/spesialist/${spesialistId}/update` : '/dokter';
       let method = spesialistId ? 'PUT' : 'POST';
 
-      console.log(spesialistId, url, method)
 
       $.ajax({
         url: url,

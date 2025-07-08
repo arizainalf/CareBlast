@@ -50,7 +50,6 @@
         }
 
         const data = result.data;
-        console.log('Data obat yang diterima dari API:', data);
 
         detailModal.innerHTML = document.getElementById('detailModalTemplate').innerHTML;
 
@@ -87,12 +86,10 @@
         if (statusElement) statusElement.textContent = data.status ? 'Aktif' : 'Tidak Aktif';
         if (batasElement) batasElement.textContent = data.batasWaktu ? formatTimestamp(data.batasWaktu) : '';
 
-        console.log(data.batasWaktu, data.status, scheduleElement, statusElement, batasElement);
 
 
         if (scheduleElement) {
           scheduleElement.innerHTML = '';
-          console.log('Membangun jadwal dengan waktu:', data.waktuKonsumsi);
 
           if (data.waktuKonsumsi && data.waktuKonsumsi.length > 0) {
             data.waktuKonsumsi.forEach(waktu => {
@@ -104,7 +101,6 @@
                 timeTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
                 timeTag.innerHTML = `<i class="far fa-clock me-2"></i>${waktu}`;
 
-                console.log('Menambahkan elemen waktu:', data);
                 timeCol.appendChild(timeTag);
                 scheduleElement.appendChild(timeCol);
               }
@@ -118,7 +114,6 @@
               batasWaktuTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
               batasWaktuTag.innerHTML = `<i class="far fa-calendar me-2"></i>${formatTimestamp(data.batasWaktu)}`;
 
-              console.log('Menambahkan elemen batas waktu:', data.batasWaktu);
               batasWaktuCol.appendChild(batasWaktuTag);
               scheduleElement.appendChild(batasWaktuCol);
             }
@@ -130,7 +125,6 @@
               batasWaktuTag.className = `d-flex align-items-center justify-content-left bg-${themeColor} bg-opacity-10 text-white px-3 py-2 rounded-pill`;
               batasWaktuTag.innerHTML = `<i class="far fa-${data.status == true ? 'check' : 'times'}-circle me-2"></i>${data.status == true ? 'Aktif' : 'Tidak Aktif'}`;
 
-              console.log('Menambahkan elemen batas waktu:', data.batasWaktu);
               batasWaktuCol.appendChild(batasWaktuTag);
               scheduleElement.appendChild(batasWaktuCol);
             }
@@ -139,7 +133,6 @@
 
 
           if (scheduleElement.children.length === 0) {
-            console.log('Tidak ada waktu yang valid, menambahkan placeholder');
             const timeCol = document.createElement('div');
             timeCol.className = 'col-12 text-center';
             timeCol.innerHTML = '<p class="text-muted">Tidak ada jadwal yang ditentukan</p>';
