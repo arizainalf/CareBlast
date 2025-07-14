@@ -1,0 +1,442 @@
+[
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB01B97ACF91E0C3C9222",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB01B97ACF91E0C3C9222",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB01B97ACF91E0C3C9222",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:69@s.whatsapp.net",
+      "id": "3EB01B97ACF91E0C3C9222",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB0B0702CDBBBB9342E51",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B0702CDBBBB9342E51",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:69@s.whatsapp.net",
+      "id": "3EB0B0702CDBBBB9342E51",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB058F27D7D753A6ECED1",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB058F27D7D753A6ECED1",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:69@s.whatsapp.net",
+      "id": "3EB058F27D7D753A6ECED1",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB01B97ACF91E0C3C9222",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB0B0702CDBBBB9342E51",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB058F27D7D753A6ECED1",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB01E5E6ADDC0660ABBD1",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB01E5E6ADDC0660ABBD1",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B0702CDBBBB9342E51",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB058F27D7D753A6ECED1",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB01E5E6ADDC0660ABBD1",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:69@s.whatsapp.net",
+      "id": "3EB01E5E6ADDC0660ABBD1",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB06284BC7FA4A03915F0",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB06284BC7FA4A03915F0",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB06284BC7FA4A03915F0",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:69@s.whatsapp.net",
+      "id": "3EB06284BC7FA4A03915F0",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB081BCBE15BA714CB0AF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB081BCBE15BA714CB0AF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:69@s.whatsapp.net",
+      "id": "3EB081BCBE15BA714CB0AF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB081BCBE15BA714CB0AF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB0E330E0FB2F517B92D8",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:69@s.whatsapp.net",
+      "id": "3EB0E330E0FB2F517B92D8",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0E330E0FB2F517B92D8",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB0B64181B97AB012EDFA",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:69@s.whatsapp.net",
+      "id": "3EB0B64181B97AB012EDFA",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B64181B97AB012EDFA",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB081BCBE15BA714CB0AF",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0E330E0FB2F517B92D8",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB0B64181B97AB012EDFA",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:71@s.whatsapp.net",
+      "id": "3EB05905CEEF75F40ED433",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB05905CEEF75F40ED433",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458@s.whatsapp.net",
+      "id": "3EB05905CEEF75F40ED433",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6281930865458:69@s.whatsapp.net",
+      "id": "3EB05905CEEF75F40ED433",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6289696950727@s.whatsapp.net",
+      "id": "3EB09F5D46BC1ACE283406",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6289696950727@s.whatsapp.net",
+      "id": "3EB09F5D46BC1ACE283406",
+      "fromMe": true
+    },
+    "update": {
+      "status": 4
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6285959638322@s.whatsapp.net",
+      "id": "3EB0D54484AE9CEE2D7287",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6289696950727@s.whatsapp.net",
+      "id": "3EB09F5D46BC1ACE283406",
+      "fromMe": true
+    },
+    "update": {
+      "status": 2
+    }
+  }
+]

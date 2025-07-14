@@ -16,6 +16,7 @@ const PasiensController = () => import('#controllers/pasiens_controller')
 const LaporansController = () => import('#controllers/laporans_controller')
 const DokterSpesialistsController = () => import('#controllers/dokter_spesialists_controller')
 const PasswordResetsController = () => import('#controllers/password_resets_controller')
+const PengaturansController = () => import('#controllers/pengaturans_controller')
 
 router
   .get('/login', async ({ view }) => {
@@ -79,6 +80,9 @@ router
     router
       .put('/dokter/:id/updateStatus', [DokterSpesialistsController, 'updateStatus'])
       .as('dokter.updateStatus')
+
+    router.get('/pengaturan', [PengaturansController, 'index']).as('pengaturan.index')
+    router.put('/pengaturan/update', [PengaturansController, 'update']).as('pengaturan.update')
 
     router
       .put('/dokter/:id/jadwal', [DokterSpesialistsController, 'updateHari'])

@@ -31,7 +31,7 @@ setInterval(() => {
   }
   if (sentFileMessages.size > 100) {
     sentFileMessages.clear()
-    console.log('Sent file messages cache cleared')  
+    console.log('Sent file messages cache cleared')
   }
 }, 5 * 60 * 1000) // Every 5 minutes
 
@@ -41,26 +41,26 @@ function getMessageId(message: any): string {
   const messageId = message.key?.id || ''
   const fromMe = message.key?.fromMe || false
   const timestamp = message.messageTimestamp || Date.now()
-  
+
   return `${remoteJid}_${messageId}_${fromMe}_${timestamp}`
 }
 
 // Check if message already processed
 function isMessageAlreadyProcessed(message: any, eventType: string): boolean {
   const identifier = `${eventType}_${getMessageId(message)}`
-  
+
   if (processedMessages.has(identifier)) {
     console.log(`[SKIP] ${eventType} already processed:`, message.key?.id)
     return true
   }
-  
+
   processedMessages.add(identifier)
   return false
 }
 
 export async function connectToWhatsApp() {
   const { state, saveCreds } = await useMultiFileAuthState('whatsappAuth')
-  
+
   socket = makeWASocket({
     auth: state,
     printQRInTerminal: false,
@@ -80,11 +80,11 @@ export async function connectToWhatsApp() {
       if (shouldReconnect && !isReconnecting) {
         isReconnecting = true
         console.log('Connection closed, reconnecting...')
-        
+
         // Clear caches on reconnect
         processedMessages.clear()
         sentFileMessages.clear()
-        
+
         await connectToWhatsApp()
         isReconnecting = false
       }
@@ -121,7 +121,7 @@ export async function connectToWhatsApp() {
 
         await saveMessages(m)
         saveFile('./messages.json', m, 'messages')
-        
+
         console.log('[UPSERT] Message saved:', m.key?.id)
       }
     } catch (error) {
@@ -201,7 +201,7 @@ export async function connectToWhatsApp() {
 async function updateMessageStatus(messageUpdate: any) {
   try {
     const messageId = messageUpdate.key?.id
-    
+
     // Find existing message in database
     const existingMessage = await Message.query()
       .where('message_id', messageId)
@@ -216,7 +216,7 @@ async function updateMessageStatus(messageUpdate: any) {
         hasChanges = true
       }
 
-           if (hasChanges) {
+      if (hasChanges) {
         await existingMessage.save()
         console.log('[STATUS] Updated message status:', messageId)
       }
@@ -292,11 +292,11 @@ export async function logoutWhatsapp() {
     } else {
       console.log('Cache directory does not exist')
     }
-    
+
     // Clear caches
     processedMessages.clear()
     sentFileMessages.clear()
-    
+
     connectToWhatsApp()
     return true
   } catch (error) {
@@ -313,25 +313,25 @@ export async function sendMsg(number: string, message: string, isNotif: boolean 
   if (!socket) {
     throw new Error('Socket not connected')
   }
-  
+
   let waId
   console.log('[SEND] Number:', number)
-  
+
   if (number.endsWith('@s.whatsapp.net')) {
     waId = number.split('@')[0]
   }
-  
+
   const NumberFormatted = NumberHelper(waId ? waId : number)
   const jid = formatWhatsappNumber(NumberFormatted)
 
   try {
     sendingFile = true
     const sentMsg = await socket.sendMessage(jid, { text: message })
-    
+
     // Track sent message to avoid processing in updates
     if (sentMsg.key?.id) {
       sentFileMessages.add(sentMsg.key.id)
-      
+
       // Auto cleanup after 30 seconds
       setTimeout(() => {
         sentFileMessages.delete(sentMsg.key.id)
@@ -346,7 +346,7 @@ export async function sendMsg(number: string, message: string, isNotif: boolean 
     const messageType = Object.keys(sentMsg.message || {})[0]
     const timestampUnix = sentMsg.messageTimestamp?.toNumber() || Math.floor(Date.now() / 1000)
     const timestamp = DateTime.fromSeconds(timestampUnix)
-    
+
     // Create message record
     const msgCreate = await Message.create({
       contactId: contactId,
@@ -393,14 +393,14 @@ export async function sendBulkMessage(numbers: string[], message: string) {
   return results
 }
 
-export async function sendFile(jid: string, file: any, caption: string) {
+export async function sendFile(jid: string, file: any, caption: string, nama: null) {
   let waId
   console.log('[FILE] JID:', jid)
-  
+
   if (jid.endsWith('@s.whatsapp.net')) {
     waId = jid.split('@')[0]
   }
-  
+
   const NumberFormatted = NumberHelper(waId ? waId : jid)
   const no = formatWhatsappNumber(NumberFormatted)
 
@@ -412,7 +412,7 @@ export async function sendFile(jid: string, file: any, caption: string) {
   if (!isRegistered.isRegistered) {
     throw new Error('Nomor tidak terdaftar di WhatsApp')
   }
-  
+
   if (!file) {
     throw new Error('Tidak ada file yang di upload')
   }
@@ -449,7 +449,7 @@ export async function sendFile(jid: string, file: any, caption: string) {
     // Track sent file message
     if (sentMsg.key?.id) {
       sentFileMessages.add(sentMsg.key.id)
-      
+
       // Auto cleanup after 30 seconds
       setTimeout(() => {
         sentFileMessages.delete(sentMsg.key.id)
@@ -458,23 +458,25 @@ export async function sendFile(jid: string, file: any, caption: string) {
 
     const contact = await Contact.findBy('wa_id', no)
     const contactId = contact?.id
-    
+
     // Create message record
     await Message.create({
       contactId: contactId,
       fromMe: true,
       messageId: sentMsg.key.id,
       messageType: 'documentMessage',
-      content: caption,
+      content: caption ?? '-',
       timestamp: DateTime.now(),
       isHasilLab: true,
+      noHp: NumberFormatted,
+      nama: contact?.name || nama,
       fileName: sanitizedFileName,
       filePath: `storage/uploads/${sanitizedFileName}`,
     })
 
     sendingFile = false
     console.log('[FILE] File sent:', sentMsg.key?.id)
-    
+
     return sentMsg
   } catch (error) {
     sendingFile = false

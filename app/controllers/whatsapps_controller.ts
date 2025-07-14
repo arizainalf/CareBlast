@@ -182,11 +182,11 @@ export default class WhatsappsController {
       .orderBy('name', 'asc')
       .paginate(page, limit)
 
-      console.log(contacts.currentPage < contacts.lastPage)
-      console.log(contacts.currentPage > 1)
+    console.log(contacts.currentPage < contacts.lastPage)
+    console.log(contacts.currentPage > 1)
 
-      const total = contacts.total
-      const perPage = contacts.perPage
+    const total = contacts.total
+    const perPage = contacts.perPage
 
     return response.json({
       success: true,
@@ -196,7 +196,7 @@ export default class WhatsappsController {
         lastPage: contacts.lastPage,
         perPage: perPage,
         total: total,
-        totalPages: total / perPage, 
+        totalPages: total / perPage,
         hasNextPage: contacts.currentPage < contacts.lastPage,
         hasPreviousPage: contacts.currentPage > 1,
       }
@@ -221,7 +221,7 @@ export default class WhatsappsController {
 
     const jid = request.input('nomor')
     const file = request.file('file')
-    const caption = request.input('caption', '')
+    const caption = request.input('caption', '-')
     const name = request.input('nama')
 
     // Validasi wajib isi
@@ -236,7 +236,7 @@ export default class WhatsappsController {
     }
 
     try {
-      const responseMsg = await sendFile(jid, file, caption)
+      const responseMsg = await sendFile(jid, file, caption, name)
       console.log('sendfile response:', responseMsg)
 
       return response.json({
@@ -256,7 +256,7 @@ export default class WhatsappsController {
 
   public async sendMsg({ request, response }: HttpContext) {
     const number = request.input('number')
-    const message = request.input('message')
+    const message = request.input('message', '-')
     const file = request.file('file')
     const nama = request.input('nama')
 
@@ -266,7 +266,7 @@ export default class WhatsappsController {
     console.log('Nama:', nama)
 
     if (file && nama) {
-      const responseMsg = await sendFile(number, file, message)
+      const responseMsg = await sendFile(number, file, message, nama)
       return response.json({
         success: true,
         message: 'Hasil Lab Telah Terkirim!',

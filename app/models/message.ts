@@ -9,7 +9,7 @@ export default class Message extends BaseModel {
   declare id: string
 
   @column()
-  declare contactId: string
+  declare contactId: string | null
 
   @column()
   declare fromMe: boolean
@@ -22,6 +22,9 @@ export default class Message extends BaseModel {
 
   @column()
   declare content: any
+
+  @column()
+  declare nama: any
 
   @column.dateTime()
   declare timestamp: DateTime
@@ -37,6 +40,9 @@ export default class Message extends BaseModel {
 
   @column()
   declare filePath: string | null
+
+  @column()
+  declare noHp: string | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

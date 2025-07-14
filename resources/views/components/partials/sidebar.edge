@@ -89,6 +89,13 @@
           <span class="nav-text">Edit Profile</span>
         </a>
       </li>
+      <li class="{{ request.url().includes(route('pengaturan.index')) ? 'mm-active' : '' }}">
+        <a href="{{ route('pengaturan.index')}}"
+          class="{{ request.url().includes(route('pengaturan.index')) ? 'aria-expanded=true' : 'aria-expanded=false' }}">
+          <i class="fas fa-cog"></i>
+          <span class="nav-text">Edit Pengaturan</span>
+        </a>
+      </li>
 
       <li>
         <a href="#" id="logoutButton2" class="" aria-expanded="false">
