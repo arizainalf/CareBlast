@@ -92,10 +92,12 @@
   document.addEventListener('DOMContentLoaded', function () {
     let logoCropper
     let logoBlob
+    let originalFileType = 'image/jpeg' // Default
 
     $('#logo-upload').change(function (event) {
       const file = event.target.files[0]
       if (file) {
+        originalFileType = file.type // Simpan tipe file asli
         const reader = new FileReader()
         reader.onload = function (e) {
           $('#logo-preview').attr('src', e.target.result).show()
@@ -119,6 +121,14 @@
     $('#logo-crop-button').click(function () {
       if (logoCropper) {
         const canvas = logoCropper.getCroppedCanvas()
+        // Gunakan tipe file asli, default ke PNG jika tidak didukung
+        const fileType = originalFileType === 'image/png' ? 'image/png' :
+          originalFileType === 'image/jpeg' ? 'image/jpeg' :
+            'image/png'
+
+        // Buat nama file dengan ekstensi yang sesuai
+        const fileName = 'cropped_logo.' + (fileType === 'image/png' ? 'png' : 'jpg')
+
         canvas.toBlob(function (blob) {
           logoBlob = blob
           const croppedURL = URL.createObjectURL(blob)
@@ -128,7 +138,7 @@
           $('.cropper-container.cropper-bg').hide()
           $('#logo-crop-button').hide()
           $('#logo-edit-button').show()
-        }, 'image/jpeg')
+        }, fileType) // Gunakan tipe file yang sesuai
       }
     })
 
@@ -153,7 +163,9 @@
       event.preventDefault()
       const formData = new FormData(this)
       if (logoBlob) {
-        formData.append('logo', logoBlob, 'cropped_logo.jpg')
+        // Gunakan nama file yang sesuai dengan tipe gambar
+        const fileExt = originalFileType === 'image/png' ? 'png' : 'jpg'
+        formData.append('logo', logoBlob, `cropped_logo.${fileExt}`)
       }
 
       ajaxRequest($(this).attr('action'), 'PUT', formData)
