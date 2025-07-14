@@ -33,20 +33,21 @@ export async function saveMessages(message: any, isNotif: boolean = false) {
   }
 
   let saveMessage;
-  
+
   const existingMessage = await Message.findBy('message_id', key.id)
-  
+
   if (!existingMessage) {
     try {
-     saveMessage = await Message.create({
-        contactId: contactId,
+      saveMessage = await Message.create({
+        contactId: contactId ?? null,
         fromMe: key.fromMe,
         messageId: key.id ?? '',
+        noHp: contact?.waId ?? null,
         messageType, content: text,
         isNotif,
         timestamp: DateTime.fromSeconds(Number(messageTimestamp)),
       })
-      return 
+      return
     } catch (error) {
       console.error('Message service: Error saving message:', error)
       return 'error'

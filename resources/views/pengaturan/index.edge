@@ -51,7 +51,7 @@
                 <div class="mb-3">
                   <label class="form-label" for="nama_aplikasi">Nama Aplikasi</label>
                   <input type="text" class="form-control" id="nama_aplikasi" name="nama_aplikasi"
-                    value="{{ pengaturan.nama_aplikasi || '' }}">
+                    value="{{ pengaturan.namaAplikasi || '' }}">
                 </div>
 
                 <!-- Puskesmas -->
@@ -155,10 +155,10 @@
       if (logoBlob) {
         formData.append('logo', logoBlob, 'cropped_logo.jpg')
       }
-      formData.append('_method', 'PUT')
 
-      ajaxRequest($(this).attr('action'), 'POST', formData)
+      ajaxRequest($(this).attr('action'), 'PUT', formData)
     })
   })
 </script>
+@end
 @end

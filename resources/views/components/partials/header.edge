@@ -3,10 +3,10 @@
 ***********************************-->
 <div class="nav-header">
   <a href="/" class="brand-logo">
-    <img src="{{ asset('images/logo.png') }}" style="width: 3.5rem; height: 3.5rem" alt="">
+    <img src="/uploads/logo/{{ await getPengaturan('logo')}}" style="width: 3.5rem; height: 3.5rem" alt="">
     <div class="brand-title">
-      <h2 class="">Sisnaf</h2>
-      <span class="brand-sub-title small">@uptdpanglayungan</span>
+      <h2 class="">{{ await getPengaturan('namaAplikasi') }}</h2>
+      <span class="brand-sub-title small">{{ await getPengaturan('puskesmas') }}</span>
     </div>
   </a>
   <div class="nav-control">

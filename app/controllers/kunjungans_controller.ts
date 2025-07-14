@@ -59,10 +59,12 @@ export default class KunjungansController {
         'tanggalKunjungan',
         new Date().toISOString().split('T')[0]
       )
-      const kunjunganBerikutnya = request.input(
-        'kunjunganBerikutnya',
-        new Date().toISOString().split('T')[0]
-      )
+
+      const kunjunganBerikutnyaInput = request.input('kunjunganBerikutnya')
+      const kunjunganBerikutnya = kunjunganBerikutnyaInput
+        ? DateTime.fromISO(kunjunganBerikutnyaInput)
+        : tanggalKunjungan.plus({ days: 7 })
+
       const obatList = request.input('obatList', [])
 
       const pasien = await Pasien.query().select('id').where('uuid', pasienUuid).firstOrFail()

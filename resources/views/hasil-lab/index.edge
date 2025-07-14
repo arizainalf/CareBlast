@@ -120,7 +120,7 @@
             <a href="javascript:void(0)" data-uuid='${hasil.id}' class="list-group-item list-group-item-action border-0 mb-1 rounded hover-shadow hasilLab">
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <h6 class="mb-1">${hasil.contact.name ? hasil.contact.name : hasil.contact.username}</h6>
+                  <h6 class="mb-1">${hasil.nama ? hasil.nama : hasil.contact.name}</h6>
                   <p class="mb-1 text-muted small">${hasil.content || 'Tidak ada pesan'}</p>
                 </div>
                 <div class="text-end">
@@ -156,9 +156,11 @@
 
         const hasil = data.message[0];
 
-        $('#nama_pasien').text(hasil.contact.name ? hasil.contact.name : hasil.contact.username);
-        $('#no_wa').text(formatPhoneNumber(hasil.contact.waId));
-        $('#name').text(hasil.contact.name ? hasil.contact.name : hasil.contact.username);
+        console.log('hasil', hasil)
+
+        $('#nama_pasien').text(hasil.nama ? hasil.nama : hasil.contact.name);
+        $('#no_wa').text(formatPhoneNumber(hasil.noHp ? hasil.noHp : '-'));
+        $('#name').text(hasil.nama ? hasil.nama : hasil.contact.name);
         $('#content').text(hasil.content || '-');
         $('#sent').text(formatTimestamp(hasil.timestamp));
 
