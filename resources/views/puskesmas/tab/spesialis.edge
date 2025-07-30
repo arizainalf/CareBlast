@@ -32,7 +32,7 @@
                     data-bs-target="#tambahSpesialisModal">
                     <i class="fas fa-pencil-alt"></i>
                   </a>
-                  <a href="#" class="btn btn-danger shadow btn-xs sharp hapusSPesialis" data-bs-toggle="modal"
+                  <a href="#" class="btn btn-danger shadow btn-xs sharp deleteSpesialist" data-bs-toggle="modal"
                     data-id="{{ spesialis.id }}" data-bs-target="#hapusSpesialisModal">
                     <i class="fa fa-trash"></i>
                   </a>
@@ -59,7 +59,7 @@
         {{ csrfField() }}
         <div class="modal-body">
           <div class="mb-2">
-        <input type="hidden" name="jenis" id="jenis" value="spesialist">
+            <input type="hidden" name="jenis" id="jenis" value="spesialist">
             <input type="text" class="form-control" name="nama" id="nama_spesialis" placeholder="Nama Spesialis"
               required>
           </div>
