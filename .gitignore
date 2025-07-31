@@ -31,3 +31,5 @@ yarn-error.log
 #data
 messages.json
 contacts.json
+history.json
+messages-updates.json

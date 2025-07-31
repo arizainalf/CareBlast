@@ -232,7 +232,7 @@
           </div>
           <div class="relative text-center">
             <h4 class="font-medium text-gray-800 text-sm cursor-pointer" onclick="toggleTooltip(this)"
-              data-nama="{{ dokter.nama }}">dr. {{ dokter.nama.substring(0, 12) }}{{ dokter.nama.length > 12 ? '...' :
+              data-nama="{{ dokter.nama }}">{{ dokter.nama.substring(0, 12) }}{{ dokter.nama.length > 12 ? '...' :
               '' }} {{ dokter.spesialist?.gelar || '' }}
             </h4>
             <div

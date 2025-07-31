@@ -368,7 +368,7 @@ export async function sendMsg(number: string, message: string, isNotif: boolean 
   }
 }
 
-function delay(minMs: number = 3000, maxMs: number = 5000): Promise<void> {
+function delay(minMs: number = 5000, maxMs: number = 10000): Promise<void> {
   const randomMs = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
   return new Promise((resolve) => setTimeout(resolve, randomMs));
 }

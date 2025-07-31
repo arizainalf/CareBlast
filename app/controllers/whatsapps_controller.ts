@@ -290,16 +290,17 @@ export default class WhatsappsController {
 
     const contacts = await Pasien.query()
       .where('jenis_penyakit_id', penyakit)
-      .select('no_hp')
+      .preload('contact', (query) => {
+        query.select('id', 'pasien_id', 'wa_id')
+      })
 
-    // Ambil hanya array nomor HP
-    const numbers = contacts.map((c) => c.no_hp)
+    const numbers = contacts.map((c) => c.contact?.waId).filter(Boolean)
 
     await sendBulkMessage(numbers, message)
 
     console.log(numbers, message)
 
-    return response.json({ success: true, message: 'Pesan massal sedang dikirim' })
+    return response.json({ success: true, message: 'Pesan Pengumuman sedang dikirim', redirectUrl: '/whatsapps' })
   }
 
 }
