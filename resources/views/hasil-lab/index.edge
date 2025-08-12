@@ -167,7 +167,7 @@
         const previewContainer = document.getElementById('previewFile');
         previewContainer.innerHTML = '';
         const baseUrl = `{{ baseUrl() }}`
-        const filePath = `${baseUrl}/storage/uploads/${hasil.fileName}`
+        const filePath = `${baseUrl}storage/uploads/${hasil.fileName}`
 
         if (hasil.fileName.endsWith('.pdf')) {
           const iframe = document.createElement('iframe');

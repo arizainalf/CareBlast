@@ -37,6 +37,8 @@ export async function saveMessages(message: any, isNotif: boolean = false) {
   const existingMessage = await Message.findBy('message_id', key.id)
 
   if (!existingMessage) {
+
+    console.log(contact?.waId);
     try {
       saveMessage = await Message.create({
         contactId: contactId ?? null,

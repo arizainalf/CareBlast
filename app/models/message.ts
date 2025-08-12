@@ -42,7 +42,7 @@ export default class Message extends BaseModel {
   declare filePath: string | null
 
   @column()
-  declare noHp: string | null
+  declare noHp: text | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
