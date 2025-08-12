@@ -8,6 +8,7 @@ import { v4 as uuid } from 'uuid'
 import Pasien from '#models/pasien'
 import { DateTime } from 'luxon'
 import Contact from '#models/contact'
+import Pengaturan from '#models/pengaturan'
 
 export default class extends BaseSeeder {
 
@@ -192,5 +193,11 @@ export default class extends BaseSeeder {
       username: 'jodimaulana',
       waId: '6281930865458@s.whatsapp.net',
     })
+
+      await Pengaturan.create({
+    deskripsi: 'Bla bla bla',
+    namaAplikasi: 'Careblast',
+    puskesmas: 'Panglayungan'
+  })
   }
 }

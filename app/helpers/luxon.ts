@@ -33,3 +33,7 @@ export async function getPengaturan(field: string) {
   const pengaturan = await Pengaturan.findOrFail(1)
   return pengaturan[field as keyof typeof pengaturan]
 }
+
+export function getCurrentYear(): number {
+  return DateTime.now().year;
+}

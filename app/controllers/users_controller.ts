@@ -287,6 +287,42 @@ export default class UsersController {
 
       user.merge({ ...payload })
       await user.save()
+
+      const contact = await Contact.findBy('user_id', user.uuid)
+
+      const newNoHp = phoneNumber || ''
+      const newWaId = formatWhatsappNumber(newNoHp)
+      if (!contact && newNoHp) {
+        let profilePicture
+        try {
+          profilePicture = await getProfilePicture(newWaId)
+        } catch (error) {
+          console.error('Gagal mengambil foto profil:', error.message)
+          profilePicture = 'images/users/user.png'
+        }
+
+        await Contact.create({
+          userId: user.uuid,
+          waId: newWaId,
+          name: payload.fullName,
+          username: payload.fullName,
+          profilePicture,
+        })
+
+      } else if (contact) {
+
+        const contactNeedsUpdate =
+          contact.waId !== newWaId || contact.name !== payload.fullName
+        if (contactNeedsUpdate) {
+          contact.merge({
+            waId: newWaId,
+            name: payload.fullName,
+            username: payload.fullName,
+          })
+          await contact.save()
+        }
+
+      }
       return response.ok({
         success: true,
         message: 'Profil berhasil diperbarui',
