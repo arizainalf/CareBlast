@@ -37,7 +37,7 @@ export default class Contact extends BaseModel {
 
   @hasMany(() => Messages)
   declare messagess: HasMany<typeof Messages>
-  
+
   @belongsTo(() => Pasien,{
     foreignKey: 'pasien_id', // Kunci asing yang mengacu pada pasien
     localKey: 'uuid' // Kunci lokal yang digunakan untuk relasi

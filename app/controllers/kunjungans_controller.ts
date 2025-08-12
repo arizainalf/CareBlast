@@ -60,12 +60,16 @@ export default class KunjungansController {
         new Date().toISOString().split('T')[0]
       )
 
+      const tanggalKunjunganInput = request.input('tanggalKunjungan')
       const kunjunganBerikutnyaInput = request.input('kunjunganBerikutnya')
+      console.log('Tanggal Kunjungan:', kunjunganBerikutnyaInput, 'Tanggal Kunjungan Input:', tanggalKunjungan)
       const kunjunganBerikutnya = kunjunganBerikutnyaInput
         ? DateTime.fromISO(kunjunganBerikutnyaInput)
-        : tanggalKunjungan.plus({ days: 7 })
+        : DateTime.fromISO(tanggalKunjunganInput).plus({ days: 7 })
 
       const obatList = request.input('obatList', [])
+
+      console.log('Obat List:', obatList)
 
       const pasien = await Pasien.query().select('id').where('uuid', pasienUuid).firstOrFail()
 
@@ -95,23 +99,11 @@ export default class KunjungansController {
             obatId,
             frekuensi: 1,
             waktuKonsumsi: JSON.stringify(['08:00']),
-            batasWaktu: kunjunganBerikutnya,
+            batasWaktu: kunjunganBerikutnya.toSQLDate(),
             keteranganWaktu: 'Sesudah makan',
             hariKonsumsi: JSON.stringify(hariKonsumsi),
           }))
           await ObatPasien.createMany(obatPasienData)
-        } else {
-          await ObatPasien.create({
-            uuid: uuidv4(),
-            pasienId: pasien.id,
-            kunjunganId: kunjungan.id,
-            obatId: undefined,
-            frekuensi: 1,
-            waktuKonsumsi: JSON.stringify(['08:00']),
-            batasWaktu: kunjunganBerikutnya,
-            keteranganWaktu: 'Sesudah makan',
-            hariKonsumsi: JSON.stringify(hariKonsumsi),
-          })
         }
       }
 
@@ -120,7 +112,7 @@ export default class KunjungansController {
       return response.json({
         success: true,
         message: 'Data kunjungan berhasil ditambahkan',
-        redirectUrl: `/data-kunjungan`,
+      redirectUrl: `/data-kunjungan`,
       })
 
     } catch (error) {
@@ -161,7 +153,6 @@ export default class KunjungansController {
         kunjungan,
         allKunjunganPasien,
         dokters,
-        obats,
         currentKunjunganId: kunjungan.uuid,
         formatDate: (date: string | Date) => {
           return DateTime.fromJSDate(new Date(date)).toFormat('dd MMMM yyyy')

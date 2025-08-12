@@ -7,6 +7,7 @@ import('dayjs/locale/id.js').then(() => {
     dayjs.locale('id')
 })
 
+
 function delay(minMs: number = 4000, maxMs: number = 10000): Promise<void> {
     const randomMs = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
     return new Promise((resolve) => setTimeout(resolve, randomMs));
@@ -18,7 +19,8 @@ function getRandomMessage(templates: string[]) {
     return templates[index];
 }
 
-cron.schedule('0 * * * *', async () => {
+cron.schedule('* * * * *', async () => {
+  console.log('Scheduler running every minute', Date.now());
     try {
         const obatPasiens = await ObatPasien
             .query()
@@ -26,7 +28,9 @@ cron.schedule('0 * * * *', async () => {
                 pasienQuery.preload('contact') // preload relasi 'contact' dari pasien
             })
             .preload('obat')
-        const kunjungans = await Kunjungan.query().preload('pasien')
+        const kunjungans = await Kunjungan.query() .preload('pasien', (pasienQuery) => {
+                pasienQuery.preload('contact') // preload relasi 'contact' dari pasien
+            })
         const now = getCurrentTime()
         const tomorrowDate = getTomorrowDate();
         const dateNow = getCurrentDate();
@@ -52,10 +56,14 @@ cron.schedule('0 * * * *', async () => {
             // Parse tanggal kunjungan berikutnya
             const kunjunganDate = dayjs(kunjungan.kunjunganBerikutnya.toString()).format('YYYY-MM-DD');
 
-            if (kunjunganDate === tomorrowDate) {
+            if (kunjunganDate === tomorrowDate && !kunjungan.isReminder) {
                 const sapaan = kunjungan.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu';
                 const nama = kunjungan.pasien.name;
-                const noHp = kunjungan.pasien.no_hp;
+                console.log('kunjungan', kunjungan);
+                console.log('pasien', kunjungan.pasien);
+                console.log('contact', kunjungan.pasien.contact);
+                const noHp = kunjungan.pasien.contact.waId;
+
 
                 // Ambil template acak dan isi dengan sapaan + nama
                 const pesanFn = pesanTemplateKunjungan[Math.floor(Math.random() * pesanTemplateKunjungan.length)];
@@ -63,6 +71,7 @@ cron.schedule('0 * * * *', async () => {
 
                 try {
                     await sendMsg(noHp, pesan);
+                    kunjungan.merge({ isReminder: true }).save(); // Simpan perubahan status
                     await delay(); // delay agar tidak dianggap spam
                 } catch (error) {
                     console.error(`Gagal kirim pesan ke ${noHp}:`, error);
@@ -102,6 +111,8 @@ cron.schedule('0 * * * *', async () => {
             ];
 
             for (const waktu of obat.waktuKonsumsi) {
+              console.log(`Waktu konsumsi obat: ${waktu}`);
+              console.log(`Waktu sekarang: ${now}`);
                 if (waktu === now) {
                     try {
                         const pesan = getRandomMessage(pesanTemplates);
@@ -110,6 +121,7 @@ cron.schedule('0 * * * *', async () => {
                             pesan, true
                         );
                         await delay()
+                        console.log(`Pesan terkirim ke ${obat.pasien.no_hp}: ${pesan}`);
                     } catch (error) {
                         console.error(`Gagal kirim ke ${obat.pasien.no_hp}:`, error);
                     }

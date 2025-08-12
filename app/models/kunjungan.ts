@@ -44,6 +44,9 @@ export default class Kunjungan extends BaseModel {
   @column.date()
   declare kunjunganBerikutnya: DateTime
 
+  @column()
+  declare isReminder: boolean
+
   @hasMany(() => ObatPasien)
   declare obatPasiens: HasMany<typeof ObatPasien>
 
@@ -53,7 +56,7 @@ export default class Kunjungan extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  
+
   @beforeCreate()
   public static assignUuid(kunjungan: Kunjungan) {
     kunjungan.uuid = uuidv4()
