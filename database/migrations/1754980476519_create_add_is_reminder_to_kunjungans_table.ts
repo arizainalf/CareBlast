@@ -1,7 +1,7 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class AddIsReminderToKunjungans extends BaseSchema {
-  protected tableName = 'kunjungan' // nama tabel yang sudah ada
+  protected tableName = 'kunjungans' // nama tabel yang sudah ada
 
   async up() {
     this.schema.alterTable(this.tableName, (table) => {

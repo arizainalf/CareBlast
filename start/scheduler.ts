@@ -91,23 +91,23 @@ cron.schedule('* * * * *', async () => {
 
             // Template pesan variasi supaya tidak monoton
             const pesanTemplates = [
-                `${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, saatnya minum obat *${obat.obat.nama}*. Jangan lupa ya, ${obat.keteranganWaktu}.`,
-                `Halo ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, waktunya konsumsi obat *${obat.obat.nama}*. ${obat.keteranganWaktu}, jangan lewatkan.`,
-                `${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, jangan lupa minum obat *${obat.obat.nama}* sesuai jadwal. Catatan: ${obat.keteranganWaktu}.`,
-                `Sekarang waktunya minum obat *${obat.obat.nama}*, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. ${obat.keteranganWaktu}. Tetap semangat dan jaga kesehatan!`,
-                `Yth. ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Bapak' : 'Ibu'} ${obat.pasien.name}, mohon untuk segera minum obat *${obat.obat.nama}*. Jadwal: ${obat.keteranganWaktu}.`,
-                `Pengingat: Obat *${obat.obat.nama}* perlu dikonsumsi sekarang, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. ${obat.keteranganWaktu}.`,
-                `Salam sehat, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Saatnya konsumsi *${obat.obat.nama}*. ${obat.keteranganWaktu}, ya.`,
-                `Jadwal minum obat *${obat.obat.nama}* sudah tiba, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Jangan ditunda, ${obat.keteranganWaktu}.`,
-                `Ingat ya, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, sekarang waktunya minum *${obat.obat.nama}*. ${obat.keteranganWaktu}.`,
-                `Waktunya minum *${obat.obat.nama}*, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Tetap teratur agar cepat pulih!`,
-                `Obat *${obat.obat.nama}* harus diminum sekarang ya, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Jangan sampai lupa! (${obat.keteranganWaktu})`,
-                `Semoga sehat selalu, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Saat ini jadwalnya minum obat *${obat.obat.nama}*. ${obat.keteranganWaktu}.`,
-                `⏰ Pengingat waktu minum obat: *${obat.obat.nama}* untuk ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Waktunya: ${obat.keteranganWaktu}.`,
-                `✉️ Halo ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, ini pengingat untuk minum *${obat.obat.nama}*. Jangan lupa, ${obat.keteranganWaktu}.`,
-                `Mohon perhatian, saatnya minum obat *${obat.obat.nama}*. ${obat.keteranganWaktu} ya, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}.`,
-                `Waktu menunjukkan saatnya untuk minum *${obat.obat.nama}*, ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}. Tetap disiplin konsumsi ya.`,
-                `Hai ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Pak' : 'Bu'} ${obat.pasien.name}, jangan sampai terlewat minum obat *${obat.obat.nama}*. Jadwal: ${obat.keteranganWaktu}.`
+                ` ${obat.pasien.name}, saatnya minum  *${obat.obat.nama}*. Jangan lupa ya, ${obat.keteranganWaktu}.`,
+                `Halo  ${obat.pasien.name}, waktunya konsumsi  *${obat.obat.nama}*. ${obat.keteranganWaktu}, jangan lewatkan.`,
+                ` ${obat.pasien.name}, jangan lupa minum  *${obat.obat.nama}* sesuai jadwal. Catatan: ${obat.keteranganWaktu}.`,
+                `Sekarang waktunya minum  *${obat.obat.nama}*,  ${obat.pasien.name}. ${obat.keteranganWaktu}. Tetap semangat dan jaga kesehatan!`,
+                `Yth. ${obat.pasien.jenis_kelamin === 'Laki-laki' ? 'Bapak' : 'Ibu'} ${obat.pasien.name}, mohon untuk segera minum  *${obat.obat.nama}*. Jadwal: ${obat.keteranganWaktu}.`,
+                `Pengingat:  *${obat.obat.nama}* perlu dikonsumsi sekarang,  ${obat.pasien.name}. ${obat.keteranganWaktu}.`,
+                `Salam sehat,  ${obat.pasien.name}. Saatnya konsumsi *${obat.obat.nama}*. ${obat.keteranganWaktu}, ya.`,
+                `Jadwal minum  *${obat.obat.nama}* sudah tiba,  ${obat.pasien.name}. Jangan ditunda, ${obat.keteranganWaktu}.`,
+                `Ingat ya,  ${obat.pasien.name}, sekarang waktunya minum *${obat.obat.nama}*. ${obat.keteranganWaktu}.`,
+                `Waktunya minum *${obat.obat.nama}*,  ${obat.pasien.name}. Tetap teratur agar cepat pulih!`,
+                `Obat *${obat.obat.nama}* harus diminum sekarang ya,  ${obat.pasien.name}. Jangan sampai lupa! (${obat.keteranganWaktu})`,
+                `Semoga sehat selalu,  ${obat.pasien.name}. Saat ini jadwalnya minum  *${obat.obat.nama}*. ${obat.keteranganWaktu}.`,
+                `⏰ Pengingat waktu minum : *${obat.obat.nama}* untuk  ${obat.pasien.name}. Waktunya: ${obat.keteranganWaktu}.`,
+                `✉️ Halo  ${obat.pasien.name}, ini pengingat untuk minum *${obat.obat.nama}*. Jangan lupa, ${obat.keteranganWaktu}.`,
+                `Mohon perhatian, saatnya minum  *${obat.obat.nama}*. ${obat.keteranganWaktu} ya,  ${obat.pasien.name}.`,
+                `Waktu menunjukkan saatnya untuk minum *${obat.obat.nama}*,  ${obat.pasien.name}. Tetap disiplin konsumsi ya.`,
+                `Hai  ${obat.pasien.name}, jangan sampai terlewat minum  *${obat.obat.nama}*. Jadwal: ${obat.keteranganWaktu}.`
             ];
 
             for (const waktu of obat.waktuKonsumsi) {
