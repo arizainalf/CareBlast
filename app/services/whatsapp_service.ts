@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { makeWASocket, useMultiFileAuthState, Browsers } from 'baileys'
+import { makeWASocket, useMultiFileAuthState, Browsers, DisconnectReason, fetchLatestBaileysVersion } from 'baileys'
 import fs from 'node:fs'
 import qrImage from 'qr-image'
 import { Boom } from '@hapi/boom'
@@ -13,15 +13,30 @@ import { saveMessages } from '#services/message_service'
 import { fileURLToPath } from 'node:url'
 import { cuid } from '@adonisjs/core/helpers'
 import { checkContact } from './contact_service.js'
+import qrcode from 'qrcode-terminal'
 
 let socket: any
 let sendingFile = false
 let sentFileMessages = new Set<string>()
 let processedMessages = new Set<string>() // Track processed messages
 let isReconnecting = false
+let reconnectAttempts = 0
+const MAX_RECONNECT_ATTEMPTS = 10
+
+const SESSION_DIR = 'wa_session_baru'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+function clearSession() {
+  if (fs.existsSync(SESSION_DIR)) {
+    const files = fs.readdirSync(SESSION_DIR)
+    for (const file of files) {
+      fs.unlinkSync(path.join(SESSION_DIR, file))
+    }
+    console.log('[WA] Session cleared')
+  }
+}
 
 // Cleanup sets periodically to prevent memory leaks
 setInterval(() => {
@@ -59,11 +74,15 @@ function isMessageAlreadyProcessed(message: any, eventType: string): boolean {
 }
 
 export async function connectToWhatsApp() {
-  const { state, saveCreds } = await useMultiFileAuthState('whatsappAuth')
+  const { state, saveCreds } = await useMultiFileAuthState(SESSION_DIR)
+
+  // Fetch latest WA version to avoid 405 Connection Failure
+  const { version } = await fetchLatestBaileysVersion()
 
   socket = makeWASocket({
     auth: state,
-    printQRInTerminal: false,
+    version,
+    // printQRInTerminal: true,
     qrTimeout: 15000,
     browser: Browsers.windows('Desktop'),
     syncFullHistory: true,
@@ -72,25 +91,55 @@ export async function connectToWhatsApp() {
   socket.ev.on('creds.update', saveCreds)
 
   socket.ev.on('connection.update', async (update: any) => {
-    const { connection, lastDisconnect } = update
+    const { connection, lastDisconnect, qr } = update
+
+    if (qr) {
+      console.log('--- SCAN THE QR CODE BELOW ---')
+      qrcode.generate(qr, { small: true })
+    }
 
     if (connection === 'close') {
-      const shouldReconnect = (lastDisconnect.error as Boom)?.output?.statusCode !== 401
+      const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode
 
-      if (shouldReconnect && !isReconnecting) {
+      console.log('[WA] Connection closed. Status code:', statusCode, 'Reason:', (lastDisconnect?.error as Boom)?.message)
+
+      // 405 = Connection Failure (session korup/expired), 401 = logged out, 403 = banned
+      const sessionInvalid = statusCode === DisconnectReason.loggedOut
+        || statusCode === 405
+        || statusCode === 403
+        || statusCode === DisconnectReason.connectionReplaced
+
+      if (sessionInvalid) {
+        console.log('[WA] Session invalid/expired. Clearing session, please re-scan QR code.')
+        clearSession()
+        reconnectAttempts = 0
+        isReconnecting = false
+        await connectToWhatsApp()
+        return
+      }
+
+      if (!isReconnecting) {
+        if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+          console.log(`[WA] Max reconnect attempts (${MAX_RECONNECT_ATTEMPTS}) reached. Giving up.`)
+          isReconnecting = false
+          reconnectAttempts = 0
+          return
+        }
+
         isReconnecting = true
-        console.log('Connection closed, reconnecting...')
+        reconnectAttempts++
 
-        // Clear caches on reconnect
-        processedMessages.clear()
-        sentFileMessages.clear()
+        const delay = Math.min(5000 * reconnectAttempts, 30000)
+        console.log(`[WA] Reconnecting in ${delay}ms... (attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`)
+        await new Promise((resolve) => setTimeout(resolve, delay))
 
         await connectToWhatsApp()
         isReconnecting = false
       }
     } else if (connection === 'open') {
-      console.log('WhatsApp connection opened')
+      console.log('✅ WhatsApp connection is now OPEN and READY')
       isReconnecting = false
+      reconnectAttempts = 0
     }
   })
 

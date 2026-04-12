@@ -37,6 +37,13 @@ new Ignitor(APP_ROOT, { importer: IMPORTER })
     app.booting(async () => {
       await import('#start/env')
     })
+    app.ready(async () => {
+      // Hanya jalankan WA jika environment-nya 'web' (bukan saat migration/ace command)
+      if (app.getEnvironment() === 'web') {
+        console.log('AdonisJS Ready. Starting WhatsApp...')
+        await connectToWhatsApp()
+      }
+    })
     app.listen('SIGTERM', () => app.terminate())
     app.listenIf(app.managedByPm2, 'SIGINT', () => app.terminate())
   })
@@ -47,4 +54,4 @@ new Ignitor(APP_ROOT, { importer: IMPORTER })
     prettyPrintError(error)
   })
 
-await connectToWhatsApp()
+// await connectToWhatsApp()
